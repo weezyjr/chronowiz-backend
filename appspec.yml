@@ -5,7 +5,11 @@ files:
   destination: /chronowiz-backend/
 hooks:
   BeforeInstall:
-  - location: ./scripts/install_dependencies.sh
+  - location: ./scripts/delete_previous_code.sh
+    timeout: 300
+    runas: root
+  AfterInstall:
+  - location: scripts/install_dependencies.sh
     timeout: 300
     runas: root
   ApplicationStart:
