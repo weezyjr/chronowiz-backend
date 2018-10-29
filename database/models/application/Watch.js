@@ -53,8 +53,8 @@ const WatchSchema = new Schema(
         price: {type: String, trim: true, required: true},
 
         mainPhotoUrl: {type: String, trim: true, required: true},
-        bannerPhotoUrl1: {type: String, trim: true, required: false},
-        bannerPhotoUrl2: {type: String, trim: true, required: false},
+        banner1PhotoUrl: {type: String, trim: true, required: false},
+        banner2PhotoUrl: {type: String, trim: true, required: false},
 
         section1Title: {type: String, trim: true, required: false},
         section1Paragraph: {type: String, trim: true, required: false},
@@ -72,8 +72,8 @@ const WatchSchema = new Schema(
         section4Paragraph: {type: String, trim: true, required: false},
         section4PhotoUrl: {type: String, trim: true, required: false},
 
-        section5Title: {type: String, trim: true, required: false},
-        section5Paragraph: {type: String, trim: true, required: false},
+        section5Titles: {type: String, trim: true, required: false},
+        section5Paragraphs: {type: String, trim: true, required: false},
         section5PhotoUrls: {type: [String], trim: true, required: false},
     },
     {
