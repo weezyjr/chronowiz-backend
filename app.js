@@ -22,10 +22,6 @@ const ActionType = require('./models/errors/ActionType');
 const Request = require('./models/reqres/Request');
 const Response = require('./models/reqres/Response');
 
-/******* Import Role Models *******/
-const PMRole = require('./models/roles/PMRole');
-const UserRole = require('./models/roles/UserRole');
-
 /******* Import Tools *******/
 const report = require('./tools/report.js');
 const random = require('./tools/random.js');
