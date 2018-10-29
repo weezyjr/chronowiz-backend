@@ -59,8 +59,8 @@ module.exports.create = async function (req, res, next)
         watch.price = Request.validateName(req.body.payload.price, 'price');
 
         watch.mainPhotoUrl = Request.validateS3Url(req.body.payload.mainPhotoUrl, 'mainPhotoUrl');
-        watch.bannerPhotoUrl1 = Request.validateS3Url(req.body.payload.bannerPhotoUrl1, 'bannerPhotoUrl1', {optional: true});
-        watch.bannerPhotoUrl2 = Request.validateS3Url(req.body.payload.bannerPhotoUrl2, 'bannerPhotoUrl2', {optional: true});
+        watch.banner1PhotoUrl = Request.validateS3Url(req.body.payload.bannerPhotoUrl1, 'bannerPhotoUrl1', {optional: true});
+        watch.banner2PhotoUrl = Request.validateS3Url(req.body.payload.bannerPhotoUrl2, 'bannerPhotoUrl2', {optional: true});
 
         watch.section1Title = Request.validateName(req.body.payload.section1Title, 'section1Title', {optional: true});
         watch.section1Paragraph = Request.validateName(req.body.payload.section1Paragraph, 'section1Paragraph', {optional: true});
@@ -78,8 +78,8 @@ module.exports.create = async function (req, res, next)
         watch.section4Paragraph = Request.validateName(req.body.payload.section4Paragraph, 'section4Paragraph', {optional: true});
         watch.section4PhotoUrl = Request.validateS3Url(req.body.payload.section4PhotoUrl, 'section4PhotoUrl', {optional: true});
 
-        watch.section5Title = Request.validateName(req.body.payload.section5Title, 'section5Title', {optional: true});
-        watch.section5Paragraph = Request.validateName(req.body.payload.section5Paragraph, 'section5Paragraph', {optional: true});
+        watch.section5Titles = Request.validateName(req.body.payload.section5Title, 'section5Title', {optional: true});
+        watch.section5Paragraphs = Request.validateName(req.body.payload.section5Paragraph, 'section5Paragraph', {optional: true});
         watch.section5PhotoUrls = Request.validateS3Urls(req.body.payload.section5PhotoUrls, 'section5PhotoUrls', {optional: true});
 
         let savedWatch = await watch.save();
