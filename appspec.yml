@@ -2,7 +2,7 @@ version: 0.0
 os: linux
 files:
 - source: /
-  destination: /chronowiz-backend/
+  destination: /home/ec2-user/chronowiz-backend/
 #hooks:
 #  BeforeInstall:
 #  - location: ./scripts/delete_previous_code.sh
