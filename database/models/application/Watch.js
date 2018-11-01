@@ -24,9 +24,9 @@ const WatchSchema = new Schema(
         movementSpring: {type: String, trim: true, required: false},
         movementTourbillon: {type: String, trim: true, required: false},
         movementRotor: {type: String, trim: true, required: false},
-        movementAdditionalFeatures: {type: [String], trim: true, required: false},
+        movementAdditionalFeatures: [{value: {type: String, trim: true, required: false}}],
 
-        functions: {type: [String], trim: true, required: true},
+        functions: [{value: {type: String, trim: true, required: true}}],
 
         caseMaterial: {type: String, trim: true, required: true},
         caseDiameter: {type: String, trim: true, required: true},
@@ -35,20 +35,20 @@ const WatchSchema = new Schema(
         caseBack: {type: String, trim: true, required: true},
         waterResistance: {type: String, trim: true, required: true},
         caseCrown: {type: String, trim: true, required: true},
-        caseAdditionalFeatures: {type: [String], trim: true, required: false},
+        caseAdditionalFeatures: [{value: {type: String, trim: true, required: false}}],
 
         dialColour: {type: String, trim: true, required: true},
         dialIndex: {type: String, trim: true, required: true},
         dialFinish: {type: String, trim: true, required: false},
         dialHands: {type: String, trim: true, required: true},
-        dialAdditionalFeatures: {type: [String], trim: true, required: false},
+        dialAdditionalFeatures: [{value: {type: String, trim: true, required: false}}],
 
         band: {type: String, trim: true, required: true},
         bandMaterial: {type: String, trim: true, required: true},
         bandClasp: {type: String, trim: true, required: true},
         bandColour: {type: String, trim: true, required: true},
         bandClaspMaterial: {type: String, trim: true, required: true},
-        bandAdditionalFeatures: {type: [String], trim: true, required: false},
+        bandAdditionalFeatures: [{value: {type: String, trim: true, required: false}}],
 
         price: {type: String, trim: true, required: true},
 
@@ -72,9 +72,9 @@ const WatchSchema = new Schema(
         section4Paragraph: {type: String, trim: true, required: false},
         section4PhotoUrl: {type: String, trim: true, required: false},
 
-        section5Titles: {type: String, trim: true, required: false},
-        section5Paragraphs: {type: String, trim: true, required: false},
-        section5PhotoUrls: {type: [String], trim: true, required: false},
+        section5Title: {type: String, trim: true, required: false},
+        section5Paragraph: {type: String, trim: true, required: false},
+        section5PhotoUrls: [{value: {type: String, trim: true, required: false}}]
     },
     {
         timestamps: true

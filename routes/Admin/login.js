@@ -12,7 +12,7 @@ router.post('/', async function (req, res, next)
         Request.validateReq(req, {enforcePayload: true});
 
         //Email
-        let email = Request.validateUserEmail(req.body.payload.email);
+        let email = Request.validateEmail(req.body.payload.email);
 
         let admin = await Admin.findOne({email});
         if (!admin)

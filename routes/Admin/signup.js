@@ -15,18 +15,18 @@ router.post('/', async function (req, res, next)
         let admin = new Admin();
 
         // Email
-        admin.email = Request.validateUserEmail(req.body.payload.email);
+        admin.email = Request.validateEmail(req.body.payload.email);
         admin.isEmailVerified = false;
         admin.emailVerificationCode = random.getRandomInt(1000, 9999);
 
         // password
-        admin.password = Request.validateUserPassword(req.body.payload.password);
+        admin.password = Request.validatePassword(req.body.payload.password);
 
         // firstName
-        admin.firstName = Request.validateName(req.body.payload.firstName, 'firstName');
+        admin.firstName = Request.validateText(req.body.payload.firstName, 'firstName');
 
         // lastName
-        admin.lastName = Request.validateName(req.body.payload.lastName, 'lastName');
+        admin.lastName = Request.validateText(req.body.payload.lastName, 'lastName');
 
         let savedAdmin = await admin.save();
 
