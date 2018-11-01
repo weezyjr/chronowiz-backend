@@ -1,2 +1,3 @@
 #!/usr/bin/env bash
-pm2 start /chronowiz-backend/app.js
+cd /home/ec2-user/chronowiz-backend/
+pm2 start app.js
