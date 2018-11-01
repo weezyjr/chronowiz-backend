@@ -1,7 +1,7 @@
 const report = require('../../tools/report');
 const ErrorType = require('../errors/ErrorType');
 
-module.exports.payload = function ({payload = undefined, en = undefined, ar = undefined, debug = undefined, actionType = undefined} = {})
+module.exports.payload = function ({payload = undefined, en = undefined, debug = undefined, actionType = undefined} = {})
 {
     return {
         response:
@@ -10,7 +10,6 @@ module.exports.payload = function ({payload = undefined, en = undefined, ar = un
                 message:
                     {
                         en,
-                        ar,
                         debug: debug || en
                     },
                 actionType,
@@ -19,7 +18,7 @@ module.exports.payload = function ({payload = undefined, en = undefined, ar = un
     };
 };
 
-module.exports.error = function ({error = undefined, en = undefined, ar = undefined, debug = undefined, errorType = undefined, payload = undefined, actionType = undefined, request = undefined} = {})
+module.exports.error = function ({error = undefined, en = undefined, debug = undefined, errorType = undefined, payload = undefined, actionType = undefined, request = undefined} = {})
 {
     if (error && error.errorType)
     {
@@ -34,7 +33,6 @@ module.exports.error = function ({error = undefined, en = undefined, ar = undefi
         let duplicateEntry = error.message.substring(firstDoubleQuote + 1, secondDoubleQuote);
 
         en = duplicateEntry + ' already exists';
-        ar = duplicateEntry + ' موجود بالفعل ';
         debug = error.message;
         error = undefined;
     }
@@ -49,7 +47,6 @@ module.exports.error = function ({error = undefined, en = undefined, ar = undefi
                     message:
                         {
                             en: en || (error ? error.en : undefined),
-                            ar: ar || (error ? error.ar : undefined),
                             debug: debug || (error ? (error.debug || error.message || error.errmsg || error.en) : en)
                         },
                     actionType,
