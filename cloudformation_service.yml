@@ -1,0 +1,52 @@
+Parameters:
+  CHRONOWIZENV:
+    Type: String
+    Default: chronowiz-err
+  Tag:
+    Type: String
+    Default: latest
+  TGARN:
+    Type: String
+    Default: error
+Resources:
+  ECSServiceRole:
+    Type: AWS::IAM::Role
+    Properties:
+      Path: /
+      AssumeRolePolicyDocument: |
+        {
+            "Statement": [{
+                "Effect": "Allow",
+                "Principal": { "Service": [ "ecs.amazonaws.com" ]},
+                "Action": [ "sts:AssumeRole" ]
+            }]
+        }
+      ManagedPolicyArns:
+        - arn:aws:iam::aws:policy/service-role/AmazonEC2ContainerServiceRole
+
+  Service:
+    Type: AWS::ECS::Service
+    Properties:
+      Cluster: !Sub ${CHRONOWIZENV}-backend-ecs-cluster
+      Role: !Ref ECSServiceRole
+      DesiredCount: 1
+      TaskDefinition: !Ref TaskDefinition
+      DeploymentConfiguration:
+        MaximumPercent: 100
+        MinimumHealthyPercent: 0
+      LoadBalancers:
+        - ContainerName: !Sub ${CHRONOWIZENV}-backend-ecs-container
+          ContainerPort: 3000
+          TargetGroupArn: !Sub ${TGARN}
+
+  TaskDefinition:
+    Type: AWS::ECS::TaskDefinition
+    Properties:
+      Family: !Sub ${CHRONOWIZENV}-backend-ecs-taskdefinition
+      ContainerDefinitions:
+        - Name: !Sub ${CHRONOWIZENV}-backend-ecs-container
+          Image: !Sub 093907686637.dkr.ecr.eu-west-1.amazonaws.com/${CHRONOWIZENV}-backend-ecr:${Tag}
+          Essential: true
+          MemoryReservation: 128
+          PortMappings:
+            - ContainerPort: 3000

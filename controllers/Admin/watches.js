@@ -1,6 +1,6 @@
 const Request = require('../../models/reqres/Request');
 const Response = require('../../models/reqres/Response');
-const Watch = require('../../database/models/application/Watch');
+const Watch = require('../../database/models/Watch');
 
 module.exports.create = async function (req, res, next)
 {
@@ -15,8 +15,10 @@ module.exports.create = async function (req, res, next)
         watch.referenceNumber = Request.validateText(req.body.payload.referenceNumber, 'referenceNumber');
         watch.gender = Request.validateText(req.body.payload.gender, 'gender', {optional: true});
         watch.limited = Request.validateText(req.body.payload.limited, 'limited', {optional: true});
+        watch.awards = Request.validateText(req.body.payload.awards, 'awards', {optional: true});
 
         watch.movementCaliberName = Request.validateText(req.body.payload.movementCaliberName, 'movementCaliberName');
+        watch.movementAutomaticOrManual = Request.validateText(req.body.payload.movementAutomaticOrManual, 'movementAutomaticOrManual', {optional: true});
         watch.movementCaliberNumber = Request.validateText(req.body.payload.movementCaliberNumber, 'movementCaliberNumber');
         watch.movementDiameter = Request.validateText(req.body.payload.movementDiameter, 'movementDiameter');
         watch.movementHeight = Request.validateText(req.body.payload.movementHeight, 'movementHeight');
@@ -37,8 +39,8 @@ module.exports.create = async function (req, res, next)
         watch.caseHeight = Request.validateText(req.body.payload.caseHeight, 'caseHeight');
         watch.caseFront = Request.validateText(req.body.payload.caseFront, 'caseFront');
         watch.caseBack = Request.validateText(req.body.payload.caseBack, 'caseBack');
-        watch.waterResistance = Request.validateText(req.body.payload.waterResistance, 'waterResistance');
-        watch.caseCrown = Request.validateText(req.body.payload.caseCrown, 'caseCrown');
+        watch.waterResistance = Request.validateText(req.body.payload.waterResistance, 'waterResistance', {optional: true});
+        watch.caseCrown = Request.validateText(req.body.payload.caseCrown, 'caseCrown', {optional: true});
         watch.caseAdditionalFeatures = Request.validateTextObjects(req.body.payload.caseAdditionalFeatures, 'caseAdditionalFeatures', {optional: true});
 
         watch.dialColour = Request.validateText(req.body.payload.dialColour, 'dialColour');
@@ -54,7 +56,8 @@ module.exports.create = async function (req, res, next)
         watch.bandClaspMaterial = Request.validateText(req.body.payload.bandClaspMaterial, 'bandClaspMaterial');
         watch.bandAdditionalFeatures = Request.validateTextObjects(req.body.payload.bandAdditionalFeatures, 'bandAdditionalFeatures', {optional: true});
 
-        watch.price = Request.validateText(req.body.payload.price, 'price');
+        watch.price = Request.validateNumber(req.body.payload.price, 'price');
+        watch.priceCurrency = Request.validateText(req.body.payload.priceCurrency, 'priceCurrency');
 
         watch.mainPhotoUrl = Request.validateS3Url(req.body.payload.mainPhotoUrl, 'mainPhotoUrl');
         watch.banner1PhotoUrl = Request.validateS3Url(req.body.payload.banner1PhotoUrl, 'bannerPhotoUrl1', {optional: true});
@@ -78,7 +81,7 @@ module.exports.create = async function (req, res, next)
 
         watch.section5Titles = Request.validateText(req.body.payload.section5Titles, 'section5Title', {optional: true});
         watch.section5Paragraphs = Request.validateText(req.body.payload.section5Paragraphs, 'section5Paragraph', {optional: true});
-        watch.section5PhotoUrls = Request.validateS3Urls(req.body.payload.section5PhotoUrls, 'section5PhotoUrls', {optional: true});
+        watch.section5PhotoUrls = Request.validateS3UrlObjects(req.body.payload.section5PhotoUrls, 'section5PhotoUrls', {optional: true});
 
         watch.createdByAdmin = req.admin._id;
         watch.lastEditedByAdmin = req.admin._id;

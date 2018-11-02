@@ -1,4 +1,4 @@
-const report = require('../../../tools/report.js');
+const report = require('../../tools/report.js');
 
 const mongoose = require('mongoose');
 

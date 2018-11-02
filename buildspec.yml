@@ -1,0 +1,19 @@
+version: 0.2
+
+phases:
+  pre_build:
+    commands:
+      - sudo pip install --upgrade awscli
+      - $(aws ecr get-login --no-include-email --region eu-west-1)
+      - TAG="$(echo $CODEBUILD_RESOLVED_SOURCE_VERSION)"
+      - aws s3 cp s3://${CHRONOWIZ_ENV}-backend/.env .
+  build:
+    commands:
+      - docker build -t ${CHRONOWIZ_ENV}-backend-ecr .
+      - docker tag ${CHRONOWIZ_ENV}-backend-ecr:latest 093907686637.dkr.ecr.eu-west-1.amazonaws.com/${CHRONOWIZ_ENV}-backend-ecr:${TAG}
+  post_build:
+    commands:
+      - docker push 093907686637.dkr.ecr.eu-west-1.amazonaws.com/${CHRONOWIZ_ENV}-backend-ecr:${TAG}
+      - printf '{"tag":"%s"}' $TAG > build.json
+artifacts:
+  files: build.json

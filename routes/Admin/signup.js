@@ -4,7 +4,7 @@ const passport = require('passport');
 const Request = require('../../models/reqres/Request');
 const Response = require('../../models/reqres/Response');
 const random = require('../../tools/random');
-const Admin = require('../../database/models/users/Admin');
+const Admin = require('../../database/models/Admin');
 
 router.post('/', async function (req, res, next)
 {

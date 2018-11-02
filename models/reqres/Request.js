@@ -86,6 +86,35 @@ module.exports.validateIds = function (Ids, {optional = false} = {})
     return Ids;
 };
 
+module.exports.validateNumber = function (number, fieldName, {optional = false} = {})
+{
+    if (!number && optional)
+        return;
+
+    if (!number)
+        throw new ValidationError(
+            {
+                args: [fieldName]
+            });
+
+    if (!validator.isNumeric(number))
+    {
+        throw new ValidationError(
+            {
+                args: [fieldName, number]
+            });
+    }
+    else if (number.length > NAME_MAX_LENGTH)
+    {
+        throw new ValidationError(
+            {
+                args: [fieldName, number]
+            });
+    }
+
+    return number;
+};
+
 module.exports.validateText = function (text, fieldName, {optional = false} = {})
 {
     //TODO protect against XSS
@@ -256,4 +285,25 @@ module.exports.validateS3Urls = function (urls, fieldName, {optional = false} = 
         this.validateS3Url(url, fieldName, {optional});
 
     return urls;
+};
+
+module.exports.validateS3UrlObjects = function (s3UrlObjects, fieldName, {optional = false} = {})
+{
+    if (!s3UrlObjects && optional)
+        return;
+
+    if (!s3UrlObjects)
+        throw new ValidationError({
+            args: [fieldName]
+        });
+
+    if (!Array.isArray(s3UrlObjects))
+        throw new ValidationError({
+            args: [fieldName, s3UrlObjects]
+        });
+
+    for (let s3UrlObject of s3UrlObjects)
+        this.validateS3Url(s3UrlObject.value, fieldName, {optional});
+
+    return s3UrlObjects;
 };

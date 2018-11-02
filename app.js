@@ -70,14 +70,14 @@ else
     app.use(morgan('dev'));
 
 /******* Setting up the routes *******/
-app.get('/version', function (req, res)
+app.get('/', function (req, res)
 {
     res.send(Response.payload({debug: process.env.CHRONOWIZ_APP_NAME + ' ' + process.env.CHRONOWIZ_APP_VERSION}));
 });
 
 app.use('/health', require('express-healthcheck')());
 
-app.use('/', require('./routes'));
+app.use('/api', require('./routes'));
 
 app.get('/robots.txt', function (req, res)
 {
