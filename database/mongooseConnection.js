@@ -22,6 +22,7 @@ module.exports.connect = async function (MONGODB_URL, CHRONOWIZ_ENV)
             mongooseConnection = await mongoose.connect(MONGODB_URL, {useNewUrlParser: true, config: {autoIndex: true}}); //TODO set autoIndex false in production
 
             Watch.createIndexes();
+            Admin.createIndexes();
 
             report.log({message: 'Connected successfully via mongoose to MongoDB'});
 
