@@ -45,7 +45,7 @@ Resources:
       Family: !Sub ${CHRONOWIZENV}-backend-ecs-taskdefinition
       ContainerDefinitions:
         - Name: !Sub ${CHRONOWIZENV}-backend-ecs-container
-          Image: !Sub 093907686637.dkr.ecr.eu-west-1.amazonaws.com/${CHRONOWIZENV}-backend-ecr:${Tag}
+          Image: !Sub 110136271225.dkr.ecr.eu-west-1.amazonaws.com/${CHRONOWIZENV}-backend-ecr:${Tag}
           Essential: true
           MemoryReservation: 128
           PortMappings:
