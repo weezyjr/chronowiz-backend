@@ -6,7 +6,7 @@ const Response = require('../../models/reqres/Response');
 const random = require('../../tools/random');
 const Admin = require('../../database/models/Admin');
 
-router.post('/', async function (req, res, next)
+router.post('/', passport.authenticate('jwt-admin', {session: false}), async function (req, res, next)
 {
     try
     {
