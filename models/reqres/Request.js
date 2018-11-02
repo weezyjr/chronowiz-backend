@@ -101,11 +101,11 @@ module.exports.validateText = function (text, fieldName, {optional = false} = {}
 
     if (typeof text === 'string')
     {
-        if (!validator.isAlphanumeric(text.replace(/ /g, '').replace("'", '').replace('&', '').replace('ô', 'o').replace('è', 'e').replace('-', '')))
-            throw new ValidationError(
-                {
-                    args: [fieldName, text]
-                });
+        // if (!validator.isAlphanumeric(text.replace(/ /g, '').replace("'", '').replace('&', '').replace('ô', 'o').replace('è', 'e').replace('-', '')))
+        //     throw new ValidationError(
+        //         {
+        //             args: [fieldName, text]
+        //         });
 
         if (text.length > NAME_MAX_LENGTH)
             throw new ValidationError(
