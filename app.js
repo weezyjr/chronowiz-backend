@@ -60,7 +60,7 @@ app.use(bodyParser.json());
 app.use(cors());
 
 /****** Setting up Passport *******/
-app.use(passport.initialize({userProperty: 'user'}));
+app.use(passport.initialize({userProperty: 'admin'}));
 passport_jwt_strategy.setupPassport(passport, process.env.JWT_SECRET);
 
 /******* Morgan Logger *******/

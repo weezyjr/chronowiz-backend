@@ -16,8 +16,7 @@ module.exports.create = async function (req, res, next)
         watch.gender = Request.validateText(req.body.payload.gender, 'gender', {optional: true});
         watch.limited = Request.validateText(req.body.payload.limited, 'limited', {optional: true});
 
-        watch.movementType = Request.validateText(req.body.payload.movementType, 'movementType');
-        watch.movementCaliberType = Request.validateText(req.body.payload.movementCaliberType, 'movementCaliberType');
+        watch.movementCaliberName = Request.validateText(req.body.payload.movementCaliberName, 'movementCaliberName');
         watch.movementCaliberNumber = Request.validateText(req.body.payload.movementCaliberNumber, 'movementCaliberNumber');
         watch.movementDiameter = Request.validateText(req.body.payload.movementDiameter, 'movementDiameter');
         watch.movementHeight = Request.validateText(req.body.payload.movementHeight, 'movementHeight');
@@ -25,7 +24,6 @@ module.exports.create = async function (req, res, next)
         watch.movementFrequency = Request.validateText(req.body.payload.movementFrequency, 'movementFrequency');
         watch.movementPowerReserve = Request.validateText(req.body.payload.movementPowerReserve, 'movementPowerReserve');
         watch.movementCertificate = Request.validateText(req.body.payload.movementCertificate, 'movementCertificate', {optional: true});
-        watch.movementCertificateType = Request.validateText(req.body.payload.movementCertificateType, 'movementCertificateType', {optional: true});
         watch.movementDecoration = Request.validateText(req.body.payload.movementDecoration, 'movementDecoration', {optional: true});
         watch.movementSpring = Request.validateText(req.body.payload.movementSpring, 'movementSpring', {optional: true});
         watch.movementTourbillon = Request.validateText(req.body.payload.movementTourbillon, 'movementTourbillon', {optional: true});
@@ -81,6 +79,9 @@ module.exports.create = async function (req, res, next)
         watch.section5Titles = Request.validateText(req.body.payload.section5Titles, 'section5Title', {optional: true});
         watch.section5Paragraphs = Request.validateText(req.body.payload.section5Paragraphs, 'section5Paragraph', {optional: true});
         watch.section5PhotoUrls = Request.validateS3Urls(req.body.payload.section5PhotoUrls, 'section5PhotoUrls', {optional: true});
+
+        watch.createdByAdmin = req.admin._id;
+        watch.lastEditedByAdmin = req.admin._id;
 
         let savedWatch = await watch.save();
 

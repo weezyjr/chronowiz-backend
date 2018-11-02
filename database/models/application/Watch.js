@@ -10,8 +10,7 @@ const WatchSchema = new Schema(
         gender: {type: String, trim: true, required: false},
         limited: {type: String, trim: true, required: false},
 
-        movementType: {type: String, trim: true, required: true},
-        movementCaliberType: {type: String, trim: true, required: true},
+        movementCaliberName: {type: String, trim: true, required: true},
         movementCaliberNumber: {type: String, trim: true, required: true},
         movementDiameter: {type: String, trim: true, required: true},
         movementHeight: {type: String, trim: true, required: true},
@@ -19,7 +18,6 @@ const WatchSchema = new Schema(
         movementFrequency: {type: String, trim: true, required: true},
         movementPowerReserve: {type: String, trim: true, required: true},
         movementCertificate: {type: String, trim: true, required: false},
-        movementCertificateType: {type: String, trim: true, required: false},
         movementDecoration: {type: String, trim: true, required: false},
         movementSpring: {type: String, trim: true, required: false},
         movementTourbillon: {type: String, trim: true, required: false},
@@ -74,7 +72,10 @@ const WatchSchema = new Schema(
 
         section5Title: {type: String, trim: true, required: false},
         section5Paragraph: {type: String, trim: true, required: false},
-        section5PhotoUrls: [{value: {type: String, trim: true, required: false}}]
+        section5PhotoUrls: [{value: {type: String, trim: true, required: false}}],
+
+        createdByAdmin: {type: Schema.Types.ObjectId, ref: 'Admin', required: true},
+        lastEditedByAdmin: {type: Schema.Types.ObjectId, ref: 'Admin', required: true},
     },
     {
         timestamps: true
