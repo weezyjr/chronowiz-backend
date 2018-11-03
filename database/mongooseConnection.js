@@ -1,6 +1,7 @@
 const report = require('../tools/report');
 const mongoose = require('mongoose');
 const Watch = require('../database/models/Watch');
+const Admin = require('../database/models/Admin');
 
 let mongooseConnection = null;
 
