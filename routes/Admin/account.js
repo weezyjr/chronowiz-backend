@@ -3,7 +3,7 @@ const passport = require('passport');
 
 const account = require('../../controllers/Admin/account');
 
-router.post('/signup', account.signup); //TODO add JWT
+router.post('/signup', passport.authenticate('jwt-admin', {session: false}), account.signup);
 
 router.post('/login', account.login);
 
