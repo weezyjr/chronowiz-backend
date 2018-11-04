@@ -97,7 +97,7 @@ module.exports.validateNumber = function (number, fieldName, {optional = false} 
                 args: [fieldName]
             });
 
-    if (!validator.isNumeric(number))
+    if (typeof number !== "number")
     {
         throw new ValidationError(
             {
