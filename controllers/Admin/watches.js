@@ -88,7 +88,7 @@ module.exports.create = async function (req, res, next)
 
         let savedWatch = await watch.save();
 
-        let message = 'Watch ' + savedWatch.model + ' created.';
+        let message = 'Watch ' + savedWatch.referenceNumber + ' created successfully.';
         return res.json(Response.payload({payload: savedWatch, en: message}));
     }
     catch (error)
