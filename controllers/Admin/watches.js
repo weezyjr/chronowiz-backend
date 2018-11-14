@@ -11,20 +11,21 @@ module.exports.create = async function (req, res, next)
         let watch = new Watch();
 
         watch.brand = Request.validateText(req.body.payload.brand, 'brand');
-        watch.model = Request.validateText(req.body.payload.model, 'model');
+        watch._collection = Request.validateText(req.body.payload._collection, '_collection', {optional: true});
+        watch.model = Request.validateText(req.body.payload.model, 'model', {optional: true});
         watch.referenceNumber = Request.validateText(req.body.payload.referenceNumber, 'referenceNumber');
         watch.gender = Request.validateText(req.body.payload.gender, 'gender', {optional: true});
         watch.limited = Request.validateText(req.body.payload.limited, 'limited', {optional: true});
         watch.awards = Request.validateText(req.body.payload.awards, 'awards', {optional: true});
 
-        watch.movementCaliberName = Request.validateText(req.body.payload.movementCaliberName, 'movementCaliberName');
+        watch.movementCaliberName = Request.validateText(req.body.payload.movementCaliberName, 'movementCaliberName', {optional: true});
         watch.movementAutomaticOrManual = Request.validateText(req.body.payload.movementAutomaticOrManual, 'movementAutomaticOrManual', {optional: true});
-        watch.movementCaliberNumber = Request.validateText(req.body.payload.movementCaliberNumber, 'movementCaliberNumber');
-        watch.movementDiameter = Request.validateText(req.body.payload.movementDiameter, 'movementDiameter');
-        watch.movementHeight = Request.validateText(req.body.payload.movementHeight, 'movementHeight');
-        watch.movementJewels = Request.validateText(req.body.payload.movementJewels, 'movementJewels');
-        watch.movementFrequency = Request.validateText(req.body.payload.movementFrequency, 'movementFrequency');
-        watch.movementPowerReserve = Request.validateText(req.body.payload.movementPowerReserve, 'movementPowerReserve');
+        watch.movementCaliberNumber = Request.validateText(req.body.payload.movementCaliberNumber, 'movementCaliberNumber', {optional: true});
+        watch.movementDiameter = Request.validateText(req.body.payload.movementDiameter, 'movementDiameter', {optional: true});
+        watch.movementHeight = Request.validateText(req.body.payload.movementHeight, 'movementHeight', {optional: true});
+        watch.movementJewels = Request.validateText(req.body.payload.movementJewels, 'movementJewels', {optional: true});
+        watch.movementFrequency = Request.validateText(req.body.payload.movementFrequency, 'movementFrequency', {optional: true});
+        watch.movementPowerReserve = Request.validateText(req.body.payload.movementPowerReserve, 'movementPowerReserve', {optional: true});
         watch.movementCertificate = Request.validateText(req.body.payload.movementCertificate, 'movementCertificate', {optional: true});
         watch.movementDecoration = Request.validateText(req.body.payload.movementDecoration, 'movementDecoration', {optional: true});
         watch.movementSpring = Request.validateText(req.body.payload.movementSpring, 'movementSpring', {optional: true});
@@ -32,34 +33,34 @@ module.exports.create = async function (req, res, next)
         watch.movementRotor = Request.validateText(req.body.payload.movementRotor, 'movementRotor', {optional: true});
         watch.movementAdditionalFeatures = Request.validateTextObjects(req.body.payload.movementAdditionalFeatures, 'movementAdditionalFeatures', {optional: true});
 
-        watch.functions = Request.validateTextObjects(req.body.payload.functions, 'functions');
+        watch.functions = Request.validateTextObjects(req.body.payload.functions, 'functions', {optional: true});
 
-        watch.caseMaterial = Request.validateText(req.body.payload.caseMaterial, 'caseMaterial');
-        watch.caseDiameter = Request.validateText(req.body.payload.caseDiameter, 'caseDiameter');
-        watch.caseHeight = Request.validateText(req.body.payload.caseHeight, 'caseHeight');
-        watch.caseFront = Request.validateText(req.body.payload.caseFront, 'caseFront');
-        watch.caseBack = Request.validateText(req.body.payload.caseBack, 'caseBack');
+        watch.caseMaterial = Request.validateText(req.body.payload.caseMaterial, 'caseMaterial', {optional: true});
+        watch.caseDiameter = Request.validateText(req.body.payload.caseDiameter, 'caseDiameter', {optional: true});
+        watch.caseHeight = Request.validateText(req.body.payload.caseHeight, 'caseHeight', {optional: true});
+        watch.caseFront = Request.validateText(req.body.payload.caseFront, 'caseFront', {optional: true});
+        watch.caseBack = Request.validateText(req.body.payload.caseBack, 'caseBack', {optional: true});
         watch.waterResistance = Request.validateText(req.body.payload.waterResistance, 'waterResistance', {optional: true});
         watch.caseCrown = Request.validateText(req.body.payload.caseCrown, 'caseCrown', {optional: true});
         watch.caseAdditionalFeatures = Request.validateTextObjects(req.body.payload.caseAdditionalFeatures, 'caseAdditionalFeatures', {optional: true});
 
-        watch.dialColour = Request.validateText(req.body.payload.dialColour, 'dialColour');
-        watch.dialIndex = Request.validateText(req.body.payload.dialIndex, 'dialIndex');
+        watch.dialColour = Request.validateText(req.body.payload.dialColour, 'dialColour', {optional: true});
+        watch.dialIndex = Request.validateText(req.body.payload.dialIndex, 'dialIndex', {optional: true});
         watch.dialFinish = Request.validateText(req.body.payload.dialFinish, 'dialFinish', {optional: true});
-        watch.dialHands = Request.validateText(req.body.payload.dialHands, 'dialHands');
+        watch.dialHands = Request.validateText(req.body.payload.dialHands, 'dialHands', {optional: true});
         watch.dialAdditionalFeatures = Request.validateTextObjects(req.body.payload.dialAdditionalFeatures, 'dialAdditionalFeatures', {optional: true});
 
-        watch.band = Request.validateText(req.body.payload.band, 'band');
-        watch.bandMaterial = Request.validateText(req.body.payload.bandMaterial, 'bandMaterial');
-        watch.bandClasp = Request.validateText(req.body.payload.bandClasp, 'bandClasp');
-        watch.bandColour = Request.validateText(req.body.payload.bandColour, 'bandColour');
-        watch.bandClaspMaterial = Request.validateText(req.body.payload.bandClaspMaterial, 'bandClaspMaterial');
+        watch.band = Request.validateText(req.body.payload.band, 'band', {optional: true});
+        watch.bandMaterial = Request.validateText(req.body.payload.bandMaterial, 'bandMaterial', {optional: true});
+        watch.bandClasp = Request.validateText(req.body.payload.bandClasp, 'bandClasp', {optional: true});
+        watch.bandColour = Request.validateText(req.body.payload.bandColour, 'bandColour', {optional: true});
+        watch.bandClaspMaterial = Request.validateText(req.body.payload.bandClaspMaterial, 'bandClaspMaterial', {optional: true});
         watch.bandAdditionalFeatures = Request.validateTextObjects(req.body.payload.bandAdditionalFeatures, 'bandAdditionalFeatures', {optional: true});
 
-        watch.price = Request.validateNumber(req.body.payload.price, 'price');
-        watch.priceCurrency = Request.validateText(req.body.payload.priceCurrency, 'priceCurrency');
+        watch.price = Request.validateNumber(req.body.payload.price, 'price', {optional: true});
+        watch.priceCurrency = Request.validateText(req.body.payload.priceCurrency, 'priceCurrency', {optional: true});
 
-        watch.mainPhotoUrl = Request.validateS3Url(req.body.payload.mainPhotoUrl, 'mainPhotoUrl');
+        watch.mainPhotoUrl = Request.validateS3Url(req.body.payload.mainPhotoUrl, 'mainPhotoUrl', {optional: true});
         watch.banner1PhotoUrl = Request.validateS3Url(req.body.payload.banner1PhotoUrl, 'bannerPhotoUrl1', {optional: true});
         watch.banner2PhotoUrl = Request.validateS3Url(req.body.payload.banner2PhotoUrl, 'bannerPhotoUrl2', {optional: true});
 
@@ -88,7 +89,7 @@ module.exports.create = async function (req, res, next)
 
         let savedWatch = await watch.save();
 
-        let message = 'Watch ' + savedWatch.referenceNumber + ' created successfully.';
+        let message = 'Watch with reference number: ' + savedWatch.referenceNumber + ' is created successfully.';
         return res.json(Response.payload({payload: savedWatch, en: message}));
     }
     catch (error)
