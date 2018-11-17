@@ -9,6 +9,7 @@ const WatchSchema = new Schema(
         model: {type: String, trim: true},
         referenceNumber: {type: String, trim: true, unique: true, required: true},
         gender: {type: String, trim: true},
+        productionYear: {type: String, trim: true},
         limited: {type: String, trim: true},
         awards: {type: String, trim: true},
 
@@ -34,6 +35,7 @@ const WatchSchema = new Schema(
         caseHeight: {type: String, trim: true},
         caseFront: {type: String, trim: true},
         caseBack: {type: String, trim: true},
+        caseBezelMaterial: {type: String, trim: true},
         waterResistance: {type: String, trim: true},
         caseCrown: {type: String, trim: true},
         caseAdditionalFeatures: [{value: {type: String, trim: true}}],

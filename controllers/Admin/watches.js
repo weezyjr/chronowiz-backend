@@ -10,11 +10,12 @@ module.exports.create = async function (req, res, next)
 
         let watch = new Watch();
 
-        watch.brand = Request.validateText(req.body.payload.brand, 'brand');
+        watch.brand = Request.validateText(req.body.payload.brand, 'brand', {optional: false});
         watch._collection = Request.validateText(req.body.payload._collection, '_collection', {optional: true});
         watch.model = Request.validateText(req.body.payload.model, 'model', {optional: true});
-        watch.referenceNumber = Request.validateText(req.body.payload.referenceNumber, 'referenceNumber');
+        watch.referenceNumber = Request.validateText(req.body.payload.referenceNumber, 'referenceNumber', {optional: false});
         watch.gender = Request.validateText(req.body.payload.gender, 'gender', {optional: true});
+        watch.productionYear = Request.validateText(req.body.payload.productionYear, 'productionYear', {optional: true});
         watch.limited = Request.validateText(req.body.payload.limited, 'limited', {optional: true});
         watch.awards = Request.validateText(req.body.payload.awards, 'awards', {optional: true});
 
@@ -40,6 +41,7 @@ module.exports.create = async function (req, res, next)
         watch.caseHeight = Request.validateText(req.body.payload.caseHeight, 'caseHeight', {optional: true});
         watch.caseFront = Request.validateText(req.body.payload.caseFront, 'caseFront', {optional: true});
         watch.caseBack = Request.validateText(req.body.payload.caseBack, 'caseBack', {optional: true});
+        watch.caseBezelMaterial = Request.validateText(req.body.payload.caseBezelMaterial, 'caseBezelMaterial', {optional: true});
         watch.waterResistance = Request.validateText(req.body.payload.waterResistance, 'waterResistance', {optional: true});
         watch.caseCrown = Request.validateText(req.body.payload.caseCrown, 'caseCrown', {optional: true});
         watch.caseAdditionalFeatures = Request.validateTextObjects(req.body.payload.caseAdditionalFeatures, 'caseAdditionalFeatures', {optional: true});
