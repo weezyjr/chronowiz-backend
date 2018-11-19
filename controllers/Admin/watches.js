@@ -10,10 +10,10 @@ module.exports.create = async function (req, res, next)
 
         let watch = new Watch();
 
-        watch.brand = Request.validateText(req.body.payload.brand, 'brand', {optional: false});
-        watch._collection = Request.validateText(req.body.payload._collection, '_collection', {optional: true});
+        watch.brandObject = Request.validateId(req.body.payload.brandObject, 'brandObject');
+        watch.collectionObject = Request.validateText(req.body.payload.collectionObject, 'collectionObject', {optional: true});
         watch.model = Request.validateText(req.body.payload.model, 'model', {optional: true});
-        watch.referenceNumber = Request.validateText(req.body.payload.referenceNumber, 'referenceNumber', {optional: false});
+        watch.referenceNumber = Request.validateText(req.body.payload.referenceNumber, 'referenceNumber');
         watch.gender = Request.validateText(req.body.payload.gender, 'gender', {optional: true});
         watch.productionYear = Request.validateText(req.body.payload.productionYear, 'productionYear', {optional: true});
         watch.limited = Request.validateText(req.body.payload.limited, 'limited', {optional: true});
@@ -86,8 +86,8 @@ module.exports.create = async function (req, res, next)
         watch.section5Paragraphs = Request.validateText(req.body.payload.section5Paragraphs, 'section5Paragraph', {optional: true});
         watch.section5PhotoUrls = Request.validateS3UrlObjects(req.body.payload.section5PhotoUrls, 'section5PhotoUrls', {optional: true});
 
-        watch.createdByAdmin = req.admin._id;
-        watch.lastEditedByAdmin = req.admin._id;
+        watch.createdByAdminObject = req.admin._id;
+        watch.lastEditedByAdminObject = req.admin._id;
 
         let savedWatch = await watch.save();
 
@@ -104,7 +104,7 @@ module.exports.readAll = async function (req, res, next)
 {
     try
     {
-        let watches = await Watch.find({});
+        let watches = await Watch.find({}).populate('brandObject').populate('collectionObject');
 
         return res.json(Response.payload({payload: watches}));
     }
@@ -120,7 +120,7 @@ module.exports.readById = async function (req, res, next)
     {
         Request.validateReq(req, {enforceParamsId: true});
 
-        let watch = await Watch.findById(req.params._id);
+        let watch = await Watch.findById(req.params._id).populate('brandObject').populate('collectionObject');
         if (!watch)
             return res.json(Response.error({en: 'No watch is available with this Id.'}));
 

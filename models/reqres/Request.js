@@ -47,41 +47,41 @@ module.exports.validateReq = function (req, {enforcePayload = false, enforcePara
     return req;
 };
 
-module.exports.validateId = function (_id, {optional = false} = {})
+module.exports.validateId = function (_id, fieldName, {optional = false} = {})
 {
     if (!_id && optional)
         return;
 
     if (!_id)
         throw new ValidationError({
-            args: [ErrorArgs.ID]
+            args: [fieldName]
         });
 
     if (!validator.isMongoId(_id))
         throw new ValidationError({
-            args: [ErrorArgs.ID, _id]
+            args: [fieldName, _id]
         });
 
     return _id;
 };
 
-module.exports.validateIds = function (Ids, {optional = false} = {})
+module.exports.validateIds = function (Ids, fieldName, {optional = false} = {})
 {
     if (!Ids && optional)
         return;
 
     if (!Ids)
         throw new ValidationError({
-            args: [ErrorArgs.IDS]
+            args: [fieldName]
         });
 
     if (!Array.isArray(Ids))
         throw new ValidationError({
-            args: [ErrorArgs.IDS, Ids]
+            args: [fieldName, Ids]
         });
 
     for (let _id of Ids)
-        this.validateId(_id, {optional});
+        this.validateId(_id, fieldName, {optional});
 
     return Ids;
 };
@@ -260,7 +260,7 @@ module.exports.validateS3Url = function (url, fieldName, {optional = false} = {}
 
     if (!validator.isURL(url))
         throw new ValidationError({
-            args: [ErrorArgs.S3URL, url, fieldName]
+            args: [ErrorArgs.S3URL, url, fieldName, 'is not Url']
         });
 
     if (!url.startsWith("https://s3-eu-west-1.amazonaws.com/"))

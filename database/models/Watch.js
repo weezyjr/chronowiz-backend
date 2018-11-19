@@ -4,8 +4,8 @@ require('mongoose-geojson-schema');
 
 const WatchSchema = new Schema(
     {
-        brand: {type: String, trim: true, required: true},
-        _collection: {type: String, trim: true},
+        brandObject: {type: Schema.Types.ObjectId, ref: 'Brand', required: true},
+        collectionObject: {type: Schema.Types.ObjectId, ref: 'Collection'},
         model: {type: String, trim: true},
         referenceNumber: {type: String, trim: true, unique: true, required: true},
         gender: {type: String, trim: true},
@@ -80,8 +80,8 @@ const WatchSchema = new Schema(
         section5Paragraph: {type: String, trim: true},
         section5PhotoUrls: [{value: {type: String, trim: true}}],
 
-        createdByAdmin: {type: Schema.Types.ObjectId, ref: 'Admin', required: true},
-        lastEditedByAdmin: {type: Schema.Types.ObjectId, ref: 'Admin', required: true},
+        createdByAdminObject: {type: Schema.Types.ObjectId, ref: 'Admin', required: true},
+        lastEditedByAdminObject: {type: Schema.Types.ObjectId, ref: 'Admin', required: true},
     },
     {
         timestamps: true

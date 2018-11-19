@@ -10,7 +10,7 @@ module.exports.search = async function (req, res, next)
 
         let query = Request.validateText(req.body.payload.query, 'query');
 
-        let watches = await Watch.find({'referenceNumber': query});
+        let watches = await Watch.find({'referenceNumber': query}).populate('brandObject').populate('collectionObject');
 
         // let watchesMatchBrand = await Watch.find({'referenceNumber': query});
         //
