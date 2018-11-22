@@ -7,7 +7,7 @@ const BrandSchema = new Schema(
         name: {type: String, trim: true, unique: true, required: true},
 
         logoPhotoUrl: {type: String, trim: true, required: true},
-        headerPhotoUrl: {type: String, trim: true, required: true},
+        headerPhotoUrl: {type: String, trim: true, required: false},
         banner1PhotoUrl: {type: String, trim: true, required: true},
         banner2PhotoUrl: {type: String, trim: true, required: true},
 

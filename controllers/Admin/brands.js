@@ -13,7 +13,7 @@ module.exports.create = async function (req, res, next)
         brand.name = Request.validateText(req.body.payload.name, 'name', {optional: false});
 
         brand.logoPhotoUrl = Request.validateS3Url(req.body.payload.logoPhotoUrl, 'logoPhotoUrl', {optional: false});
-        brand.headerPhotoUrl = Request.validateS3Url(req.body.payload.headerPhotoUrl, 'headerPhotoUrl', {optional: false});
+        brand.headerPhotoUrl = Request.validateS3Url(req.body.payload.headerPhotoUrl, 'headerPhotoUrl', {optional: true});
         brand.banner1PhotoUrl = Request.validateS3Url(req.body.payload.banner1PhotoUrl, 'banner1PhotoUrl', {optional: false});
         brand.banner2PhotoUrl = Request.validateS3Url(req.body.payload.banner2PhotoUrl, 'banner2PhotoUrl', {optional: false});
 
