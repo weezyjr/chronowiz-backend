@@ -18,6 +18,7 @@ module.exports.create = async function (req, res, next)
         watch.productionYear = Request.validateText(req.body.payload.productionYear, 'productionYear', {optional: true});
         watch.limited = Request.validateText(req.body.payload.limited, 'limited', {optional: true});
         watch.awards = Request.validateText(req.body.payload.awards, 'awards', {optional: true});
+        watch.perpetual = Request.validateText(req.body.payload.perpetual, 'perpetual', {optional: true});
 
         watch.movementCaliberName = Request.validateText(req.body.payload.movementCaliberName, 'movementCaliberName', {optional: true});
         watch.movementAutomaticOrManual = Request.validateText(req.body.payload.movementAutomaticOrManual, 'movementAutomaticOrManual', {optional: true});

@@ -12,6 +12,7 @@ const WatchSchema = new Schema(
         productionYear: {type: String, trim: true},
         limited: {type: String, trim: true},
         awards: {type: String, trim: true},
+        perpetual: {type: String, trim: true},
 
         movementCaliberName: {type: String, trim: true},
         movementAutomaticOrManual: {type: String, trim: true},
