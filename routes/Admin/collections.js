@@ -5,6 +5,6 @@ const collections = require('../../controllers/Admin/collections');
 
 router.post('/', passport.authenticate('jwt-admin', {session: false}), collections.create);
 
-router.get('/', passport.authenticate('jwt-admin', {session: false}), collections.readAll);
+router.get('/', collections.readAll);
 
 module.exports = router;

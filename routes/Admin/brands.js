@@ -5,6 +5,6 @@ const brands = require('../../controllers/Admin/brands');
 
 router.post('/', passport.authenticate('jwt-admin', {session: false}), brands.create);
 
-router.get('/', passport.authenticate('jwt-admin', {session: false}), brands.readAll);
+router.get('/', brands.readAll);
 
 module.exports = router;

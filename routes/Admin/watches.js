@@ -5,6 +5,6 @@ const watches = require('../../controllers/Admin/watches');
 
 router.post('/', passport.authenticate('jwt-admin', {session: false}), watches.create);
 
-router.get('/', passport.authenticate('jwt-admin', {session: false}), watches.readAll);
+router.get('/', watches.readAll);
 
 module.exports = router;
