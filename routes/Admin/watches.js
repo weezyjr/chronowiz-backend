@@ -7,4 +7,6 @@ router.post('/', passport.authenticate('jwt-admin', {session: false}), watches.c
 
 router.get('/', watches.readAll);
 
+router.get('/:_id', watches.readById);
+
 module.exports = router;

@@ -7,4 +7,6 @@ router.post('/', passport.authenticate('jwt-admin', {session: false}), brands.cr
 
 router.get('/', brands.readAll);
 
+router.get('/:_id', brands.readById);
+
 module.exports = router;

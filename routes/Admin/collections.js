@@ -7,4 +7,6 @@ router.post('/', passport.authenticate('jwt-admin', {session: false}), collectio
 
 router.get('/', collections.readAll);
 
+router.get('/:_id', collections.readById);
+
 module.exports = router;
