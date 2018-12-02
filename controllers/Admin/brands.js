@@ -35,7 +35,7 @@ module.exports.readAll = async function (req, res, next)
 {
     try
     {
-        let brands = await Brand.find({}).populate('collectionObjects');
+        let brands = await Brand.find({});
 
         return res.json(Response.payload({payload: brands}));
     }

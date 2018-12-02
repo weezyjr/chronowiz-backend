@@ -151,7 +151,7 @@ module.exports.readAll = async function (req, res, next)
 {
     try
     {
-        let watches = await Watch.find({}).populate('brandObject').populate('collectionObject');
+        let watches = await Watch.find({});
 
         return res.json(Response.payload({payload: watches}));
     }
