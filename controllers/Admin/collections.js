@@ -17,6 +17,8 @@ module.exports.create = async function (req, res, next)
         collection.lastEditedByAdminObject = req.admin._id;
 
         let brand = await Brand.findById(collection.brandObject).populate('collectionObjects');
+        if (!brand)
+            return res.json(Response.error({en: 'No brand is available with this Id.'}));
         let existingCollection = brand.collectionObjects.find(brandCollection => brandCollection.name === collection.name);
         if (existingCollection)
             return res.json(Response.error({en: 'Collection already exists in this brand.'}));
@@ -24,7 +26,7 @@ module.exports.create = async function (req, res, next)
         let savedCollection = await collection.save();
 
         brand.collectionObjects.addToSet(savedCollection);
-        let savedBrand = await brand.save();
+        await brand.save();
 
         let message = savedCollection.name + ' created successfully.';
         return res.json(Response.payload({payload: savedCollection, en: message}));
@@ -40,7 +42,7 @@ module.exports.readAll = async function (req, res, next)
 {
     try
     {
-        let collections = await Collection.find({}).populate('brandObject');
+        let collections = await Collection.find({}).populate('brandObject').populate('watchObjects');
 
         return res.json(Response.payload({payload: collections}));
     }
@@ -56,7 +58,7 @@ module.exports.readById = async function (req, res, next)
     {
         Request.validateReq(req, {enforceParamsId: true});
 
-        let collection = await Collection.findById(req.params._id).populate('brandObject');
+        let collection = await Collection.findById(req.params._id).populate('brandObject').populate('watchObjects');
         if (!collection)
             return res.json(Response.error({en: 'No collection is available with this Id.'}));
 

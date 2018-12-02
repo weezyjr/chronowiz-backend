@@ -1,5 +1,7 @@
 const Request = require('../../models/reqres/Request');
 const Response = require('../../models/reqres/Response');
+const Brand = require('../../database/models/Brand');
+const Collection = require('../../database/models/Collection');
 const Watch = require('../../database/models/Watch');
 
 module.exports.create = async function (req, res, next)
@@ -11,7 +13,6 @@ module.exports.create = async function (req, res, next)
         let watch = new Watch();
 
         watch.brandObject = Request.validateId(req.body.payload.brandObject, 'brandObject');
-        watch.collectionObject = Request.validateText(req.body.payload.collectionObject, 'collectionObject', {optional: true});
         watch.model = Request.validateText(req.body.payload.model, 'model', {optional: true});
         watch.referenceNumber = Request.validateText(req.body.payload.referenceNumber, 'referenceNumber');
         watch.gender = Request.validateText(req.body.payload.gender, 'gender', {optional: true});
@@ -87,10 +88,51 @@ module.exports.create = async function (req, res, next)
         watch.section5Paragraphs = Request.validateText(req.body.payload.section5Paragraphs, 'section5Paragraph', {optional: true});
         watch.section5PhotoUrls = Request.validateS3UrlObjects(req.body.payload.section5PhotoUrls, 'section5PhotoUrls', {optional: true});
 
+        watch.collectionObject = Request.validateId(req.body.payload.collectionObject, 'collectionObject', {optional: true});
+
+        if(!watch.collectionObject)
+        {
+            let brand = await Brand.findById(watch.brandObject).populate('collectionObjects');
+            if (!brand)
+                return res.json(Response.error({en: 'No brand is available with this Id.'}));
+
+            let existingCollection = brand.collectionObjects.find(brandCollection => brandCollection.name === 'UNDEFINED');
+            if(!existingCollection)
+            {
+                let collection = new Collection();
+
+                collection.brandObject = Request.validateId(req.body.payload.brandObject, 'brandObject', {optional: false});
+                collection.name = Request.validateText('UNDEFINED', 'name', {optional: false});
+                collection.createdByAdminObject = req.admin._id;
+                collection.lastEditedByAdminObject = req.admin._id;
+
+                let savedCollection = await collection.save();
+
+                brand = await Brand.findById(collection.brandObject).populate('collectionObjects');
+                if (!brand)
+                    return res.json(Response.error({en: 'No brand is available with this Id.'}));
+
+                brand.collectionObjects.addToSet(savedCollection);
+                await brand.save();
+
+                watch.collectionObject = savedCollection._id;
+            }
+        }
+
+        let collection = await Collection.findById(watch.collectionObject).populate('watchObjects');
+        if (!collection)
+            return res.json(Response.error({en: 'No collection is available with this Id.'}));
+        let existingWatch = collection.watchObjects.find(collectionWatch => collectionWatch.referenceNumber === watch.referenceNumber);
+        if (existingWatch)
+            return res.json(Response.error({en: 'Watch already exists in this collection.'})); // This should never happen since the reference number will have already been rejected
+
         watch.createdByAdminObject = req.admin._id;
         watch.lastEditedByAdminObject = req.admin._id;
 
         let savedWatch = await watch.save();
+
+        collection.watchObjects.addToSet(savedWatch);
+        await collection.save();
 
         let message = 'Watch with reference number: ' + savedWatch.referenceNumber + ' is created successfully.';
         return res.json(Response.payload({payload: savedWatch, en: message}));
