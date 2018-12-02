@@ -117,6 +117,10 @@ module.exports.create = async function (req, res, next)
 
                 watch.collectionObject = savedCollection._id;
             }
+            else
+            {
+                watch.collectionObject = existingCollection._id;
+            }
         }
 
         let collection = await Collection.findById(watch.collectionObject).populate('watchObjects');
