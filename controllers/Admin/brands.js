@@ -51,7 +51,14 @@ module.exports.readById = async function (req, res, next)
     {
         Request.validateReq(req, {enforceParamsId: true});
 
-        let brand = await Brand.findById(req.params._id).populate('collectionObjects');
+        let brand = await Brand.findById(req.params._id).populate(
+            {
+                path: 'collectionObjects',
+                populate:
+                    {
+                        path: 'watchObjects'
+                    }
+            });
         if (!brand)
             return res.json(Response.error({en: 'No brand is available with this Id.'}));
 
