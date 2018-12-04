@@ -1,6 +1,6 @@
-const Request = require('../../models/reqres/Request');
-const Response = require('../../models/reqres/Response');
-const Watch = require('../../database/models/Watch');
+const Request = require('../models/reqres/Request');
+const Response = require('../models/reqres/Response');
+const Watch = require('../database/models/Watch');
 
 module.exports.search = async function (req, res, next)
 {

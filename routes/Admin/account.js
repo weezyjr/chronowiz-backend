@@ -1,7 +1,7 @@
 const router = require('express').Router();
 const passport = require('passport');
 
-const account = require('../../controllers/Admin/account');
+const account = require('../../controllers/account');
 
 router.post('/signup', passport.authenticate('jwt-admin', {session: false}), account.signup);
 

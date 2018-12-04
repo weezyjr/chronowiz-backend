@@ -1,8 +1,8 @@
-const Request = require('../../models/reqres/Request');
-const Response = require('../../models/reqres/Response');
-const Brand = require('../../database/models/Brand');
-const Collection = require('../../database/models/Collection');
-const Watch = require('../../database/models/Watch');
+const Request = require('../models/reqres/Request');
+const Response = require('../models/reqres/Response');
+const Brand = require('../database/models/Brand');
+const Collection = require('../database/models/Collection');
+const Watch = require('../database/models/Watch');
 
 module.exports.create = async function (req, res, next)
 {
@@ -178,3 +178,22 @@ module.exports.readById = async function (req, res, next)
         next(error);
     }
 };
+
+module.exports.updateById = async function (req, res, next)
+{
+    try
+    {
+        Request.validateReq(req, {enforceParamsId: true});
+
+        let watch = await Watch.findById(req.params._id).populate('brandObject').populate('collectionObject');
+        if (!watch)
+            return res.json(Response.error({en: 'No watch is available with this Id.'}));
+
+        return res.json(Response.payload({payload: watch}));
+    }
+    catch (error)
+    {
+        next(error);
+    }
+};
+

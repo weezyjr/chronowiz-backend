@@ -1,12 +1,16 @@
 const router = require('express').Router({mergeParams: true});
 const passport = require('passport');
 
-const brands = require('../../controllers/Admin/brands');
+const brands = require('../../controllers/brands');
 
 router.post('/', passport.authenticate('jwt-admin', {session: false}), brands.create);
 
-router.get('/', brands.readAll);
+router.get('/', passport.authenticate('jwt-admin', {session: false}), brands.readAll);
 
-router.get('/:_id', brands.readById);
+router.get('/:_id', passport.authenticate('jwt-admin', {session: false}), brands.readById);
+
+router.put('/:_id', passport.authenticate('jwt-admin', {session: false}), brands.updateById);
+
+// router.delete('/:_id', passport.authenticate('jwt-admin', {session: false}), brands.deleteById);
 
 module.exports = router;
