@@ -123,14 +123,14 @@ module.exports.updateById = async function(req, res, next)
         }
 
         let banner1PhotoUrl = Request.validateS3Url(req.body.payload.banner1PhotoUrl, 'banner1PhotoUrl', {optional: true});
-        if(headerPhotoUrl)
+        if(banner1PhotoUrl)
         {
             brand.banner1PhotoUrl = banner1PhotoUrl;
             brand.markModified('banner1PhotoUrl');
         }
 
         let banner2PhotoUrl = Request.validateS3Url(req.body.payload.banner2PhotoUrl, 'banner2PhotoUrl', {optional: true});
-        if(headerPhotoUrl)
+        if(banner2PhotoUrl)
         {
             brand.banner2PhotoUrl = banner2PhotoUrl;
             brand.markModified('banner2PhotoUrl');
