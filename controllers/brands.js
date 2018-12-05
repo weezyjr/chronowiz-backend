@@ -149,25 +149,25 @@ module.exports.updateById = async function(req, res, next)
     }
 };
 
-// module.exports.deleteById = async function (req, res, next)
-// {
-//     try
-//     {
-//         Request.validateReq(req, {enforceParamsId: true});
-//
-//         let brand = await Brand.findById(req.params._id);
-//         if (!brand)
-//             return res.json(Response.error({en: 'No brand is available with this Id.'}));
-//
-//         await Collection.deleteMany({brandObject: brand._id});
-//
-//         await brand.remove();
-//
-//         let message = brand.name + ' deleted successfully.';
-//         return res.json(Response.payload({payload: brand, en: message}));
-//     }
-//     catch (error)
-//     {
-//         next(error);
-//     }
-// };
+module.exports.deleteById = async function (req, res, next)
+{
+    try
+    {
+        Request.validateReq(req, {enforceParamsId: true});
+
+        let brand = await Brand.findById(req.params._id);
+        if (!brand)
+            return res.json(Response.error({en: 'No brand is available with this Id.'}));
+
+        await Collection.deleteMany({brandObject: brand._id});
+
+        await brand.remove();
+
+        let message = brand.name + ' deleted successfully.';
+        return res.json(Response.payload({payload: brand, en: message}));
+    }
+    catch (error)
+    {
+        next(error);
+    }
+};

@@ -82,11 +82,11 @@ module.exports.updateById = async function(req, res, next)
         let brandObject = Request.validateId(req.body.payload.brandObject, 'brandObject', {optional: true});
         if(brandObject && (brandObject !== collection.brandObject._id))
         {
-            let oldBrand = await Brand.findById(collection.brandObject);
+            let oldBrand = await Brand.findById(collection.brandObject._id);
             if(!oldBrand)
                 return res.json(Response.error({en: 'No brand is available with the existing Brand Id.'}));
 
-            oldBrand.collectionObjects.pull({_id: brandCollection._id});
+            oldBrand.collectionObjects.pull({_id: collection._id});
             await oldBrand.save();
 
             let brand = await Brand.findById(brandObject).populate('collectionObjects');
