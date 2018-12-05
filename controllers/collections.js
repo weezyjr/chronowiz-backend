@@ -79,8 +79,12 @@ module.exports.updateById = async function(req, res, next)
         if(!collection)
             return res.json(Response.error({en: 'No collection is available with this Id.'}));
 
+        if(collection.isUndefined === true)
+            return res.json(Response.error({en: 'Cannot edit the UNDEFINED Collection.'}));
+
         let brandObject = Request.validateId(req.body.payload.brandObject, 'brandObject', {optional: true});
-        if(brandObject && (brandObject !== collection.brandObject._id))
+
+        if(brandObject && (brandObject.toString() !== collection.brandObject._id.toString()))
         {
             let oldBrand = await Brand.findById(collection.brandObject._id);
             if(!oldBrand)
@@ -89,15 +93,17 @@ module.exports.updateById = async function(req, res, next)
             oldBrand.collectionObjects.pull({_id: collection._id});
             await oldBrand.save();
 
-            let brand = await Brand.findById(brandObject).populate('collectionObjects');
+            let brand = await Brand.findById(brandObject).populate('collectionObjects'); //TODO FIX BUG HERE brand.collectionObjects is always empty even when there is a real value
             if(!brand)
                 return res.json(Response.error({en: 'No brand is available with the new Brand Id.'}));
+
             let existingCollection = brand.collectionObjects.find(brandCollection => brandCollection.name === collection.name);
             if(existingCollection)
                 return res.json(Response.error({en: 'Collection already exists in the new brand.'}));
 
             brand.collectionObjects.addToSet(collection);
             await brand.save();
+            console.log(brand.collectionObjects);
 
             collection.brandObject = brandObject;
             collection.markModified('brandObject');
@@ -123,26 +129,34 @@ module.exports.updateById = async function(req, res, next)
     }
 };
 
-// module.exports.deleteById = async function (req, res, next)
-// {
-//     try
-//     {
-//         Request.validateReq(req, {enforceParamsId: true});
-//
-//         let brand = await Brand.findById(req.params._id);
-//         if (!brand)
-//             return res.json(Response.error({en: 'No brand is available with this Id.'}));
-//
-//         await Collection.deleteMany({brandObject: brand._id});
-//
-//         await brand.remove();
-//
-//         let message = brand.name + ' deleted successfully.';
-//         return res.json(Response.payload({payload: brand, en: message}));
-//     }
-//     catch (error)
-//     {
-//         next(error);
-//     }
-// };
-//
+module.exports.deleteById = async function (req, res, next)
+{
+    try
+    {
+        Request.validateReq(req, {enforceParamsId: true});
+
+        let collection = await Collection.findById(req.params._id);
+        if (!collection)
+            return res.json(Response.error({en: 'No collection is available with this Id.'}));
+
+        if(collection.isUndefined === true)
+            return res.json(Response.error({en: 'Cannot delete the UNDEFINED Collection.'}));
+
+        let brand = await Brand.findById(collection.brandObject._id);
+        if(!brand)
+            return res.json(Response.error({en: 'No brand is available with this collection\'s brand Id.'}));
+
+        brand.collectionObjects.pull({_id: collection._id});
+        await brand.save();
+
+        await collection.remove();
+
+        let message = collection.name + ' deleted successfully.';
+        return res.json(Response.payload({payload: collection, en: message}));
+    }
+    catch (error)
+    {
+        next(error);
+    }
+};
+

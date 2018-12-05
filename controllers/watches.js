@@ -90,20 +90,20 @@ module.exports.create = async function(req, res, next)
         watch.section5PhotoUrls = Request.validateS3UrlObjects(req.body.payload.section5PhotoUrls, 'section5PhotoUrls', {optional: true});
 
         watch.collectionObject = Request.validateId(req.body.payload.collectionObject, 'collectionObject', {optional: true});
-
         if(!watch.collectionObject)
         {
             let brand = await Brand.findById(watch.brandObject).populate('collectionObjects');
             if(!brand)
                 return res.json(Response.error({en: 'No brand is available with this Id.'}));
 
-            let existingCollection = brand.collectionObjects.find(brandCollection => brandCollection.name === 'UNDEFINED');
+            let existingCollection = brand.collectionObjects.find(brandCollection => brandCollection.isUndefined === true);
             if(!existingCollection)
             {
                 let collection = new Collection();
 
                 collection.brandObject = Request.validateId(req.body.payload.brandObject, 'brandObject', {optional: false});
                 collection.name = Request.validateText('UNDEFINED', 'name', {optional: false});
+                collection.isUndefined = true;
                 collection.createdByAdminObject = req.admin._id;
                 collection.lastEditedByAdminObject = req.admin._id;
 
@@ -201,9 +201,48 @@ module.exports.updateById = async function(req, res, next)
         if(!watch)
             return res.json(Response.error({en: 'No watch is available with this Id.'}));
 
+        let brandObject = Request.validateId(req.body.payload.brandObject, 'brandObject', {optional: true});
+        let collectionObject = Request.validateId(req.body.payload.collectionObject, 'collectionObject', {optional: true});
+
+        if(brandObject && (brandObject.toString() !== watch.brandObject._id.toString()))
+        {
+
+        }
+
         return res.json(Response.payload({payload: watch}));
     }
     catch(error)
+    {
+        next(error);
+    }
+};
+
+module.exports.deleteById = async function (req, res, next)
+{
+    try
+    {
+        Request.validateReq(req, {enforceParamsId: true});
+
+        let watch = await Watch.findById(req.params._id).populate('brandObject').populate('collectionObject');
+        if (!watch)
+            return res.json(Response.error({en: 'No watch is available with this Id.'}));
+
+        if(watch.collectionObject)
+        {
+            let collection = await Collection.findById(watch.collectionObject._id);
+            if(!collection)
+                return res.json(Response.error({en: 'No collection is available with the watch\'s collection Id.'}));
+
+            collection.watchObjects.pull({_id: watch._id});
+            await collection.save();
+        }
+
+        await watch.remove();
+
+        let message = watch.referenceNumber + ' deleted successfully.';
+        return res.json(Response.payload({payload: watch, en: message}));
+    }
+    catch (error)
     {
         next(error);
     }

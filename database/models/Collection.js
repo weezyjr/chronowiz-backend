@@ -7,6 +7,7 @@ const CollectionSchema = new Schema(
         brandObject: {type: Schema.Types.ObjectId, ref: 'Brand', required: true},
 
         name: {type: String, trim: true, required: true},
+        isUndefined: {type: Boolean, default: false},
 
         watchObjects: [{type: Schema.Types.ObjectId, ref: 'Watch', required: false}],
 

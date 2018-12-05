@@ -11,6 +11,6 @@ router.get('/:_id', passport.authenticate('jwt-admin', {session: false}), collec
 
 router.put('/:_id', passport.authenticate('jwt-admin', {session: false}), collections.updateById);
 
-// router.delete('/:_id', passport.authenticate('jwt-admin', {session: false}), collections.deleteById);
+router.delete('/:_id', passport.authenticate('jwt-admin', {session: false}), collections.deleteById);
 
 module.exports = router;

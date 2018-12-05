@@ -11,6 +11,6 @@ router.get('/:_id', passport.authenticate('jwt-admin', {session: false}), watche
 
 router.put('/:_id', passport.authenticate('jwt-admin', {session: false}), watches.updateById);
 
-// router.delete('/:_id', passport.authenticate('jwt-admin', {session: false}), watches.deleteById);
+router.delete('/:_id', passport.authenticate('jwt-admin', {session: false}), watches.deleteById);
 
 module.exports = router;
