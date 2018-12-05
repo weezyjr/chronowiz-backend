@@ -2,8 +2,9 @@ const Request = require('../models/reqres/Request');
 const Response = require('../models/reqres/Response');
 const Brand = require('../database/models/Brand');
 const Collection = require('../database/models/Collection');
+const validator = require('validator');
 
-module.exports.create = async function (req, res, next)
+module.exports.create = async function(req, res, next)
 {
     try
     {
@@ -26,13 +27,13 @@ module.exports.create = async function (req, res, next)
         let message = savedBrand.name + ' created successfully.';
         return res.json(Response.payload({payload: savedBrand, en: message}));
     }
-    catch (error)
+    catch(error)
     {
         next(error);
     }
 };
 
-module.exports.readAll = async function (req, res, next)
+module.exports.readAll = async function(req, res, next)
 {
     try
     {
@@ -40,45 +41,64 @@ module.exports.readAll = async function (req, res, next)
 
         return res.json(Response.payload({payload: brands}));
     }
-    catch (error)
+    catch(error)
     {
         next(error);
     }
 };
 
-module.exports.readById = async function (req, res, next)
+module.exports.readByIdOrName = async function(req, res, next)
 {
     try
     {
-        Request.validateReq(req, {enforceParamsId: true});
+        Request.validateReq(req, {enforceParams: true});
 
-        let brand = await Brand.findById(req.params._id).populate(
-            {
-                path: 'collectionObjects',
-                populate:
-                    {
-                        path: 'watchObjects'
-                    }
-            });
-        if (!brand)
-            return res.json(Response.error({en: 'No brand is available with this Id.'}));
+        if(validator.isMongoId(req.params._id))
+        {
+            let brand = await Brand.findById(req.params._id).populate(
+                {
+                    path: 'collectionObjects',
+                    populate:
+                        {
+                            path: 'watchObjects'
+                        }
+                });
 
-        return res.json(Response.payload({payload: brand}));
+            if(!brand)
+                return res.json(Response.error({en: 'No brand is available with this Id.'}));
+
+            return res.json(Response.payload({payload: brand}));
+        }
+        else
+        {
+            let brand = await Brand.findOne({name: req.params._id}).populate(
+                {
+                    path: 'collectionObjects',
+                    populate:
+                        {
+                            path: 'watchObjects'
+                        }
+                });
+            if(!brand)
+                return res.json(Response.error({en: 'No brand is available with this Name.'}));
+
+            return res.json(Response.payload({payload: brand}));
+        }
     }
-    catch (error)
+    catch(error)
     {
         next(error);
     }
 };
 
-module.exports.updateById = async function (req, res, next)
+module.exports.updateById = async function(req, res, next)
 {
     try
     {
         Request.validateReq(req, {enforceParamsId: true, enforcePayload: true});
 
         let brand = await Brand.findById(req.params._id);
-        if (!brand)
+        if(!brand)
             return res.json(Response.error({en: 'No brand is available with this Id.'}));
 
         let name = Request.validateText(req.body.payload.name, 'name', {optional: true});
@@ -123,7 +143,7 @@ module.exports.updateById = async function (req, res, next)
         let message = savedBrand.name + ' updated successfully.';
         return res.json(Response.payload({payload: savedBrand, en: message}));
     }
-    catch (error)
+    catch(error)
     {
         next(error);
     }

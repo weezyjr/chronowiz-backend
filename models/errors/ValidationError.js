@@ -1,7 +1,9 @@
 const ErrorType = require('./ErrorType');
 
-class ValidationError extends Error {
-    constructor({args = undefined} = {}) {
+class ValidationError extends Error
+{
+    constructor({args = undefined} = {})
+    {
         super();
         this.args = args;
         this.errorType = ErrorType.INVALID;

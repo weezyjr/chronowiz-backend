@@ -3,7 +3,7 @@ const Response = require('../models/reqres/Response');
 const Collection = require('../database/models/Collection');
 const Brand = require('../database/models/Brand');
 
-module.exports.create = async function (req, res, next)
+module.exports.create = async function(req, res, next)
 {
     try
     {
@@ -17,10 +17,10 @@ module.exports.create = async function (req, res, next)
         collection.lastEditedByAdminObject = req.admin._id;
 
         let brand = await Brand.findById(collection.brandObject).populate('collectionObjects');
-        if (!brand)
+        if(!brand)
             return res.json(Response.error({en: 'No brand is available with this Id.'}));
         let existingCollection = brand.collectionObjects.find(brandCollection => brandCollection.name === collection.name);
-        if (existingCollection)
+        if(existingCollection)
             return res.json(Response.error({en: 'Collection already exists in this brand.'}));
 
         let savedCollection = await collection.save();
@@ -31,13 +31,13 @@ module.exports.create = async function (req, res, next)
         let message = savedCollection.name + ' created successfully.';
         return res.json(Response.payload({payload: savedCollection, en: message}));
     }
-    catch (error)
+    catch(error)
     {
         next(error);
     }
 };
 
-module.exports.readAll = async function (req, res, next)
+module.exports.readAll = async function(req, res, next)
 {
     try
     {
@@ -45,67 +45,79 @@ module.exports.readAll = async function (req, res, next)
 
         return res.json(Response.payload({payload: collections}));
     }
-    catch (error)
+    catch(error)
     {
         next(error);
     }
 };
 
-module.exports.readById = async function (req, res, next)
+module.exports.readById = async function(req, res, next)
 {
     try
     {
         Request.validateReq(req, {enforceParamsId: true});
 
         let collection = await Collection.findById(req.params._id).populate('brandObject').populate('watchObjects');
-        if (!collection)
+        if(!collection)
             return res.json(Response.error({en: 'No collection is available with this Id.'}));
 
         return res.json(Response.payload({payload: collection}));
     }
-    catch (error)
+    catch(error)
     {
         next(error);
     }
 };
 
-module.exports.updateById = async function (req, res, next)
+module.exports.updateById = async function(req, res, next)
 {
     try
     {
         Request.validateReq(req, {enforceParamsId: true, enforcePayload: true});
 
         let collection = await Collection.findById(req.params._id);
-        if (!collection)
+        if(!collection)
             return res.json(Response.error({en: 'No collection is available with this Id.'}));
 
         let brandObject = Request.validateId(req.body.payload.brandObject, 'brandObject', {optional: true});
-        if(brandObject)
+        if(brandObject && (brandObject !== collection.brandObject._id))
         {
+            let oldBrand = await Brand.findById(collection.brandObject);
+            if(!oldBrand)
+                return res.json(Response.error({en: 'No brand is available with the existing Brand Id.'}));
+
+            oldBrand.collectionObjects.pull({_id: brandCollection._id});
+            await oldBrand.save();
+
+            let brand = await Brand.findById(brandObject).populate('collectionObjects');
+            if(!brand)
+                return res.json(Response.error({en: 'No brand is available with the new Brand Id.'}));
+            let existingCollection = brand.collectionObjects.find(brandCollection => brandCollection.name === collection.name);
+            if(existingCollection)
+                return res.json(Response.error({en: 'Collection already exists in the new brand.'}));
+
+            brand.collectionObjects.addToSet(collection);
+            await brand.save();
 
             collection.brandObject = brandObject;
+            collection.markModified('brandObject');
         }
 
-        collection.name = Request.validateText(req.body.payload.name, 'name', {optional: true});
-
-
-        collection.lastEditedByAdminObject = req.admin._id;
-
-        let brand = await Brand.findById(collection.brandObject).populate('collectionObjects');
-        if (!brand)
-            return res.json(Response.error({en: 'No brand is available with this Id.'}));
-        let existingCollection = brand.collectionObjects.find(brandCollection => brandCollection.name === collection.name);
-        if (existingCollection)
-            return res.json(Response.error({en: 'Collection already exists in this brand.'}));
+        let name = Request.validateText(req.body.payload.name, 'name', {optional: true});
+        if(name)
+        {
+            collection.name = name;
+            collection.markModified('name');
+        }
 
         collection.lastEditedByAdminObject = req.admin._id;
 
-        let savedBrand = await brand.save();
+        let savedCollection = await collection.save();
 
-        let message = savedBrand.name + ' updated successfully.';
-        return res.json(Response.payload({payload: savedBrand, en: message}));
+        let message = savedCollection.name + ' updated successfully.';
+        return res.json(Response.payload({payload: savedCollection, en: message}));
     }
-    catch (error)
+    catch(error)
     {
         next(error);
     }

@@ -1,7 +1,7 @@
 const report = require('../../tools/report');
 const ErrorType = require('../errors/ErrorType');
 
-module.exports.payload = function ({payload = undefined, en = undefined, debug = undefined, actionType = undefined} = {})
+module.exports.payload = function({payload = undefined, en = undefined, debug = undefined, actionType = undefined} = {})
 {
     return {
         response:
@@ -18,13 +18,13 @@ module.exports.payload = function ({payload = undefined, en = undefined, debug =
     };
 };
 
-module.exports.error = function ({error = undefined, en = undefined, debug = undefined, errorType = undefined, payload = undefined, actionType = undefined, request = undefined} = {})
+module.exports.error = function({error = undefined, en = undefined, debug = undefined, errorType = undefined, payload = undefined, actionType = undefined, request = undefined} = {})
 {
-    if (error && error.errorType)
+    if(error && error.errorType)
     {
         errorType = error.errorType;
     }
-    else if (error && error.code === 11000)
+    else if(error && error.code === 11000)
     {
         errorType = ErrorType.DUPLICATE; // TODO present the error in a much better way and hide the object
 

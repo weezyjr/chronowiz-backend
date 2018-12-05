@@ -1,7 +1,9 @@
 const ErrorType = require('./ErrorType');
 
-class UnverifiedError extends Error {
-    constructor({args = undefined} = {}) {
+class UnverifiedError extends Error
+{
+    constructor({args = undefined} = {})
+    {
         super();
         this.args = args;
         this.errorType = ErrorType.UNVERIFIED;

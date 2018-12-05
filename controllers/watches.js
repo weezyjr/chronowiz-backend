@@ -3,8 +3,9 @@ const Response = require('../models/reqres/Response');
 const Brand = require('../database/models/Brand');
 const Collection = require('../database/models/Collection');
 const Watch = require('../database/models/Watch');
+const validator = require('validator');
 
-module.exports.create = async function (req, res, next)
+module.exports.create = async function(req, res, next)
 {
     try
     {
@@ -93,7 +94,7 @@ module.exports.create = async function (req, res, next)
         if(!watch.collectionObject)
         {
             let brand = await Brand.findById(watch.brandObject).populate('collectionObjects');
-            if (!brand)
+            if(!brand)
                 return res.json(Response.error({en: 'No brand is available with this Id.'}));
 
             let existingCollection = brand.collectionObjects.find(brandCollection => brandCollection.name === 'UNDEFINED');
@@ -109,7 +110,7 @@ module.exports.create = async function (req, res, next)
                 let savedCollection = await collection.save();
 
                 brand = await Brand.findById(collection.brandObject).populate('collectionObjects');
-                if (!brand)
+                if(!brand)
                     return res.json(Response.error({en: 'No brand is available with this Id.'}));
 
                 brand.collectionObjects.addToSet(savedCollection);
@@ -124,10 +125,10 @@ module.exports.create = async function (req, res, next)
         }
 
         let collection = await Collection.findById(watch.collectionObject).populate('watchObjects');
-        if (!collection)
+        if(!collection)
             return res.json(Response.error({en: 'No collection is available with this Id.'}));
         let existingWatch = collection.watchObjects.find(collectionWatch => collectionWatch.referenceNumber === watch.referenceNumber);
-        if (existingWatch)
+        if(existingWatch)
             return res.json(Response.error({en: 'Watch already exists in this collection.'})); // This should never happen since the reference number will have already been rejected
 
         watch.createdByAdminObject = req.admin._id;
@@ -141,13 +142,13 @@ module.exports.create = async function (req, res, next)
         let message = 'Watch with reference number: ' + savedWatch.referenceNumber + ' is created successfully.';
         return res.json(Response.payload({payload: savedWatch, en: message}));
     }
-    catch (error)
+    catch(error)
     {
         next(error);
     }
 };
 
-module.exports.readAll = async function (req, res, next)
+module.exports.readAll = async function(req, res, next)
 {
     try
     {
@@ -155,43 +156,54 @@ module.exports.readAll = async function (req, res, next)
 
         return res.json(Response.payload({payload: watches}));
     }
-    catch (error)
+    catch(error)
     {
         next(error);
     }
 };
 
-module.exports.readById = async function (req, res, next)
+module.exports.readByIdOrReference = async function(req, res, next)
+{
+    try
+    {
+        Request.validateReq(req, {enforceParams: true});
+
+        if(validator.isMongoId(req.params._id))
+        {
+            let watch = await Watch.findById(req.params._id).populate('brandObject').populate('collectionObject');
+            if(!watch)
+                return res.json(Response.error({en: 'No watch is available with this Id.'}));
+
+            return res.json(Response.payload({payload: watch}));
+        }
+        else
+        {
+            let watch = await Watch.findOne({referenceNumber: req.params._id}).populate('brandObject').populate('collectionObject');
+            if(!watch)
+                return res.json(Response.error({en: 'No watch is available with this Reference Number.'}));
+
+            return res.json(Response.payload({payload: watch}));
+        }
+    }
+    catch(error)
+    {
+        next(error);
+    }
+};
+
+module.exports.updateById = async function(req, res, next)
 {
     try
     {
         Request.validateReq(req, {enforceParamsId: true});
 
         let watch = await Watch.findById(req.params._id).populate('brandObject').populate('collectionObject');
-        if (!watch)
+        if(!watch)
             return res.json(Response.error({en: 'No watch is available with this Id.'}));
 
         return res.json(Response.payload({payload: watch}));
     }
-    catch (error)
-    {
-        next(error);
-    }
-};
-
-module.exports.updateById = async function (req, res, next)
-{
-    try
-    {
-        Request.validateReq(req, {enforceParamsId: true});
-
-        let watch = await Watch.findById(req.params._id).populate('brandObject').populate('collectionObject');
-        if (!watch)
-            return res.json(Response.error({en: 'No watch is available with this Id.'}));
-
-        return res.json(Response.payload({payload: watch}));
-    }
-    catch (error)
+    catch(error)
     {
         next(error);
     }

@@ -7,7 +7,7 @@ router.post('/', passport.authenticate('jwt-admin', {session: false}), watches.c
 
 router.get('/', passport.authenticate('jwt-admin', {session: false}), watches.readAll);
 
-router.get('/:_id', passport.authenticate('jwt-admin', {session: false}), watches.readById);
+router.get('/:_id', passport.authenticate('jwt-admin', {session: false}), watches.readByIdOrReference);
 
 router.put('/:_id', passport.authenticate('jwt-admin', {session: false}), watches.updateById);
 

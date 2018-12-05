@@ -29,9 +29,9 @@ const AdminSchema = new mongoose.Schema(
         timestamps: true
     });
 
-AdminSchema.pre('save', async function (next)
+AdminSchema.pre('save', async function(next)
 {
-    if (!this.isModified('password')) return next();
+    if(!this.isModified('password')) return next();
 
     try
     {
@@ -39,26 +39,26 @@ AdminSchema.pre('save', async function (next)
         this.password = await bcrypt.hash(this.password, salt);
         next();
     }
-    catch (error)
+    catch(error)
     {
         next(error);
     }
 });
 
-AdminSchema.methods.comparePassword = async function (password)
+AdminSchema.methods.comparePassword = async function(password)
 {
     try
     {
         return await bcrypt.compare(password, this.password);
     }
-    catch (error)
+    catch(error)
     {
         report.error({error});
         throw error;
     }
 };
 
-AdminSchema.methods.generateJWT = function (JWT_SECRET)
+AdminSchema.methods.generateJWT = function(JWT_SECRET)
 {
     let payload =
         {
@@ -66,11 +66,11 @@ AdminSchema.methods.generateJWT = function (JWT_SECRET)
             role: this.role
         };
 
-    return new Promise(function (resolve, reject)
+    return new Promise(function(resolve, reject)
     {
-        jsonwebtoken.sign(payload, JWT_SECRET, {expiresIn: '1y'}, function (error, token)
+        jsonwebtoken.sign(payload, JWT_SECRET, {expiresIn: '1y'}, function(error, token)
         {
-            if (error || !token)
+            if(error || !token)
                 return reject(error);
 
             return resolve(token);
@@ -78,7 +78,7 @@ AdminSchema.methods.generateJWT = function (JWT_SECRET)
     });
 };
 
-AdminSchema.methods.toJSON = function ()
+AdminSchema.methods.toJSON = function()
 {
     return {
         _id: this._id,

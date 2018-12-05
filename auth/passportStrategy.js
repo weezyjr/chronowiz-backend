@@ -5,7 +5,7 @@ const Admin = require('../database/models/Admin');
 const report = require('../tools/report.js');
 const ErrorType = require('../models/errors/ErrorType');
 
-module.exports.setupPassport = function (passport, JWT_SECRET)
+module.exports.setupPassport = function(passport, JWT_SECRET)
 {
     let opts = {};
 
@@ -17,18 +17,18 @@ module.exports.setupPassport = function (passport, JWT_SECRET)
     // opts.audience = 'yoursite.net';
 
     // The below is the authentication strategy called every time passport.authenticate('jwt-admin') is used
-    passport.use('jwt-admin', new JwtStrategy(opts, async function (jwt_payload, done)
+    passport.use('jwt-admin', new JwtStrategy(opts, async function(jwt_payload, done)
     {
         try
         {
             let admin = await Admin.findById(jwt_payload._id);
 
-            if (!admin)
+            if(!admin)
                 return done({en: 'This Admin is not registered', errorType: ErrorType.UNAUTHORIZED});
 
             return done(null, admin);
         }
-        catch (error)
+        catch(error)
         {
             report.error({error});
 

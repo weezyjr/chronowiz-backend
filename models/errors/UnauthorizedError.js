@@ -1,7 +1,9 @@
 const ErrorType = require('./ErrorType');
 
-class UnauthorizedError extends Error {
-    constructor({args = undefined} = {}) {
+class UnauthorizedError extends Error
+{
+    constructor({args = undefined} = {})
+    {
         super();
         this.args = args;
         this.errorType = ErrorType.UNAUTHORIZED;

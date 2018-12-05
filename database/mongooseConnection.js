@@ -7,9 +7,9 @@ const Collection = require('../database/models/Collection');
 
 let mongooseConnection = null;
 
-module.exports.connect = async function (MONGODB_URL, CHRONOWIZ_ENV)
+module.exports.connect = async function(MONGODB_URL, CHRONOWIZ_ENV)
 {
-    if (mongooseConnection)
+    if(mongooseConnection)
         return mongooseConnection;
     else
     {
@@ -33,20 +33,20 @@ module.exports.connect = async function (MONGODB_URL, CHRONOWIZ_ENV)
 
             return mongooseConnection;
         }
-        catch (error)
+        catch(error)
         {
             throw error;
         }
     }
 };
 
-module.exports.disconnect = async function (MONGODB_URL, CHRONOWIZ_ENV)
+module.exports.disconnect = async function(MONGODB_URL, CHRONOWIZ_ENV)
 {
     try
     {
         await mongoose.disconnect();
     }
-    catch (error)
+    catch(error)
     {
         throw error;
     }

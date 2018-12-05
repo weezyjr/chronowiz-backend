@@ -2,7 +2,7 @@ const Request = require('../models/reqres/Request');
 const Response = require('../models/reqres/Response');
 const Watch = require('../database/models/Watch');
 
-module.exports.search = async function (req, res, next)
+module.exports.search = async function(req, res, next)
 {
     try
     {
@@ -20,7 +20,7 @@ module.exports.search = async function (req, res, next)
 
         return res.json(Response.payload({payload: watches}));
     }
-    catch (error)
+    catch(error)
     {
         next(error);
     }

@@ -1,11 +1,11 @@
-module.exports.getRandomInt = function (min, max)
+module.exports.getRandomInt = function(min, max)
 {
     min = Math.ceil(min);
     max = Math.floor(max);
     return Math.floor(Math.random() * (max - min)) + min; //The maximum is exclusive and the minimum is inclusive
 };
 
-module.exports.getRandomPassword = function ()
+module.exports.getRandomPassword = function()
 {
     let numberChars = "0123456789";
     let upperChars = "ABCDEFGHIJKLMNOPQRSTUVWXYZ";
@@ -23,7 +23,7 @@ module.exports.getRandomPassword = function ()
 
     randPasswordArray = randPasswordArray.fill(allChars, 4);
 
-    return shuffleArray(randPasswordArray.map(function (x)
+    return shuffleArray(randPasswordArray.map(function(x)
     {
         return x[Math.floor(Math.random() * x.length)]
     })).join('');
@@ -31,7 +31,7 @@ module.exports.getRandomPassword = function ()
 
 function shuffleArray(array)
 {
-    for (let i = array.length - 1; i > 0; i--)
+    for(let i = array.length - 1; i > 0; i--)
     {
         let j = Math.floor(Math.random() * (i + 1));
         let temp = array[i];

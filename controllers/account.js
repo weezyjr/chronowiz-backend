@@ -3,7 +3,7 @@ const Response = require('../models/reqres/Response');
 const random = require('../tools/random');
 const Admin = require('../database/models/Admin');
 
-module.exports.signup = async function (req, res, next)
+module.exports.signup = async function(req, res, next)
 {
     try
     {
@@ -34,13 +34,13 @@ module.exports.signup = async function (req, res, next)
 
         return res.json(Response.payload({payload: savedAdmin, en: 'Thank you for signing up with ChronoWiz.'}));
     }
-    catch (error)
+    catch(error)
     {
         next(error);
     }
 };
 
-module.exports.login = async function (req, res, next)
+module.exports.login = async function(req, res, next)
 {
     try
     {
@@ -50,13 +50,13 @@ module.exports.login = async function (req, res, next)
         let email = Request.validateEmail(req.body.payload.email);
 
         let admin = await Admin.findOne({email});
-        if (!admin)
+        if(!admin)
             return res.json(Response.error({en: 'This email is not registered, hence cannot login.', request: req}));
 
         //Password
         let password = req.body.payload.password;
         let isPasswordCorrect = await admin.comparePassword(password);
-        if (!isPasswordCorrect)
+        if(!isPasswordCorrect)
             return res.json(Response.error({en: 'Password does not match registered admin', request: req}));
 
         let jwt = await admin.generateJWT(process.env.JWT_SECRET);
@@ -65,7 +65,7 @@ module.exports.login = async function (req, res, next)
 
         return res.json(Response.payload({payload: admin}));
     }
-    catch (error)
+    catch(error)
     {
         next(error);
     }

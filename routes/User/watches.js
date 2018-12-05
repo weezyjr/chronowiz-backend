@@ -4,6 +4,6 @@ const watches = require('../../controllers/watches');
 
 router.get('/', watches.readAll);
 
-router.get('/:_id', watches.readById);
+router.get('/:_id', watches.readByIdOrReference);
 
 module.exports = router;
