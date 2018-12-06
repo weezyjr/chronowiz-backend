@@ -102,7 +102,7 @@ module.exports.create = async function(req, res, next)
             {
                 let collection = new Collection();
 
-                collection.brandObject = Request.validateId(watch.brandObject, 'brandObject', {optional: false});
+                collection.brandObject = Request.validateId(watch.brandObject._id, 'brandObject', {optional: false});
                 collection.name = Request.validateText('UNDEFINED', 'name', {optional: false});
                 collection.isUndefined = true;
                 collection.createdByAdminObject = req.admin._id;
@@ -293,12 +293,10 @@ module.exports.updateById = async function(req, res, next)
 
             collection.watchObjects.addToSet(savedWatch);
             await collection.save();
-
-            let message = savedWatch.referenceNumber + ' updated successfully.';
-            return res.json(Response.payload({payload: savedWatch, en: message}));
         }
 
-        return res.json(Response.payload({payload: watch}));
+        let message = watch.referenceNumber + ' updated successfully.';
+        return res.json(Response.payload({payload: watch, en: message}));
     }
     catch(error)
     {
