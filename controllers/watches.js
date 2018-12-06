@@ -202,11 +202,60 @@ module.exports.updateById = async function(req, res, next)
             return res.json(Response.error({en: 'No watch is available with this Id.'}));
 
         let brandObject = Request.validateId(req.body.payload.brandObject, 'brandObject', {optional: true});
-        let collectionObject = Request.validateId(req.body.payload.collectionObject, 'collectionObject', {optional: true});
-
         if(brandObject && (brandObject.toString() !== watch.brandObject._id.toString()))
         {
+            watch.brandObject = brandObject;
+            watch.markModified('brandObject');
+        }
 
+        let collectionObject = Request.validateId(req.body.payload.collectionObject, 'collectionObject', {optional: true});
+        if(collectionObject && (collectionObject.toString() !== watch.collectionObject._id.toString()))
+        {
+            //tODO remove from old collection
+
+            if(!watch.collectionObject)
+            {
+                let brand = await Brand.findById(watch.brandObject).populate('collectionObjects');
+                if(!brand)
+                    return res.json(Response.error({en: 'No brand is available with this Id.'}));
+
+                let existingCollection = brand.collectionObjects.find(brandCollection => brandCollection.isUndefined === true);
+                if(!existingCollection)
+                {
+                    let collection = new Collection();
+
+                    collection.brandObject = Request.validateId(req.body.payload.brandObject, 'brandObject', {optional: false});
+                    collection.name = Request.validateText('UNDEFINED', 'name', {optional: false});
+                    collection.isUndefined = true;
+                    collection.createdByAdminObject = req.admin._id;
+                    collection.lastEditedByAdminObject = req.admin._id;
+
+                    let savedCollection = await collection.save();
+
+                    brand = await Brand.findById(collection.brandObject).populate('collectionObjects');
+                    if(!brand)
+                        return res.json(Response.error({en: 'No brand is available with this Id.'}));
+
+                    brand.collectionObjects.addToSet(savedCollection);
+                    await brand.save();
+
+                    watch.collectionObject = savedCollection._id;
+                }
+                else
+                {
+                    watch.collectionObject = existingCollection._id;
+                }
+            }
+
+            let collection = await Collection.findById(watch.collectionObject).populate('watchObjects');
+            if(!collection)
+                return res.json(Response.error({en: 'No collection is available with this Id.'}));
+            let existingWatch = collection.watchObjects.find(collectionWatch => collectionWatch.referenceNumber === watch.referenceNumber);
+            if(existingWatch)
+                return res.json(Response.error({en: 'Watch already exists in this collection.'})); // This should never happen since the reference number will have already been rejected
+
+            watch.collectionObject = collectionObject;
+            watch.markModified('collectionObject');
         }
 
         return res.json(Response.payload({payload: watch}));
