@@ -18,7 +18,7 @@ module.exports.create = async function(req, res, next)
 
         let brand = await Brand.findById(collection.brandObject).populate('collectionObjects');
         if(!brand)
-            return res.json(Response.error({en: 'No brand is available with this Id.'}));
+            return res.json(Response.error({en: 'No brand is available with this collection\'s brand Id.'}));
         let existingCollection = brand.collectionObjects.find(brandCollection => brandCollection.name === collection.name);
         if(existingCollection)
             return res.json(Response.error({en: 'Collection already exists in this brand.'}));
