@@ -192,7 +192,7 @@ module.exports.updateById = async function(req, res, next)
 {
     try
     {
-        Request.validateReq(req, {enforceParamsId: true});
+        Request.validateReq(req, {enforceParamsId: true, enforcePayload: true});
 
         let watch = await Watch.findById(req.params._id).populate('brandObject').populate('collectionObject');
         if(!watch)
