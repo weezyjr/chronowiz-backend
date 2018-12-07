@@ -287,6 +287,9 @@ module.exports.updateById = async function(req, res, next)
             if(existingWatch)
                 return res.json(Response.error({en: 'Watch already exists in this collection.'}));
 
+            if(!watch.createdByAdminObject)
+                watch.createdByAdminObject = req.admin._id;
+            
             watch.lastEditedByAdminObject = req.admin._id;
 
             let savedWatch = await watch.save();

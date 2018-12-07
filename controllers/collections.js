@@ -116,6 +116,9 @@ module.exports.updateById = async function(req, res, next)
             collection.markModified('name');
         }
 
+        if(!collection.createdByAdminObject)
+            collection.createdByAdminObject = req.admin._id;
+
         collection.lastEditedByAdminObject = req.admin._id;
 
         let savedCollection = await collection.save();
@@ -129,14 +132,14 @@ module.exports.updateById = async function(req, res, next)
     }
 };
 
-module.exports.deleteById = async function (req, res, next)
+module.exports.deleteById = async function(req, res, next)
 {
     try
     {
         Request.validateReq(req, {enforceParamsId: true});
 
         let collection = await Collection.findById(req.params._id);
-        if (!collection)
+        if(!collection)
             return res.json(Response.error({en: 'No collection is available with this Id.'}));
 
         if(collection.isUndefined === true)
@@ -154,7 +157,7 @@ module.exports.deleteById = async function (req, res, next)
         let message = collection.name + ' deleted successfully.';
         return res.json(Response.payload({payload: collection, en: message}));
     }
-    catch (error)
+    catch(error)
     {
         next(error);
     }
