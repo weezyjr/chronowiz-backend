@@ -52,7 +52,7 @@ report.log({message: 'App Environment: ' + process.env.CHRONOWIZ_APP_NAME + ', i
 app.use(helmet());
 app.use(new RateLimit({
     windowMs: 60 * 1000,
-    max: 30,
+    max: 120,
     delayMs: 0
 }));
 app.use(bodyParser.urlencoded({extended: true}));

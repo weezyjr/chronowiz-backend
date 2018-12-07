@@ -190,6 +190,8 @@ module.exports.readByIdOrReference = async function(req, res, next)
 
 module.exports.updateById = async function(req, res, next)
 {
+    let isWatchUpdated = false;
+
     try
     {
         Request.validateReq(req, {enforceParamsId: true, enforcePayload: true});
@@ -200,6 +202,15 @@ module.exports.updateById = async function(req, res, next)
 
         let brandObject = Request.validateId(req.body.payload.brandObject, 'brandObject', {optional: false});
 
+        let collectionObject = Request.validateId(req.body.payload.collectionObject, 'collectionObject', {optional: true});
+        let newCollection;
+        if(collectionObject)
+        {
+            newCollection = await Collection.findById(collectionObject).populate('watchObjects');
+            if(!newCollection)
+                return res.json(Response.error({en: 'No collection is available with this Id.'}));
+        }
+
         // Cases to update the brand
         if(
             (!watch.brandObject) ||
@@ -208,15 +219,7 @@ module.exports.updateById = async function(req, res, next)
         {
             watch.brandObject = brandObject;
             watch.markModified('brandObject');
-        }
-
-        let collectionObject = Request.validateId(req.body.payload.collectionObject, 'collectionObject', {optional: true});
-        let newCollection;
-        if(collectionObject)
-        {
-            newCollection = await Collection.findById(collectionObject).populate('watchObjects');
-            if(!newCollection)
-                return res.json(Response.error({en: 'No collection is available with this Id.'}));
+            isWatchUpdated = true;
         }
 
         // Cases to delete watch from current collection
@@ -247,6 +250,7 @@ module.exports.updateById = async function(req, res, next)
             {
                 watch.collectionObject = collectionObject;
                 watch.markModified('collectionObject');
+                isWatchUpdated = true;
             }
             else // Case to create watch in undefined collection of brandObject
             {
@@ -272,11 +276,13 @@ module.exports.updateById = async function(req, res, next)
 
                     watch.collectionObject = savedCollection._id;
                     watch.markModified('collectionObject');
+                    isWatchUpdated = true;
                 }
                 else
                 {
                     watch.collectionObject = existingCollection._id;
                     watch.markModified('collectionObject');
+                    isWatchUpdated = true;
                 }
             }
 
@@ -289,7 +295,7 @@ module.exports.updateById = async function(req, res, next)
 
             if(!watch.createdByAdminObject)
                 watch.createdByAdminObject = req.admin._id;
-            
+
             watch.lastEditedByAdminObject = req.admin._id;
 
             let savedWatch = await watch.save();
@@ -298,8 +304,16 @@ module.exports.updateById = async function(req, res, next)
             await collectionToSaveTo.save();
         }
 
-        let message = watch.referenceNumber + ' updated successfully.';
-        return res.json(Response.payload({payload: watch, en: message}));
+        if(isWatchUpdated)
+        {
+            let message = watch.referenceNumber + ' updated successfully.';
+            return res.json(Response.payload({payload: watch, en: message}));
+        }
+        else
+        {
+            let message = watch.referenceNumber + ' was not updated.';
+            return res.json(Response.payload({payload: watch, en: message}));
+        }
     }
     catch(error)
     {
