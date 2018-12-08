@@ -13,7 +13,8 @@ module.exports.create = async function(req, res, next)
 
         let watch = new Watch();
 
-        watch.brandObject = Request.validateId(req.body.payload.brandObject, 'brandObject');
+        watch.brandObject = Request.validateIdOrObject(req.body.payload.brandObject, 'brandObject');
+        watch.collectionObject = Request.validateIdOrObject(req.body.payload.collectionObject, 'collectionObject', {optional: true});
         watch.model = Request.validateText(req.body.payload.model, 'model', {optional: true});
         watch.referenceNumber = Request.validateText(req.body.payload.referenceNumber, 'referenceNumber');
         watch.gender = Request.validateText(req.body.payload.gender, 'gender', {optional: true});
@@ -89,7 +90,6 @@ module.exports.create = async function(req, res, next)
         watch.section5Paragraphs = Request.validateText(req.body.payload.section5Paragraphs, 'section5Paragraph', {optional: true});
         watch.section5PhotoUrls = Request.validateS3UrlObjects(req.body.payload.section5PhotoUrls, 'section5PhotoUrls', {optional: true});
 
-        watch.collectionObject = Request.validateId(req.body.payload.collectionObject, 'collectionObject', {optional: true});
         if(!watch.collectionObject)
         {
             //Create Watch in Undefined Collection Object of watch.brandObject
@@ -102,7 +102,7 @@ module.exports.create = async function(req, res, next)
             {
                 let collection = new Collection();
 
-                collection.brandObject = Request.validateId(watch.brandObject._id.toString(), 'brandObject', {optional: false});
+                collection.brandObject = Request.validateIdOrObject(watch.brandObject, 'brandObject', {optional: false});
                 collection.name = Request.validateText('UNDEFINED', 'name', {optional: false});
                 collection.isUndefined = true;
                 collection.createdByAdminObject = req.admin._id;
@@ -200,13 +200,14 @@ module.exports.updateById = async function(req, res, next)
         if(!watch)
             return res.json(Response.error({en: 'No watch is available with this Id.'}));
 
-        let brandObject = Request.validateId(req.body.payload.brandObject, 'brandObject', {optional: false});
+        let newBrandId = Request.validateIdOrObject(req.body.payload.brandObject, 'brandObject', {optional: false});
+        let newCollectionId = Request.validateIdOrObject(req.body.payload.collectionObject, 'collectionObject', {optional: true});
 
-        let collectionObject = Request.validateId(req.body.payload.collectionObject, 'collectionObject', {optional: true});
         let newCollection;
-        if(collectionObject)
+
+        if(newCollectionId)
         {
-            newCollection = await Collection.findById(collectionObject).populate('watchObjects');
+            newCollection = await Collection.findById(newCollectionId).populate('watchObjects');
             if(!newCollection)
                 return res.json(Response.error({en: 'No collection is available with this Id.'}));
         }
@@ -214,20 +215,20 @@ module.exports.updateById = async function(req, res, next)
         // Cases to update the brand
         if(
             (!watch.brandObject) ||
-            (watch.brandObject._id.toString() !== brandObject.toString())
+            (watch.brandObject._id.toString() !== newBrandId.toString())
         )
         {
-            watch.brandObject = brandObject;
+            watch.brandObject = newBrandId;
             watch.markModified('brandObject');
             isWatchUpdated = true;
         }
 
         // Cases to delete watch from current collection
-        if(watch.collectionObject &&
+        if(watch.brandObject && watch.collectionObject &&
             (
-                !(!watch.collectionObject.isUndefined && collectionObject && !newCollection.isUndefined && watch.collectionObject._id.toString() === collectionObject.toString()) &&
-                !(watch.collectionObject.isUndefined && !collectionObject && watch.brandObject._id.toString() === brandObject.toString()) &&
-                !(watch.collectionObject.isUndefined && collectionObject && newCollection.isUndefined && watch.brandObject._id.toString() === brandObject.toString())
+                !(!watch.collectionObject.isUndefined && newCollectionId && !newCollection.isUndefined && (watch.brandObject._id.toString() === newBrandId.toString()) && (watch.collectionObject._id.toString() === newCollectionId.toString())) &&
+                !(watch.collectionObject.isUndefined && !newCollectionId && watch.brandObject._id.toString() === newBrandId.toString()) &&
+                !(watch.collectionObject.isUndefined && newCollectionId && newCollection.isUndefined && watch.brandObject._id.toString() === newBrandId.toString())
             ))
         {
             let collection = await Collection.findById(watch.collectionObject._id);
@@ -240,21 +241,21 @@ module.exports.updateById = async function(req, res, next)
 
         // Cases to create watch in defined or undefined collection
         if(
-            !(watch.brandObject && watch.brandObject._id.toString() === brandObject.toString() && watch.collectionObject && collectionObject && !newCollection.isUndefined && watch.collectionObject._id.toString() === collectionObject.toString()) &&
-            !(watch.brandObject && watch.brandObject._id.toString() === brandObject.toString() && watch.collectionObject && !collectionObject) &&
-            !(watch.brandObject && watch.brandObject._id.toString() === brandObject.toString() && watch.collectionObject && collectionObject && newCollection.isUndefined)
+            !(watch.brandObject && watch.collectionObject && !watch.collectionObject.isUndefined && (watch.brandObject._id.toString() === newBrandId.toString()) && newCollectionId && !newCollection.isUndefined && (watch.collectionObject._id.toString() === newCollectionId.toString())) &&
+            !(watch.brandObject && watch.collectionObject && watch.collectionObject.isUndefined && (watch.brandObject._id.toString() === newBrandId.toString()) && !newCollectionId && !newCollection) &&
+            !(watch.brandObject && watch.collectionObject && watch.collectionObject.isUndefined && (watch.brandObject._id.toString() === newBrandId.toString()) && newCollectionId && newCollection.isUndefined)
         )
         {
             // Case to create watch in defined collection
-            if(collectionObject && newCollection && !newCollection.isUndefined)
+            if(newCollectionId && newCollection && !newCollection.isUndefined)
             {
-                watch.collectionObject = collectionObject;
+                watch.collectionObject = newCollectionId;
                 watch.markModified('collectionObject');
                 isWatchUpdated = true;
             }
             else // Case to create watch in undefined collection of brandObject
             {
-                let brand = await Brand.findById(brandObject).populate('collectionObjects');
+                let brand = await Brand.findById(newBrandId).populate('collectionObjects');
                 if(!brand)
                     return res.json(Response.error({en: 'No brand is available with this watch\'s brand Id.'}));
 
@@ -263,7 +264,7 @@ module.exports.updateById = async function(req, res, next)
                 {
                     let collection = new Collection();
 
-                    collection.brandObject = Request.validateId(req.body.payload.brandObject, 'brandObject', {optional: false});
+                    collection.brandObject = Request.validateIdOrObject(req.body.payload.brandObject, 'brandObject', {optional: false});
                     collection.name = Request.validateText('UNDEFINED', 'name', {optional: false});
                     collection.isUndefined = true;
                     collection.createdByAdminObject = req.admin._id;

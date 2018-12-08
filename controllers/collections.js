@@ -11,7 +11,7 @@ module.exports.create = async function(req, res, next)
 
         let collection = new Collection();
 
-        collection.brandObject = Request.validateId(req.body.payload.brandObject, 'brandObject', {optional: false});
+        collection.brandObject = Request.validateIdOrObject(req.body.payload.brandObject, 'brandObject', {optional: false});
         collection.name = Request.validateText(req.body.payload.name, 'name', {optional: false});
         collection.createdByAdminObject = req.admin._id;
         collection.lastEditedByAdminObject = req.admin._id;
@@ -82,7 +82,7 @@ module.exports.updateById = async function(req, res, next)
         if(collection.isUndefined === true)
             return res.json(Response.error({en: 'Cannot edit the UNDEFINED Collection.'}));
 
-        let brandObject = Request.validateId(req.body.payload.brandObject, 'brandObject', {optional: true});
+        let brandObject = Request.validateIdOrObject(req.body.payload.brandObject, 'brandObject', {optional: true});
 
         if(brandObject && (brandObject.toString() !== collection.brandObject._id.toString()))
         {

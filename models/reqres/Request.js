@@ -73,6 +73,44 @@ module.exports.validateId = function(_id, fieldName, {optional = false} = {})
     return _id;
 };
 
+module.exports.validateIdOrObject = function(_idOrObject, fieldName, {optional = false} = {})
+{
+    if(!_idOrObject && optional)
+        return;
+
+    if(!_idOrObject)
+        throw new ValidationError({
+            args: [fieldName]
+        });
+
+    if(typeof _idOrObject === 'string')
+    {
+        if(!validator.isMongoId(_idOrObject))
+            throw new ValidationError({
+                args: [fieldName, _idOrObject]
+            });
+
+        return _idOrObject;
+    }
+    else
+    {
+        if(!_idOrObject._id && optional)
+            return;
+
+        if(!_idOrObject._id)
+            throw new ValidationError({
+                args: [fieldName]
+            });
+
+        if(!validator.isMongoId(_idOrObject._id))
+            throw new ValidationError({
+                args: [fieldName, _idOrObject]
+            });
+
+        return _idOrObject._id;
+    }
+};
+
 module.exports.validateIds = function(Ids, fieldName, {optional = false} = {})
 {
     if(!Ids && optional)
