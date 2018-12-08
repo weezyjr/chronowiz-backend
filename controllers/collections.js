@@ -43,6 +43,8 @@ module.exports.readAll = async function(req, res, next)
     {
         let collections = await Collection.find({});
 
+        await collections.sort(sortByNameKey);
+
         return res.json(Response.payload({payload: collections}));
     }
     catch(error)
@@ -50,6 +52,15 @@ module.exports.readAll = async function(req, res, next)
         next(error);
     }
 };
+
+function sortByNameKey(a, b)
+{
+    if(a.name < b.name)
+        return -1;
+    if(a.name > b.name)
+        return 1;
+    return 0;
+}
 
 module.exports.readById = async function(req, res, next)
 {

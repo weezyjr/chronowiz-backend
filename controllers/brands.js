@@ -39,6 +39,8 @@ module.exports.readAll = async function(req, res, next)
     {
         let brands = await Brand.find({});
 
+        await brands.sort(sortByNameKey);
+
         return res.json(Response.payload({payload: brands}));
     }
     catch(error)
@@ -46,6 +48,15 @@ module.exports.readAll = async function(req, res, next)
         next(error);
     }
 };
+
+function sortByNameKey(a, b)
+{
+    if(a.name < b.name)
+        return -1;
+    if(a.name > b.name)
+        return 1;
+    return 0;
+}
 
 module.exports.readByIdOrName = async function(req, res, next)
 {

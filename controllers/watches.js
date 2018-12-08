@@ -151,6 +151,8 @@ module.exports.readAll = async function(req, res, next)
     {
         let watches = await Watch.find({});
 
+        await watches.sort(sortByRefKey);
+
         return res.json(Response.payload({payload: watches}));
     }
     catch(error)
@@ -158,6 +160,15 @@ module.exports.readAll = async function(req, res, next)
         next(error);
     }
 };
+
+function sortByRefKey(a, b)
+{
+    if(a.referenceNumber < b.referenceNumber)
+        return -1;
+    if(a.referenceNumber > b.referenceNumber)
+        return 1;
+    return 0;
+}
 
 module.exports.readByIdOrReference = async function(req, res, next)
 {
