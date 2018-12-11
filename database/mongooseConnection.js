@@ -1,8 +1,12 @@
 const report = require('../tools/report');
 const mongoose = require('mongoose');
-const Watch = require('../database/models/Watch');
+
 const Admin = require('../database/models/Admin');
+const Retailer = require('../database/models/Retailer');
+const User = require('../database/models/User');
+
 const Brand = require('../database/models/Brand');
+const Watch = require('../database/models/Watch');
 const Collection = require('../database/models/Collection');
 
 let mongooseConnection = null;
@@ -24,10 +28,14 @@ module.exports.connect = async function(MONGODB_URL, CHRONOWIZ_ENV)
 
             mongooseConnection = await mongoose.connect(MONGODB_URL, {useNewUrlParser: true, config: {autoIndex: true}}); //TODO set autoIndex false in production
 
-            Watch.createIndexes();
-            Brand.createIndexes();
+
             Admin.createIndexes();
+            Retailer.createIndexes();
+            User.createIndexes();
+
+            Brand.createIndexes();
             Collection.createIndexes();
+            Watch.createIndexes();
 
             report.log({message: 'Connected successfully via mongoose to MongoDB'});
 

@@ -7,7 +7,7 @@ const jsonwebtoken = require('jsonwebtoken');
 const bcrypt = require('bcryptjs');
 const SALT_WORK_FACTOR = 10;
 
-const AdminSchema = new mongoose.Schema(
+const RetailerSchema = new mongoose.Schema(
     {
         // Email
         email:
@@ -23,18 +23,26 @@ const AdminSchema = new mongoose.Schema(
         // Password
         password: {type: String, required: true},
 
-        // Name
         firstName: {type: String, trim: true, required: false},
         lastName: {type: String, trim: true, required: false},
 
-        createdByAdminObject: {type: Schema.Types.ObjectId, ref: 'Admin', required: false},
-        lastEditedByAdminObject: {type: Schema.Types.ObjectId, ref: 'Admin', required: false},
+        companyName: {type: String, trim: true, required: false},
+        address: {type: String, trim: true, required: false},
+        city: {type: String, trim: true, required: false},
+        country: {type: String, trim: true, required: false},
+        poBox: {type: String, trim: true, required: false},
+        phoneNumber: {type: String, trim: true, required: false},
+        fax: {type: String, trim: true, required: false},
+        mobileNumber: {type: String, trim: true, required: false},
+
+        createdByAdminObject: {type: Schema.Types.ObjectId, ref: 'Admin', required: true},
+        lastEditedByAdminObject: {type: Schema.Types.ObjectId, ref: 'Admin', required: true}
     },
     {
         timestamps: true
     });
 
-AdminSchema.pre('save', async function(next)
+RetailerSchema.pre('save', async function(next)
 {
     if(!this.isModified('password')) return next();
 
@@ -50,7 +58,7 @@ AdminSchema.pre('save', async function(next)
     }
 });
 
-AdminSchema.methods.comparePassword = async function(password)
+RetailerSchema.methods.comparePassword = async function(password)
 {
     try
     {
@@ -63,7 +71,7 @@ AdminSchema.methods.comparePassword = async function(password)
     }
 };
 
-AdminSchema.methods.generateJWT = function(JWT_SECRET)
+RetailerSchema.methods.generateJWT = function(JWT_SECRET)
 {
     let payload =
         {
@@ -82,7 +90,7 @@ AdminSchema.methods.generateJWT = function(JWT_SECRET)
     });
 };
 
-AdminSchema.methods.toJSON = function()
+RetailerSchema.methods.toJSON = function()
 {
     return {
         _id: this._id,
@@ -93,4 +101,4 @@ AdminSchema.methods.toJSON = function()
     };
 };
 
-module.exports = mongoose.model('Admin', AdminSchema);
+module.exports = mongoose.model('Retailer', RetailerSchema);

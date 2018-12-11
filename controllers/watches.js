@@ -250,7 +250,7 @@ module.exports.updateById = async function(req, res, next)
             await collection.save();
         }
 
-        // Cases to create watch in defined or undefined collection
+        // Cases to add watch to defined or undefined collection
         if(
             !(watch.brandObject && watch.collectionObject && !watch.collectionObject.isUndefined && (watch.brandObject._id.toString() === newBrandId.toString()) && newCollectionId && !newCollection.isUndefined && (watch.collectionObject._id.toString() === newCollectionId.toString())) &&
             !(watch.brandObject && watch.collectionObject && watch.collectionObject.isUndefined && (watch.brandObject._id.toString() === newBrandId.toString()) && !newCollectionId && !newCollection) &&
@@ -262,7 +262,6 @@ module.exports.updateById = async function(req, res, next)
             {
                 watch.collectionObject = newCollectionId;
                 watch.markModified('collectionObject');
-                isWatchUpdated = true;
             }
             else // Case to create watch in undefined collection of brandObject
             {
@@ -288,13 +287,11 @@ module.exports.updateById = async function(req, res, next)
 
                     watch.collectionObject = savedCollection._id;
                     watch.markModified('collectionObject');
-                    isWatchUpdated = true;
                 }
                 else
                 {
                     watch.collectionObject = existingCollection._id;
                     watch.markModified('collectionObject');
-                    isWatchUpdated = true;
                 }
             }
 
@@ -308,16 +305,514 @@ module.exports.updateById = async function(req, res, next)
             if(!watch.createdByAdminObject)
                 watch.createdByAdminObject = req.admin._id;
 
-            watch.lastEditedByAdminObject = req.admin._id;
-
-            let savedWatch = await watch.save();
-
-            collectionToSaveTo.watchObjects.addToSet(savedWatch);
+            collectionToSaveTo.watchObjects.addToSet(watch);
             await collectionToSaveTo.save();
+
+            isWatchUpdated = true;
+        }
+
+        let model = Request.validateText(req.body.payload.model, 'model', {optional: true});
+        if(model && model !== watch.model)
+        {
+            watch.model = model;
+            watch.markModified('model');
+            isWatchUpdated = true;
+        }
+
+        let referenceNumber = Request.validateText(req.body.payload.referenceNumber, 'referenceNumber');
+        if(referenceNumber && referenceNumber !== watch.referenceNumber)
+        {
+            watch.referenceNumber = referenceNumber;
+            watch.markModified('referenceNumber');
+            isWatchUpdated = true;
+        }
+
+        let gender = Request.validateText(req.body.payload.gender, 'gender', {optional: true});
+        if(gender && gender !== watch.gender)
+        {
+            watch.gender = gender;
+            watch.markModified('gender');
+            isWatchUpdated = true;
+        }
+
+        let productionYear = Request.validateText(req.body.payload.productionYear, 'productionYear', {optional: true});
+        if(productionYear && productionYear !== watch.productionYear)
+        {
+            watch.productionYear = productionYear;
+            watch.markModified('productionYear');
+            isWatchUpdated = true;
+        }
+
+        let limited = Request.validateText(req.body.payload.limited, 'limited', {optional: true});
+        if(limited && limited !== watch.limited)
+        {
+            watch.limited = limited;
+            watch.markModified('limited');
+            isWatchUpdated = true;
+        }
+
+        let awards = Request.validateText(req.body.payload.awards, 'awards', {optional: true});
+        if(awards && awards !== watch.awards)
+        {
+            watch.awards = awards;
+            watch.markModified('awards');
+            isWatchUpdated = true;
+        }
+
+        let perpetual = Request.validateText(req.body.payload.perpetual, 'perpetual', {optional: true});
+        if(perpetual && perpetual !== watch.perpetual)
+        {
+            watch.perpetual = perpetual;
+            watch.markModified('perpetual');
+            isWatchUpdated = true;
+        }
+
+        let movementCaliberName = Request.validateText(req.body.payload.movementCaliberName, 'movementCaliberName', {optional: true});
+        if(movementCaliberName && movementCaliberName !== watch.movementCaliberName)
+        {
+            watch.movementCaliberName = movementCaliberName;
+            watch.markModified('movementCaliberName');
+            isWatchUpdated = true;
+        }
+
+        let movementAutomaticOrManual = Request.validateText(req.body.payload.movementAutomaticOrManual, 'movementAutomaticOrManual', {optional: true});
+        if(movementAutomaticOrManual && movementAutomaticOrManual !== watch.movementAutomaticOrManual)
+        {
+            watch.movementAutomaticOrManual = movementAutomaticOrManual;
+            watch.markModified('movementAutomaticOrManual');
+            isWatchUpdated = true;
+        }
+
+        let movementCaliberNumber = Request.validateText(req.body.payload.movementCaliberNumber, 'movementCaliberNumber', {optional: true});
+        if(movementCaliberNumber && movementCaliberNumber !== watch.movementCaliberNumber)
+        {
+            watch.movementCaliberNumber = movementCaliberNumber;
+            watch.markModified('movementCaliberNumber');
+            isWatchUpdated = true;
+        }
+
+        let movementDiameter = Request.validateText(req.body.payload.movementDiameter, 'movementDiameter', {optional: true});
+        if(movementDiameter && movementDiameter !== watch.movementDiameter)
+        {
+            watch.movementDiameter = movementDiameter;
+            watch.markModified('movementDiameter');
+            isWatchUpdated = true;
+        }
+
+        let movementHeight = Request.validateText(req.body.payload.movementHeight, 'movementHeight', {optional: true});
+        if(movementHeight && movementHeight !== watch.movementHeight)
+        {
+            watch.movementHeight = movementHeight;
+            watch.markModified('movementHeight');
+            isWatchUpdated = true;
+        }
+
+        let movementJewels = Request.validateText(req.body.payload.movementJewels, 'movementJewels', {optional: true});
+        if(movementJewels && movementJewels !== watch.movementJewels)
+        {
+            watch.movementJewels = movementJewels;
+            watch.markModified('movementJewels');
+            isWatchUpdated = true;
+        }
+
+        let movementFrequency = Request.validateText(req.body.payload.movementFrequency, 'movementFrequency', {optional: true});
+        if(movementFrequency && movementFrequency !== watch.movementFrequency)
+        {
+            watch.movementFrequency = movementFrequency;
+            watch.markModified('movementFrequency');
+            isWatchUpdated = true;
+        }
+
+        let movementPowerReserve = Request.validateText(req.body.payload.movementPowerReserve, 'movementPowerReserve', {optional: true});
+        if(movementPowerReserve && movementPowerReserve !== watch.movementPowerReserve)
+        {
+            watch.movementPowerReserve = movementPowerReserve;
+            watch.markModified('movementPowerReserve');
+            isWatchUpdated = true;
+        }
+
+        let movementCertificate = Request.validateText(req.body.payload.movementCertificate, 'movementCertificate', {optional: true});
+        if(movementCertificate && movementCertificate !== watch.movementCertificate)
+        {
+            watch.movementCertificate = movementCertificate;
+            watch.markModified('movementCertificate');
+            isWatchUpdated = true;
+        }
+
+        let movementDecoration = Request.validateText(req.body.payload.movementDecoration, 'movementDecoration', {optional: true});
+        if(movementDecoration && movementDecoration !== watch.movementDecoration)
+        {
+            watch.movementDecoration = movementDecoration;
+            watch.markModified('movementDecoration');
+            isWatchUpdated = true;
+        }
+
+        let movementSpring = Request.validateText(req.body.payload.movementSpring, 'movementSpring', {optional: true});
+        if(movementSpring && movementSpring !== watch.movementSpring)
+        {
+            watch.movementSpring = movementSpring;
+            watch.markModified('movementSpring');
+            isWatchUpdated = true;
+        }
+
+        let movementTourbillon = Request.validateText(req.body.payload.movementTourbillon, 'movementTourbillon', {optional: true});
+        if(movementTourbillon && movementTourbillon !== watch.movementTourbillon)
+        {
+            watch.movementTourbillon = movementTourbillon;
+            watch.markModified('movementTourbillon');
+            isWatchUpdated = true;
+        }
+
+        let movementRotor = Request.validateText(req.body.payload.movementRotor, 'movementRotor', {optional: true});
+        if(movementRotor && movementRotor !== watch.movementRotor)
+        {
+            watch.movementRotor = movementRotor;
+            watch.markModified('movementRotor');
+            isWatchUpdated = true;
+        }
+
+        let movementAdditionalFeatures = Request.validateTextObjects(req.body.payload.movementAdditionalFeatures, 'movementAdditionalFeatures', {optional: true});
+        if(movementAdditionalFeatures && movementAdditionalFeatures !== watch.movementAdditionalFeatures)
+        {
+            watch.movementAdditionalFeatures = movementAdditionalFeatures;
+            watch.markModified('movementAdditionalFeatures');
+            isWatchUpdated = true;
+        }
+
+        let functions = Request.validateTextObjects(req.body.payload.functions, 'functions', {optional: true});
+        if(functions && functions !== watch.functions)
+        {
+            watch.functions = functions;
+            watch.markModified('functions');
+            isWatchUpdated = true;
+        }
+
+        let caseMaterial = Request.validateText(req.body.payload.caseMaterial, 'caseMaterial', {optional: true});
+        if(caseMaterial && caseMaterial !== watch.caseMaterial)
+        {
+            watch.awards = awards;
+            watch.markModified('awards');
+            isWatchUpdated = true;
+        }
+
+        let caseDiameter = Request.validateText(req.body.payload.caseDiameter, 'caseDiameter', {optional: true});
+        if(caseDiameter && caseDiameter !== watch.caseDiameter)
+        {
+            watch.caseDiameter = caseDiameter;
+            watch.markModified('caseDiameter');
+            isWatchUpdated = true;
+        }
+
+        let caseHeight = Request.validateText(req.body.payload.caseHeight, 'caseHeight', {optional: true});
+        if(caseHeight && caseHeight !== watch.caseHeight)
+        {
+            watch.caseHeight = caseHeight;
+            watch.markModified('caseHeight');
+            isWatchUpdated = true;
+        }
+
+        let caseFront = Request.validateText(req.body.payload.caseFront, 'caseFront', {optional: true});
+        if(caseFront && caseFront !== watch.caseFront)
+        {
+            watch.caseFront = caseFront;
+            watch.markModified('caseFront');
+            isWatchUpdated = true;
+        }
+
+        let caseBack = Request.validateText(req.body.payload.caseBack, 'caseBack', {optional: true});
+        if(caseBack && caseBack !== watch.caseBack)
+        {
+            watch.caseBack = caseBack;
+            watch.markModified('caseBack');
+            isWatchUpdated = true;
+        }
+
+        let caseBezelMaterial = Request.validateText(req.body.payload.caseBezelMaterial, 'caseBezelMaterial', {optional: true});
+        if(caseBezelMaterial && caseBezelMaterial !== watch.caseBezelMaterial)
+        {
+            watch.caseBezelMaterial = caseBezelMaterial;
+            watch.markModified('caseBezelMaterial');
+            isWatchUpdated = true;
+        }
+
+        let waterResistance = Request.validateText(req.body.payload.waterResistance, 'waterResistance', {optional: true});
+        if(waterResistance && waterResistance !== watch.waterResistance)
+        {
+            watch.waterResistance = waterResistance;
+            watch.markModified('waterResistance');
+            isWatchUpdated = true;
+        }
+
+        let caseCrown = Request.validateText(req.body.payload.caseCrown, 'caseCrown', {optional: true});
+        if(caseCrown && caseCrown !== watch.caseCrown)
+        {
+            watch.caseCrown = caseCrown;
+            watch.markModified('caseCrown');
+            isWatchUpdated = true;
+        }
+
+        let caseAdditionalFeatures = Request.validateTextObjects(req.body.payload.caseAdditionalFeatures, 'caseAdditionalFeatures', {optional: true});
+        if(caseAdditionalFeatures && caseAdditionalFeatures !== watch.caseAdditionalFeatures)
+        {
+            watch.caseAdditionalFeatures = caseAdditionalFeatures;
+            watch.markModified('caseAdditionalFeatures');
+            isWatchUpdated = true;
+        }
+
+        let dialColour = Request.validateText(req.body.payload.dialColour, 'dialColour', {optional: true});
+        if(dialColour && dialColour !== watch.dialColour)
+        {
+            watch.dialColour = dialColour;
+            watch.markModified('model');
+            isWatchUpdated = true;
+        }
+
+        let dialIndex = Request.validateText(req.body.payload.dialIndex, 'dialIndex', {optional: true});
+        if(dialIndex && dialIndex !== watch.dialIndex)
+        {
+            watch.dialIndex = dialIndex;
+            watch.markModified('dialIndex');
+            isWatchUpdated = true;
+        }
+
+        let dialFinish = Request.validateText(req.body.payload.dialFinish, 'dialFinish', {optional: true});
+        if(dialFinish && dialFinish !== watch.dialFinish)
+        {
+            watch.dialFinish = dialFinish;
+            watch.markModified('dialFinish');
+            isWatchUpdated = true;
+        }
+
+        let dialHands = Request.validateText(req.body.payload.dialHands, 'dialHands', {optional: true});
+        if(dialHands && dialHands !== watch.dialHands)
+        {
+            watch.dialHands = dialHands;
+            watch.markModified('dialHands');
+            isWatchUpdated = true;
+        }
+
+        let dialAdditionalFeatures = Request.validateTextObjects(req.body.payload.dialAdditionalFeatures, 'dialAdditionalFeatures', {optional: true});
+        if(dialAdditionalFeatures && dialAdditionalFeatures !== watch.dialAdditionalFeatures)
+        {
+            watch.dialAdditionalFeatures = dialAdditionalFeatures;
+            watch.markModified('dialAdditionalFeatures');
+            isWatchUpdated = true;
+        }
+
+        let band = Request.validateText(req.body.payload.band, 'band', {optional: true});
+        if(band && band !== watch.band)
+        {
+            watch.band = band;
+            watch.markModified('band');
+            isWatchUpdated = true;
+        }
+
+        let bandMaterial = Request.validateText(req.body.payload.bandMaterial, 'bandMaterial', {optional: true});
+        if(bandMaterial && bandMaterial !== watch.bandMaterial)
+        {
+            watch.bandMaterial = bandMaterial;
+            watch.markModified('bandMaterial');
+            isWatchUpdated = true;
+        }
+
+        let bandClasp = Request.validateText(req.body.payload.bandClasp, 'bandClasp', {optional: true});
+        if(bandClasp && bandClasp !== watch.bandClasp)
+        {
+            watch.bandClasp = bandClasp;
+            watch.markModified('bandClasp');
+            isWatchUpdated = true;
+        }
+
+        let bandColour = Request.validateText(req.body.payload.bandColour, 'bandColour', {optional: true});
+        if(bandColour && bandColour !== watch.bandColour)
+        {
+            watch.bandColour = bandColour;
+            watch.markModified('bandColour');
+            isWatchUpdated = true;
+        }
+
+        let bandClaspMaterial = Request.validateText(req.body.payload.bandClaspMaterial, 'bandClaspMaterial', {optional: true});
+        if(bandClaspMaterial && bandClaspMaterial !== watch.bandClaspMaterial)
+        {
+            watch.bandClaspMaterial = bandClaspMaterial;
+            watch.markModified('bandClaspMaterial');
+            isWatchUpdated = true;
+        }
+
+        let bandAdditionalFeatures = Request.validateTextObjects(req.body.payload.bandAdditionalFeatures, 'bandAdditionalFeatures', {optional: true});
+        if(bandAdditionalFeatures && bandAdditionalFeatures !== watch.bandAdditionalFeatures)
+        {
+            watch.bandAdditionalFeatures = bandAdditionalFeatures;
+            watch.markModified('bandAdditionalFeatures');
+            isWatchUpdated = true;
+        }
+
+        let price = Request.validateNumber(req.body.payload.price, 'price', {optional: true});
+        if(price && price !== watch.price)
+        {
+            watch.price = price;
+            watch.markModified('price');
+            isWatchUpdated = true;
+        }
+
+        let priceCurrency = Request.validateText(req.body.payload.priceCurrency, 'priceCurrency', {optional: true});
+        if(priceCurrency && priceCurrency !== watch.priceCurrency)
+        {
+            watch.priceCurrency = priceCurrency;
+            watch.markModified('priceCurrency');
+            isWatchUpdated = true;
+        }
+
+        let mainPhotoUrl = Request.validateS3Url(req.body.payload.mainPhotoUrl, 'mainPhotoUrl', {optional: true});
+        if(mainPhotoUrl && mainPhotoUrl !== watch.mainPhotoUrl)
+        {
+            watch.mainPhotoUrl = mainPhotoUrl;
+            watch.markModified('mainPhotoUrl');
+            isWatchUpdated = true;
+        }
+
+        let banner1PhotoUrl = Request.validateS3Url(req.body.payload.banner1PhotoUrl, 'bannerPhotoUrl1', {optional: true});
+        if(banner1PhotoUrl && banner1PhotoUrl !== watch.banner1PhotoUrl)
+        {
+            watch.banner1PhotoUrl = banner1PhotoUrl;
+            watch.markModified('banner1PhotoUrl');
+            isWatchUpdated = true;
+        }
+
+        let banner2PhotoUrl = Request.validateS3Url(req.body.payload.banner2PhotoUrl, 'bannerPhotoUrl2', {optional: true});
+        if(banner2PhotoUrl && banner2PhotoUrl !== watch.banner2PhotoUrl)
+        {
+            watch.banner2PhotoUrl = banner2PhotoUrl;
+            watch.markModified('banner2PhotoUrl');
+            isWatchUpdated = true;
+        }
+
+        let section1Title = Request.validateText(req.body.payload.section1Title, 'section1Title', {optional: true});
+        if(section1Title && section1Title !== watch.section1Title)
+        {
+            watch.section1Title = section1Title;
+            watch.markModified('section1Title');
+            isWatchUpdated = true;
+        }
+
+        let section1Paragraph = Request.validateText(req.body.payload.section1Paragraph, 'section1Paragraph', {optional: true});
+        if(section1Paragraph && section1Paragraph !== watch.section1Paragraph)
+        {
+            watch.section1Paragraph = section1Paragraph;
+            watch.markModified('section1Paragraph');
+            isWatchUpdated = true;
+        }
+
+        let section1PhotoUrl = Request.validateS3Url(req.body.payload.section1PhotoUrl, 'section1PhotoUrl', {optional: true});
+        if(section1PhotoUrl && section1PhotoUrl !== watch.section1PhotoUrl)
+        {
+            watch.section1PhotoUrl = section1PhotoUrl;
+            watch.markModified('section1PhotoUrl');
+            isWatchUpdated = true;
+        }
+
+        let section2Title = Request.validateText(req.body.payload.section2Title, 'section2Title', {optional: true});
+        if(section2Title && section2Title !== watch.section2Title)
+        {
+            watch.section2Title = section2Title;
+            watch.markModified('section2Title');
+            isWatchUpdated = true;
+        }
+
+        let section2Paragraph = Request.validateText(req.body.payload.section2Paragraph, 'section2Paragraph', {optional: true});
+        if(section2Paragraph && section2Paragraph !== watch.section2Paragraph)
+        {
+            watch.section2Paragraph = section2Paragraph;
+            watch.markModified('section2Paragraph');
+            isWatchUpdated = true;
+        }
+
+        let section2PhotoUrl = Request.validateS3Url(req.body.payload.section2PhotoUrl, 'section2PhotoUrl', {optional: true});
+        if(section2PhotoUrl && section2PhotoUrl !== watch.section2PhotoUrl)
+        {
+            watch.section2PhotoUrl = section2PhotoUrl;
+            watch.markModified('section2PhotoUrl');
+            isWatchUpdated = true;
+        }
+
+        let section3Title = Request.validateText(req.body.payload.section3Title, 'section3Title', {optional: true});
+        if(section3Title && section3Title !== watch.section3Title)
+        {
+            watch.section3Title = section3Title;
+            watch.markModified('section3Title');
+            isWatchUpdated = true;
+        }
+
+        let section3Paragraph = Request.validateText(req.body.payload.section3Paragraph, 'section3Paragraph', {optional: true});
+        if(section3Paragraph && section3Paragraph !== watch.section3Paragraph)
+        {
+            watch.section3Paragraph = section3Paragraph;
+            watch.markModified('section3Paragraph');
+            isWatchUpdated = true;
+        }
+
+        let section3PhotoUrl = Request.validateS3Url(req.body.payload.section3PhotoUrl, 'section3PhotoUrl', {optional: true});
+        if(section3PhotoUrl && section3PhotoUrl !== watch.section3PhotoUrl)
+        {
+            watch.section3PhotoUrl = section3PhotoUrl;
+            watch.markModified('section3PhotoUrl');
+            isWatchUpdated = true;
+        }
+
+        let section4Title = Request.validateText(req.body.payload.section4Title, 'section4Title', {optional: true});
+        if(section4Title && section4Title !== watch.section4Title)
+        {
+            watch.section4Title = section4Title;
+            watch.markModified('section4Title');
+            isWatchUpdated = true;
+        }
+
+        let section4Paragraph = Request.validateText(req.body.payload.section4Paragraph, 'section4Paragraph', {optional: true});
+        if(section4Paragraph && section4Paragraph !== watch.section4Paragraph)
+        {
+            watch.section4Paragraph = section4Paragraph;
+            watch.markModified('section4Paragraph');
+            isWatchUpdated = true;
+        }
+
+        let section4PhotoUrl = Request.validateS3Url(req.body.payload.section4PhotoUrl, 'section4PhotoUrl', {optional: true});
+        if(section4PhotoUrl && section4PhotoUrl !== watch.section4PhotoUrl)
+        {
+            watch.section4PhotoUrl = section4PhotoUrl;
+            watch.markModified('section4PhotoUrl');
+            isWatchUpdated = true;
+        }
+
+        let section5Titles = Request.validateText(req.body.payload.section5Titles, 'section5Title', {optional: true});
+        if(section5Titles && section5Titles !== watch.section5Titles)
+        {
+            watch.section5Titles = section5Titles;
+            watch.markModified('section5Titles');
+            isWatchUpdated = true;
+        }
+
+        let section5Paragraphs = Request.validateText(req.body.payload.section5Paragraphs, 'section5Paragraph', {optional: true});
+        if(section5Paragraphs && section5Paragraphs !== watch.section5Paragraphs)
+        {
+            watch.section5Paragraphs = section5Paragraphs;
+            watch.markModified('section5Paragraphs');
+            isWatchUpdated = true;
+        }
+
+        let section5PhotoUrls = Request.validateS3UrlObjects(req.body.payload.section5PhotoUrls, 'section5PhotoUrls', {optional: true});
+        if(section5PhotoUrls && section5PhotoUrls !== watch.section5PhotoUrls)
+        {
+            watch.section5PhotoUrls = section5PhotoUrls;
+            watch.markModified('section5PhotoUrls');
+            isWatchUpdated = true;
         }
 
         if(isWatchUpdated)
         {
+            watch.lastEditedByAdminObject = req.admin._id;
+
+            let savedWatch = await watch.save();
+
             let message = watch.referenceNumber + ' updated successfully.';
             return res.json(Response.payload({payload: watch, en: message}));
         }

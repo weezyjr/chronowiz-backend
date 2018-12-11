@@ -7,7 +7,7 @@ const jsonwebtoken = require('jsonwebtoken');
 const bcrypt = require('bcryptjs');
 const SALT_WORK_FACTOR = 10;
 
-const AdminSchema = new mongoose.Schema(
+const UserSchema = new mongoose.Schema(
     {
         // Email
         email:
@@ -25,16 +25,13 @@ const AdminSchema = new mongoose.Schema(
 
         // Name
         firstName: {type: String, trim: true, required: false},
-        lastName: {type: String, trim: true, required: false},
-
-        createdByAdminObject: {type: Schema.Types.ObjectId, ref: 'Admin', required: false},
-        lastEditedByAdminObject: {type: Schema.Types.ObjectId, ref: 'Admin', required: false},
+        lastName: {type: String, trim: true, required: false}
     },
     {
         timestamps: true
     });
 
-AdminSchema.pre('save', async function(next)
+UserSchema.pre('save', async function(next)
 {
     if(!this.isModified('password')) return next();
 
@@ -50,7 +47,7 @@ AdminSchema.pre('save', async function(next)
     }
 });
 
-AdminSchema.methods.comparePassword = async function(password)
+UserSchema.methods.comparePassword = async function(password)
 {
     try
     {
@@ -63,7 +60,7 @@ AdminSchema.methods.comparePassword = async function(password)
     }
 };
 
-AdminSchema.methods.generateJWT = function(JWT_SECRET)
+UserSchema.methods.generateJWT = function(JWT_SECRET)
 {
     let payload =
         {
@@ -82,7 +79,7 @@ AdminSchema.methods.generateJWT = function(JWT_SECRET)
     });
 };
 
-AdminSchema.methods.toJSON = function()
+UserSchema.methods.toJSON = function()
 {
     return {
         _id: this._id,
@@ -93,4 +90,4 @@ AdminSchema.methods.toJSON = function()
     };
 };
 
-module.exports = mongoose.model('Admin', AdminSchema);
+module.exports = mongoose.model('User', UserSchema);
