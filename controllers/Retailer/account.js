@@ -1,7 +1,7 @@
-const Request = require('../models/reqres/Request');
-const Response = require('../models/reqres/Response');
-const random = require('../tools/random');
-const Retailer = require('../database/models/Retailer');
+const Request = require('../../models/reqres/Request');
+const Response = require('../../models/reqres/Response');
+const random = require('../../tools/random');
+const Retailer = require('../../database/models/Retailer');
 
 module.exports.login = async function(req, res, next)
 {
