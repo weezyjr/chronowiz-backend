@@ -173,4 +173,3 @@ module.exports.deleteById = async function(req, res, next)
         next(error);
     }
 };
-

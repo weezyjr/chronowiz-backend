@@ -15,9 +15,8 @@ const UserSchema = new mongoose.Schema(
                 type: String,
                 trim: true,
                 lowercase: true,
-                required: false,
-                uniqueCaseInsensitive: true,
-                index: {unique: true, partialFilterExpression: {email: {$type: 'string'}}}
+                required: true,
+                uniqueCaseInsensitive: true
             },
 
         // Password
