@@ -19,8 +19,8 @@ module.exports.create = async function(req, res, next)
         brand.banner1PhotoUrl = Request.validateS3Url(req.body.payload.banner1PhotoUrl, 'banner1PhotoUrl', {optional: false});
         brand.banner2PhotoUrl = Request.validateS3Url(req.body.payload.banner2PhotoUrl, 'banner2PhotoUrl', {optional: false});
 
-        brand.createdByAdminObject = req.admin._id;
-        brand.lastEditedByAdminObject = req.admin._id;
+        brand.createdByAdminObject = req.user._id;
+        brand.lastEditedByAdminObject = req.user._id;
 
         let savedBrand = await brand.save();
 
@@ -148,9 +148,9 @@ module.exports.updateById = async function(req, res, next)
         }
 
         if(!brand.createdByAdminObject)
-            brand.createdByAdminObject = req.admin._id;
+            brand.createdByAdminObject = req.user._id;
 
-        brand.lastEditedByAdminObject = req.admin._id;
+        brand.lastEditedByAdminObject = req.user._id;
 
         let savedBrand = await brand.save();
 

@@ -105,7 +105,8 @@ RetailerSchema.methods.toJSON = function()
         poBox: this.poBox,
         phoneNumber: this.phoneNumber,
         fax: this.fax,
-        mobileNumber: this.mobileNumber
+        mobileNumber: this.mobileNumber,
+        watchObjects: this.watchObjects
     };
 };
 

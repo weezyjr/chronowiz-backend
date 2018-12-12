@@ -1,7 +1,7 @@
 const router = require('express').Router({mergeParams: true});
 const passport = require('passport');
 
-const retailers = require('../../controllers/Admin/retailers');
+const retailers = require('../../controllers/retailers');
 
 router.post('/', passport.authenticate('jwt-admin', {session: false}), retailers.create);
 

@@ -13,8 +13,8 @@ module.exports.create = async function(req, res, next)
 
         collection.brandObject = Request.validateIdOrObject(req.body.payload.brandObject, 'brandObject', {optional: false});
         collection.name = Request.validateText(req.body.payload.name, 'name', {optional: false});
-        collection.createdByAdminObject = req.admin._id;
-        collection.lastEditedByAdminObject = req.admin._id;
+        collection.createdByAdminObject = req.user._id;
+        collection.lastEditedByAdminObject = req.user._id;
 
         let brand = await Brand.findById(collection.brandObject).populate('collectionObjects');
         if(!brand)
@@ -114,7 +114,6 @@ module.exports.updateById = async function(req, res, next)
 
             brand.collectionObjects.addToSet(collection);
             await brand.save();
-            console.log(brand.collectionObjects);
 
             collection.brandObject = brandObject;
             collection.markModified('brandObject');
@@ -128,9 +127,9 @@ module.exports.updateById = async function(req, res, next)
         }
 
         if(!collection.createdByAdminObject)
-            collection.createdByAdminObject = req.admin._id;
+            collection.createdByAdminObject = req.user._id;
 
-        collection.lastEditedByAdminObject = req.admin._id;
+        collection.lastEditedByAdminObject = req.user._id;
 
         let savedCollection = await collection.save();
 

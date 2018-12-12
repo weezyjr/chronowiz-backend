@@ -3,7 +3,9 @@ const Response = require('../models/reqres/Response');
 const Brand = require('../database/models/Brand');
 const Collection = require('../database/models/Collection');
 const Watch = require('../database/models/Watch');
+const Retailer = require('../database/models/Retailer');
 const validator = require('validator');
+const ErrorType = require('../models/errors/ErrorType');
 
 module.exports.create = async function(req, res, next)
 {
@@ -105,8 +107,8 @@ module.exports.create = async function(req, res, next)
                 collection.brandObject = Request.validateIdOrObject(watch.brandObject, 'brandObject', {optional: false});
                 collection.name = Request.validateText('UNDEFINED', 'name', {optional: false});
                 collection.isUndefined = true;
-                collection.createdByAdminObject = req.admin._id;
-                collection.lastEditedByAdminObject = req.admin._id;
+                collection.createdByAdminObject = req.user._id;
+                collection.lastEditedByAdminObject = req.user._id;
 
                 let savedCollection = await collection.save();
 
@@ -128,8 +130,8 @@ module.exports.create = async function(req, res, next)
         if(existingWatch)
             return res.json(Response.error({en: 'Watch already exists in this collection.'})); // This should never happen since the reference number will have already been rejected
 
-        watch.createdByAdminObject = req.admin._id;
-        watch.lastEditedByAdminObject = req.admin._id;
+        watch.createdByAdminObject = req.user._id;
+        watch.lastEditedByAdminObject = req.user._id;
 
         let savedWatch = await watch.save();
 
@@ -277,8 +279,8 @@ module.exports.updateById = async function(req, res, next)
                     collection.brandObject = Request.validateIdOrObject(req.body.payload.brandObject, 'brandObject', {optional: false});
                     collection.name = Request.validateText('UNDEFINED', 'name', {optional: false});
                     collection.isUndefined = true;
-                    collection.createdByAdminObject = req.admin._id;
-                    collection.lastEditedByAdminObject = req.admin._id;
+                    collection.createdByAdminObject = req.user._id;
+                    collection.lastEditedByAdminObject = req.user._id;
 
                     let savedCollection = await collection.save();
 
@@ -303,7 +305,7 @@ module.exports.updateById = async function(req, res, next)
                 return res.json(Response.error({en: 'Watch already exists in this collection.'}));
 
             if(!watch.createdByAdminObject)
-                watch.createdByAdminObject = req.admin._id;
+                watch.createdByAdminObject = req.user._id;
 
             collectionToSaveTo.watchObjects.addToSet(watch);
             await collectionToSaveTo.save();
@@ -809,7 +811,7 @@ module.exports.updateById = async function(req, res, next)
 
         if(isWatchUpdated)
         {
-            watch.lastEditedByAdminObject = req.admin._id;
+            watch.lastEditedByAdminObject = req.user._id;
 
             let savedWatch = await watch.save();
 
@@ -859,3 +861,62 @@ module.exports.deleteById = async function(req, res, next)
     }
 };
 
+module.exports.AddToStockById = async function(req, res, next)
+{
+    try
+    {
+        Request.validateReq(req, {enforceParams: true});
+
+        let retailer = await Retailer.findById(req.user._id).populate('watchObjects');
+        if(!retailer)
+            return done({en: 'This Retailer is not registered', errorType: ErrorType.UNAUTHORIZED});
+
+        let watch = await Watch.findById(req.params._id);
+        if(!watch)
+            return res.json(Response.error({en: 'No watch is available with this Id.'}));
+
+        let existingWatch = retailer.watchObjects.find(retailerWatch => retailerWatch.referenceNumber === watch.referenceNumber);
+        if(existingWatch)
+            return res.json(Response.error({en: 'Watch already exists in the retailer\'s stock watches.'}));
+
+        retailer.watchObjects.addToSet(watch);
+
+        await retailer.save();
+
+        return res.json(Response.payload({payload: retailer}));
+    }
+    catch(error)
+    {
+        next(error);
+    }
+};
+
+module.exports.RemoveFromStockById = async function(req, res, next)
+{
+    try
+    {
+        Request.validateReq(req, {enforceParams: true});
+
+        let retailer = await Retailer.findById(req.user._id).populate('watchObjects');
+        if(!retailer)
+            return done({en: 'This Retailer is not registered', errorType: ErrorType.UNAUTHORIZED});
+
+        let watch = await Watch.findById(req.params._id);
+        if(!watch)
+            return res.json(Response.error({en: 'No watch is available with this Id.'}));
+
+        let existingWatch = retailer.watchObjects.find(retailerWatch => retailerWatch.referenceNumber === watch.referenceNumber);
+        if(!existingWatch)
+            return res.json(Response.error({en: 'Watch is not present in retailer\'s stock watches.'}));
+
+        retailer.watchObjects.pull({_id: existingWatch._id});
+
+        await retailer.save();
+
+        return res.json(Response.payload({payload: retailer}));
+    }
+    catch(error)
+    {
+        next(error);
+    }
+};

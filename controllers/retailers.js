@@ -1,7 +1,7 @@
-const Request = require('../../models/reqres/Request');
-const Response = require('../../models/reqres/Response');
-const random = require('../../tools/random');
-const Retailer = require('../../database/models/Retailer');
+const Request = require('../models/reqres/Request');
+const Response = require('../models/reqres/Response');
+const random = require('../tools/random');
+const Retailer = require('../database/models/Retailer');
 const validator = require('validator');
 
 module.exports.create = async function(req, res, next)
@@ -31,8 +31,8 @@ module.exports.create = async function(req, res, next)
         retailer.fax = Request.validateText(req.body.payload.fax, 'fax', {optional: true});
         retailer.mobileNumber = Request.validateText(req.body.payload.mobileNumber, 'mobileNumber', {optional: true});
 
-        retailer.createdByAdminObject = req.admin._id;
-        retailer.lastEditedByAdminObject = req.admin._id;
+        retailer.createdByAdminObject = req.user._id;
+        retailer.lastEditedByAdminObject = req.user._id;
 
         let savedRetailer = await retailer.save();
 
@@ -53,7 +53,7 @@ module.exports.readAll = async function(req, res, next)
 {
     try
     {
-        let retailers = await Retailer.find({});
+        let retailers = await Retailer.find({}).populate('watchObjects');
 
         await retailers.sort(sortByCompany);
 
@@ -143,4 +143,3 @@ module.exports.deleteById = async function(req, res, next)
         next(error);
     }
 };
-
