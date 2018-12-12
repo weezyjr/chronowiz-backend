@@ -1,6 +1,7 @@
 const router = require('express').Router();
-const account = require('../../controllers/Retailer/account');
 const passport = require('passport');
+
+const account = require('../../controllers/Retailer/account');
 
 router.post('/login', account.login);
 

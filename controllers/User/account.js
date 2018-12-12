@@ -70,3 +70,21 @@ module.exports.login = async function(req, res, next)
         next(error);
     }
 };
+
+module.exports.profile = async function(req, res, next)
+{
+    try
+    {
+        Request.validateReq(req, {enforceParams: true});
+
+        let user = await User.findById(req.user._id);
+        if(!user)
+            return res.json(Response.error({en: 'No user is available with this Id.'}));
+
+        return res.json(Response.payload({payload: user}));
+    }
+    catch(error)
+    {
+        next(error);
+    }
+};

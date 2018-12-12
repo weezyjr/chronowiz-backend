@@ -70,3 +70,21 @@ module.exports.login = async function(req, res, next)
         next(error);
     }
 };
+
+module.exports.profile = async function(req, res, next)
+{
+    try
+    {
+        Request.validateReq(req, {enforceParams: true});
+
+        let admin = await Admin.findById(req.user._id);
+        if(!admin)
+            return res.json(Response.error({en: 'No admin is available with this Id.'}));
+
+        return res.json(Response.payload({payload: admin}));
+    }
+    catch(error)
+    {
+        next(error);
+    }
+};

@@ -7,4 +7,6 @@ router.post('/signup', passport.authenticate('jwt-admin', {session: false}), acc
 
 router.post('/login', account.login);
 
+router.get('/profile', passport.authenticate('jwt-admin', {session: false}), account.profile);
+
 module.exports = router;
