@@ -22,10 +22,9 @@ const RetailerSchema = new mongoose.Schema(
         // Password
         password: {type: String, required: true},
 
+        companyName: {type: String, trim: true, required: false},
         firstName: {type: String, trim: true, required: false},
         lastName: {type: String, trim: true, required: false},
-
-        companyName: {type: String, trim: true, required: false},
         address: {type: String, trim: true, required: false},
         city: {type: String, trim: true, required: false},
         country: {type: String, trim: true, required: false},
@@ -33,6 +32,8 @@ const RetailerSchema = new mongoose.Schema(
         phoneNumber: {type: String, trim: true, required: false},
         fax: {type: String, trim: true, required: false},
         mobileNumber: {type: String, trim: true, required: false},
+
+        watchObjects: [{type: Schema.Types.ObjectId, ref: 'Watch', required: false}],
 
         createdByAdminObject: {type: Schema.Types.ObjectId, ref: 'Admin', required: true},
         lastEditedByAdminObject: {type: Schema.Types.ObjectId, ref: 'Admin', required: true}
@@ -95,8 +96,16 @@ RetailerSchema.methods.toJSON = function()
         _id: this._id,
 
         email: this.email,
+        companyName: this.companyName,
         firstName: this.firstName,
-        lastName: this.lastName
+        lastName: this.lastName,
+        address: this.address,
+        city: this.city,
+        country: this.country,
+        poBox: this.poBox,
+        phoneNumber: this.phoneNumber,
+        fax: this.fax,
+        mobileNumber: this.mobileNumber
     };
 };
 

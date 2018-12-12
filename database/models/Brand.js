@@ -1,6 +1,5 @@
 const mongoose = require('mongoose');
 const Schema = mongoose.Schema;
-require('mongoose-geojson-schema');
 
 const BrandSchema = new Schema(
     {
