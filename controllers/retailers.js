@@ -109,7 +109,7 @@ module.exports.updateById = async function(req, res, next)
 
     try
     {
-        Request.validateReq(req, {enforceParams: true});
+        Request.validateReq(req, {enforceParamsId: true});
 
         let retailer = await Retailer.findById(req.params._id).populate('watchObjects');
         if(!retailer)

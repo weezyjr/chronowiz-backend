@@ -87,5 +87,4 @@ const WatchSchema = new Schema(
         timestamps: true
     });
 
-
 module.exports = mongoose.model('Watch', WatchSchema);

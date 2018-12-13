@@ -5,6 +5,11 @@ const ErrorArgs = require('../errors/ErrorArgs');
 const NAME_MAX_LENGTH = 255;
 const EMAIL_ADDRESS_MAX_LENGTH = 255;
 
+function isEmptyObject(obj)
+{
+    return Object.keys(obj).length === 0 && obj.constructor === Object;
+}
+
 module.exports.validateReq = function(req, {enforcePayload = false, enforceParamsId = false, enforceParams = false, enforceQuery = false} = {})
 {
     if(!req)
@@ -16,30 +21,34 @@ module.exports.validateReq = function(req, {enforcePayload = false, enforceParam
     if(enforcePayload)
     {
         if(!req.body)
-            throw new ValidationError({
-                args: [ErrorArgs.REQUEST_BODY]
-            });
+            throw new ValidationError(
+                {
+                    args: [ErrorArgs.REQUEST_BODY]
+                });
 
         if(!req.body.payload)
-            throw new ValidationError({
-                args: [ErrorArgs.REQUEST_PAYLOAD]
-            });
+            throw new ValidationError(
+                {
+                    args: [ErrorArgs.REQUEST_PAYLOAD]
+                });
     }
 
     if(enforceParams)
     {
-        if(!req.params)
-            throw new ValidationError({
-                args: [ErrorArgs.REQUEST_PARAMS]
-            });
+        if(!req.params || isEmptyObject(req.params))
+            throw new ValidationError(
+                {
+                    args: [ErrorArgs.REQUEST_PARAMS]
+                });
     }
 
     if(enforceParamsId)
     {
         if(!req.params)
-            throw new ValidationError({
-                args: [ErrorArgs.REQUEST_PARAMS]
-            });
+            throw new ValidationError(
+                {
+                    args: [ErrorArgs.REQUEST_PARAMS]
+                });
 
         this.validateId(req.params._id, 'req.params');
     }
@@ -47,9 +56,10 @@ module.exports.validateReq = function(req, {enforcePayload = false, enforceParam
     if(enforceQuery)
     {
         if(!req.query)
-            throw new ValidationError({
-                args: [ErrorArgs.REQUEST_QUERY]
-            });
+            throw new ValidationError(
+                {
+                    args: [ErrorArgs.REQUEST_QUERY]
+                });
     }
 
     return req;
@@ -61,14 +71,16 @@ module.exports.validateId = function(_id, fieldName, {optional = false} = {})
         return;
 
     if(!_id)
-        throw new ValidationError({
-            args: [fieldName]
-        });
+        throw new ValidationError(
+            {
+                args: [fieldName]
+            });
 
     if(!validator.isMongoId(_id))
-        throw new ValidationError({
-            args: [fieldName, _id]
-        });
+        throw new ValidationError(
+            {
+                args: [fieldName, _id]
+            });
 
     return _id;
 };
@@ -79,16 +91,18 @@ module.exports.validateIdOrObject = function(_idOrObject, fieldName, {optional =
         return;
 
     if(!_idOrObject)
-        throw new ValidationError({
-            args: [fieldName]
-        });
+        throw new ValidationError(
+            {
+                args: [fieldName]
+            });
 
     if(typeof _idOrObject === 'string')
     {
         if(!validator.isMongoId(_idOrObject))
-            throw new ValidationError({
-                args: [fieldName, _idOrObject]
-            });
+            throw new ValidationError(
+                {
+                    args: [fieldName, _idOrObject]
+                });
 
         return _idOrObject;
     }
@@ -98,14 +112,16 @@ module.exports.validateIdOrObject = function(_idOrObject, fieldName, {optional =
             return;
 
         if(!_idOrObject._id)
-            throw new ValidationError({
-                args: [fieldName]
-            });
+            throw new ValidationError(
+                {
+                    args: [fieldName]
+                });
 
         if(!validator.isMongoId(_idOrObject._id))
-            throw new ValidationError({
-                args: [fieldName, _idOrObject]
-            });
+            throw new ValidationError(
+                {
+                    args: [fieldName, _idOrObject]
+                });
 
         return _idOrObject._id;
     }
@@ -117,14 +133,16 @@ module.exports.validateIds = function(Ids, fieldName, {optional = false} = {})
         return;
 
     if(!Ids)
-        throw new ValidationError({
-            args: [fieldName]
-        });
+        throw new ValidationError(
+            {
+                args: [fieldName]
+            });
 
     if(!Array.isArray(Ids))
-        throw new ValidationError({
-            args: [fieldName, Ids]
-        });
+        throw new ValidationError(
+            {
+                args: [fieldName, Ids]
+            });
 
     for(let _id of Ids)
         this.validateId(_id, fieldName, {optional});
@@ -205,14 +223,16 @@ module.exports.validateTexts = function(texts, fieldName, {optional = false} = {
         return;
 
     if(!texts)
-        throw new ValidationError({
-            args: [fieldName]
-        });
+        throw new ValidationError(
+            {
+                args: [fieldName]
+            });
 
     if(!Array.isArray(texts))
-        throw new ValidationError({
-            args: [fieldName, texts]
-        });
+        throw new ValidationError(
+            {
+                args: [fieldName, texts]
+            });
 
     for(let text of texts)
         this.validateText(text, fieldName, {optional});
@@ -226,14 +246,16 @@ module.exports.validateTextObjects = function(textObjects, fieldName, {optional 
         return;
 
     if(!textObjects)
-        throw new ValidationError({
-            args: [fieldName]
-        });
+        throw new ValidationError(
+            {
+                args: [fieldName]
+            });
 
     if(!Array.isArray(textObjects))
-        throw new ValidationError({
-            args: [fieldName, textObjects]
-        });
+        throw new ValidationError(
+            {
+                args: [fieldName, textObjects]
+            });
 
     for(let textObject of textObjects)
         this.validateText(textObject.value, fieldName, {optional});
@@ -247,18 +269,21 @@ module.exports.validateEmail = function(email, {optional = false} = {})
         return;
 
     if(!email)
-        throw new ValidationError({
-            args: [ErrorArgs.EMAIL]
-        });
+        throw new ValidationError(
+            {
+                args: [ErrorArgs.EMAIL]
+            });
 
     if(!validator.isEmail(email))
-        throw new ValidationError({
-            args: [ErrorArgs.EMAIL, email]
-        });
+        throw new ValidationError(
+            {
+                args: [ErrorArgs.EMAIL, email]
+            });
     if(email.length > EMAIL_ADDRESS_MAX_LENGTH)
-        throw new ValidationError({
-            args: [ErrorArgs.EMAIL, email]
-        });
+        throw new ValidationError(
+            {
+                args: [ErrorArgs.EMAIL, email]
+            });
     email = email.toLowerCase();
 
     return email;
@@ -270,25 +295,29 @@ module.exports.validatePassword = function(password, {optional = false} = {})
         return;
 
     if(!password)
-        throw new ValidationError({
-            args: [ErrorArgs.PASSWORD]
-        });
+        throw new ValidationError(
+            {
+                args: [ErrorArgs.PASSWORD]
+            });
 
     if(password.length < 8)
-        throw new ValidationError({
-            args: [ErrorArgs.PASSWORD, password]
-        });
+        throw new ValidationError(
+            {
+                args: [ErrorArgs.PASSWORD, password]
+            });
 
     if(password.length > 20)
-        throw new ValidationError({
-            args: [ErrorArgs.PASSWORD, password]
-        });
+        throw new ValidationError(
+            {
+                args: [ErrorArgs.PASSWORD, password]
+            });
 
     if(!/^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[#$_\-@!%&*?])[A-Za-z\d#$_\-@!%&*?]{8,20}$/.test(password))
     {
-        throw new ValidationError({
-            args: [ErrorArgs.PASSWORD, password]
-        });
+        throw new ValidationError(
+            {
+                args: [ErrorArgs.PASSWORD, password]
+            });
     }
 
     return password;

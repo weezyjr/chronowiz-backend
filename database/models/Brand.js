@@ -19,5 +19,4 @@ const BrandSchema = new Schema(
         timestamps: true
     });
 
-
 module.exports = mongoose.model('Brand', BrandSchema);

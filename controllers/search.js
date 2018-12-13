@@ -1,24 +1,29 @@
 const Request = require('../models/reqres/Request');
 const Response = require('../models/reqres/Response');
+const Brand = require('../database/models/Brand');
+const Collection = require('../database/models/Collection');
 const Watch = require('../database/models/Watch');
 
 module.exports.search = async function(req, res, next)
 {
     try
     {
-        Request.validateReq(req, {enforcePayload: true});
+        Request.validateReq(req, {enforceParams: true});
 
-        let query = Request.validateText(req.body.payload.query, 'query');
+        let query = Request.validateText(req.params.query, 'query');
 
-        let watches = await Watch.find({'referenceNumber': query}).populate('brandObject').populate('collectionObject');
+        console.log(query);
 
-        // let watchesMatchBrand = await Watch.find({'referenceNumber': query});
-        //
-        // let watchesMatchCollection = await Watch.find({'referenceNumber': query});
-        //
-        // let watchesMatchCollection = await Watch.find({'referenceNumber': query});
+        //TODO search query for watch fields
+        let watches = await Watch.find({$text: {$search: query}});
+
+        //TODO search query for collection fields
+
+
+        //TODO search query for brand fields
 
         return res.json(Response.payload({payload: watches}));
+
     }
     catch(error)
     {

@@ -75,7 +75,7 @@ module.exports.profile = async function(req, res, next)
 {
     try
     {
-        Request.validateReq(req, {enforceParams: true});
+        Request.validateReq(req);
 
         let admin = await Admin.findById(req.user._id);
         if(!admin)

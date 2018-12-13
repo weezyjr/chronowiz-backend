@@ -37,7 +37,7 @@ module.exports.profile = async function(req, res, next)
 {
     try
     {
-        Request.validateReq(req, {enforceParams: true});
+        Request.validateReq(req);
 
         let retailer = await Retailer.findById(req.user._id).populate('watchObjects');
         if(!retailer)

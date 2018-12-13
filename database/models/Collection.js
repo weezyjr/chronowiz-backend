@@ -17,5 +17,4 @@ const CollectionSchema = new Schema(
         timestamps: true
     });
 
-
 module.exports = mongoose.model('Collection', CollectionSchema);
