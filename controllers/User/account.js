@@ -20,10 +20,10 @@ module.exports.signup = async function(req, res, next)
         user.password = Request.validatePassword(req.body.payload.password);
 
         // firstName
-        user.firstName = Request.validateText(req.body.payload.firstName, 'firstName');
+        user.firstName = Request.validateText(req.body.payload.firstName, 'firstName', {optional: true});
 
         // lastName
-        user.lastName = Request.validateText(req.body.payload.lastName, 'lastName');
+        user.lastName = Request.validateText(req.body.payload.lastName, 'lastName', {optional: true});
 
         let savedUser = await user.save();
 
