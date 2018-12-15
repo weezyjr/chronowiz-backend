@@ -12,21 +12,66 @@ module.exports.search = async function(req, res, next)
 
         let query = Request.validateText(req.params.query, 'query');
 
-        console.log(query);
+        let brands = await searchBrands(query);
 
-        //TODO search query for watch fields
-        let watches = await Watch.find({$text: {$search: query}});
+        let collections = await searchCollections(query);
 
-        //TODO search query for collection fields
+        let watches = await searchWatches(query);
 
+        let result =
+            {
+                brands: brands,
+                collections: collections,
+                watches: watches,
+            };
 
-        //TODO search query for brand fields
-
-        return res.json(Response.payload({payload: watches}));
-
+        return res.json(Response.payload({payload: result}));
     }
     catch(error)
     {
         next(error);
     }
 };
+
+async function searchWatches(query)
+{
+    return new Promise(function(resolve, reject)
+    {
+        Watch.search(query, function(error, data)
+        {
+            if(error)
+                return reject(error);
+
+            return resolve(data);
+        });
+    });
+}
+
+async function searchCollections(query)
+{
+    return new Promise(function(resolve, reject)
+    {
+        Collection.search(query, function(error, data)
+        {
+            if(error)
+                return reject(error);
+
+            return resolve(data);
+        });
+    });
+}
+
+async function searchBrands(query)
+{
+    return new Promise(function(resolve, reject)
+    {
+        Brand.search(query, function(error, data)
+        {
+            if(error)
+                return reject(error);
+
+            return resolve(data);
+        });
+    });
+}
+

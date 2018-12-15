@@ -1,9 +1,11 @@
 const mongoose = require('mongoose');
 const Schema = mongoose.Schema;
 
+mongoose.plugin(require('mongoose-regex-search'));
+
 const BrandSchema = new Schema(
     {
-        name: {type: String, trim: true, unique: true, required: true},
+        name: {type: String, trim: true, unique: true, required: true, searchable: true},
 
         logoPhotoUrl: {type: String, trim: true, required: true},
         headerPhotoUrl: {type: String, trim: true, required: false},

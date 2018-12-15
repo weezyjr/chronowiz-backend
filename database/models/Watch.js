@@ -1,12 +1,14 @@
 const mongoose = require('mongoose');
 const Schema = mongoose.Schema;
 
+mongoose.plugin(require('mongoose-regex-search'));
+
 const WatchSchema = new Schema(
     {
         brandObject: {type: Schema.Types.ObjectId, ref: 'Brand', required: true},
         collectionObject: {type: Schema.Types.ObjectId, ref: 'Collection'},
-        model: {type: String, trim: true},
-        referenceNumber: {type: String, trim: true, unique: true, required: true},
+        model: {type: String, trim: true, searchable: true},
+        referenceNumber: {type: String, trim: true, unique: true, required: true, searchable: true},
         gender: {type: String, trim: true},
         productionYear: {type: String, trim: true},
         limited: {type: String, trim: true},
