@@ -38,7 +38,10 @@ module.exports.create = async function(req, res, next)
         watch.movementSpring = Request.validateText(req.body.payload.movementSpring, 'movementSpring', {optional: true});
         watch.movementTourbillon = Request.validateText(req.body.payload.movementTourbillon, 'movementTourbillon', {optional: true});
         watch.movementRotor = Request.validateText(req.body.payload.movementRotor, 'movementRotor', {optional: true});
+        watch.movementNumberOfParts = Request.validateNumber(req.body.payload.movementNumberOfParts, 'movementNumberOfParts', {optional: true});
         watch.movementAdditionalFeatures = Request.validateTextObjects(req.body.payload.movementAdditionalFeatures, 'movementAdditionalFeatures', {optional: true});
+
+        watch.complications = Request.validateTextObjects(req.body.payload.complications, 'complications', {optional: true});
 
         watch.functions = Request.validateTextObjects(req.body.payload.functions, 'functions', {optional: true});
 
@@ -49,12 +52,14 @@ module.exports.create = async function(req, res, next)
         watch.caseBack = Request.validateText(req.body.payload.caseBack, 'caseBack', {optional: true});
         watch.caseBezelMaterial = Request.validateText(req.body.payload.caseBezelMaterial, 'caseBezelMaterial', {optional: true});
         watch.waterResistance = Request.validateText(req.body.payload.waterResistance, 'waterResistance', {optional: true});
+        watch.waterProof = Request.validateText(req.body.payload.waterProof, 'waterProof', {optional: true});
         watch.caseCrown = Request.validateText(req.body.payload.caseCrown, 'caseCrown', {optional: true});
         watch.caseAdditionalFeatures = Request.validateTextObjects(req.body.payload.caseAdditionalFeatures, 'caseAdditionalFeatures', {optional: true});
 
         watch.dialColour = Request.validateText(req.body.payload.dialColour, 'dialColour', {optional: true});
         watch.dialIndex = Request.validateText(req.body.payload.dialIndex, 'dialIndex', {optional: true});
         watch.dialFinish = Request.validateText(req.body.payload.dialFinish, 'dialFinish', {optional: true});
+        watch.dialType = Request.validateText(req.body.payload.dialType, 'dialType', {optional: true});
         watch.dialHands = Request.validateText(req.body.payload.dialHands, 'dialHands', {optional: true});
         watch.dialAdditionalFeatures = Request.validateTextObjects(req.body.payload.dialAdditionalFeatures, 'dialAdditionalFeatures', {optional: true});
 
@@ -67,6 +72,7 @@ module.exports.create = async function(req, res, next)
 
         watch.price = Request.validateNumber(req.body.payload.price, 'price', {optional: true});
         watch.priceCurrency = Request.validateText(req.body.payload.priceCurrency, 'priceCurrency', {optional: true});
+        watch.maximumDiscount = Request.validateNumber(req.body.payload.maximumDiscount, 'maximumDiscount', {optional: true});
 
         watch.mainPhotoUrl = Request.validateS3Url(req.body.payload.mainPhotoUrl, 'mainPhotoUrl', {optional: true});
         watch.banner1PhotoUrl = Request.validateS3Url(req.body.payload.banner1PhotoUrl, 'bannerPhotoUrl1', {optional: true});
@@ -473,11 +479,27 @@ module.exports.updateById = async function(req, res, next)
             isWatchUpdated = true;
         }
 
+        let movementNumberOfParts = Request.validateNumber(req.body.payload.movementNumberOfParts, 'movementNumberOfParts', {optional: true});
+        if(movementNumberOfParts && movementNumberOfParts !== watch.movementNumberOfParts)
+        {
+            watch.movementNumberOfParts = movementNumberOfParts;
+            watch.markModified('movementNumberOfParts');
+            isWatchUpdated = true;
+        }
+
         let movementAdditionalFeatures = Request.validateTextObjects(req.body.payload.movementAdditionalFeatures, 'movementAdditionalFeatures', {optional: true});
         if(movementAdditionalFeatures && movementAdditionalFeatures !== watch.movementAdditionalFeatures)
         {
             watch.movementAdditionalFeatures = movementAdditionalFeatures;
             watch.markModified('movementAdditionalFeatures');
+            isWatchUpdated = true;
+        }
+
+        let complications = Request.validateTextObjects(req.body.payload.complications, 'complications', {optional: true});
+        if(complications && complications !== watch.complications)
+        {
+            watch.complications = complications;
+            watch.markModified('complications');
             isWatchUpdated = true;
         }
 
@@ -537,6 +559,14 @@ module.exports.updateById = async function(req, res, next)
             isWatchUpdated = true;
         }
 
+        let waterProof = Request.validateText(req.body.payload.waterProof, 'waterProof', {optional: true});
+        if(waterProof && waterProof !== watch.waterProof)
+        {
+            watch.waterProof = waterProof;
+            watch.markModified('waterProof');
+            isWatchUpdated = true;
+        }
+
         let waterResistance = Request.validateText(req.body.payload.waterResistance, 'waterResistance', {optional: true});
         if(waterResistance && waterResistance !== watch.waterResistance)
         {
@@ -582,6 +612,14 @@ module.exports.updateById = async function(req, res, next)
         {
             watch.dialFinish = dialFinish;
             watch.markModified('dialFinish');
+            isWatchUpdated = true;
+        }
+
+        let dialType = Request.validateText(req.body.payload.dialType, 'dialType', {optional: true});
+        if(dialFinish && dialType !== watch.dialType)
+        {
+            watch.dialType = dialType;
+            watch.markModified('dialType');
             isWatchUpdated = true;
         }
 
@@ -662,6 +700,14 @@ module.exports.updateById = async function(req, res, next)
         {
             watch.priceCurrency = priceCurrency;
             watch.markModified('priceCurrency');
+            isWatchUpdated = true;
+        }
+
+        let maximumDiscount = Request.validateNumber(req.body.payload.maximumDiscount, 'maximumDiscount', {optional: true});
+        if(maximumDiscount && maximumDiscount !== watch.maximumDiscount)
+        {
+            watch.maximumDiscount = maximumDiscount;
+            watch.markModified('maximumDiscount');
             isWatchUpdated = true;
         }
 

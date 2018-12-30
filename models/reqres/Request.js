@@ -338,7 +338,7 @@ module.exports.validateS3Url = function(url, fieldName, {optional = false} = {})
             args: [ErrorArgs.S3URL, url, fieldName, 'is not Url']
         });
 
-    if(!url.startsWith("https://s3-eu-west-1.amazonaws.com/"))
+    if(!url.startsWith("https://media-dev.chronowiz.com/") && !url.startsWith("https://media.chronowiz.com/"))
         throw new ValidationError({
             args: [ErrorArgs.S3URL, url, fieldName]
         });

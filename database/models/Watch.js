@@ -28,7 +28,10 @@ const WatchSchema = new Schema(
         movementSpring: {type: String, trim: true},
         movementTourbillon: {type: String, trim: true},
         movementRotor: {type: String, trim: true},
+        movementNumberOfParts: {type: Number, trim: true, required: false},
         movementAdditionalFeatures: [{value: {type: String, trim: true}}],
+
+        complications: [{value: {type: String, trim: true}}],
 
         functions: [{value: {type: String, trim: true}}],
 
@@ -39,12 +42,14 @@ const WatchSchema = new Schema(
         caseBack: {type: String, trim: true},
         caseBezelMaterial: {type: String, trim: true},
         waterResistance: {type: String, trim: true},
+        waterProof: {type: String, trim: true},
         caseCrown: {type: String, trim: true},
         caseAdditionalFeatures: [{value: {type: String, trim: true}}],
 
         dialColour: {type: String, trim: true},
         dialIndex: {type: String, trim: true},
         dialFinish: {type: String, trim: true},
+        dialType: {type: String, trim: true},
         dialHands: {type: String, trim: true},
         dialAdditionalFeatures: [{value: {type: String, trim: true}}],
 
@@ -57,6 +62,7 @@ const WatchSchema = new Schema(
 
         price: {type: Number, trim: true},
         priceCurrency: {type: String, trim: true},
+        maximumDiscount: {type: Number, trim: true},
 
         mainPhotoUrl: {type: String, trim: true},
         banner1PhotoUrl: {type: String, trim: true},

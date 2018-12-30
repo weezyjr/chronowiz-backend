@@ -13,6 +13,10 @@ module.exports.create = async function(req, res, next)
 
         collection.brandObject = Request.validateIdOrObject(req.body.payload.brandObject, 'brandObject', {optional: false});
         collection.name = Request.validateText(req.body.payload.name, 'name', {optional: false});
+
+        collection.description = Request.validateText(req.body.payload.description, 'description', {optional: false});
+        collection.maximumDiscount = Request.validateNumber(req.body.payload.maximumDiscount, 'maximumDiscount', {optional: true});
+
         collection.createdByAdminObject = req.user._id;
         collection.lastEditedByAdminObject = req.user._id;
 
@@ -124,6 +128,20 @@ module.exports.updateById = async function(req, res, next)
         {
             collection.name = name;
             collection.markModified('name');
+        }
+
+        let description = Request.validateText(req.body.payload.description, 'description', {optional: true});
+        if(description)
+        {
+            collection.description = description;
+            collection.markModified('description');
+        }
+
+        let maximumDiscount = Request.validateNumber(req.body.payload.maximumDiscount, 'maximumDiscount', {optional: true});
+        if(maximumDiscount && maximumDiscount !== collection.maximumDiscount)
+        {
+            collection.maximumDiscount = maximumDiscount;
+            collection.markModified('maximumDiscount');
         }
 
         if(!collection.createdByAdminObject)
