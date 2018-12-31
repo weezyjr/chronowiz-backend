@@ -110,7 +110,7 @@ module.exports.create = async function(req, res, next)
             {
                 let collection = new Collection();
 
-                collection.brandObject = Request.validateIdOrObject(watch.brandObject, 'brandObject', {optional: false});
+                collection.brandObject = Request.validateIdOrObject(req.body.payload.brandObject, 'brandObject', {optional: false});
                 collection.name = Request.validateText('UNDEFINED', 'name', {optional: false});
                 collection.isUndefined = true;
                 collection.createdByAdminObject = req.user._id;
@@ -515,7 +515,7 @@ module.exports.updateById = async function(req, res, next)
         if(caseMaterial && caseMaterial !== watch.caseMaterial)
         {
             watch.awards = awards;
-            watch.markModified('awards');
+            watch.markModified('caseMaterial');
             isWatchUpdated = true;
         }
 
