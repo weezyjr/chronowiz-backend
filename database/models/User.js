@@ -19,6 +19,8 @@ const UserSchema = new mongoose.Schema(
                 uniqueCaseInsensitive: true
             },
 
+        recoveryEmailVerificationCode: {type: String, required: false},
+
         // Password
         password: {type: String, required: true},
 

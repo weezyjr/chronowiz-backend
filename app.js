@@ -26,6 +26,7 @@ const Response = require('./models/reqres/Response');
 const report = require('./tools/report.js');
 const random = require('./tools/random.js');
 const utils = require('./tools/utils');
+const ses = require('./aws/ses');
 
 /****** Setting up Express app *******/
 const app = express();
@@ -43,6 +44,9 @@ const RateLimit = require('express-rate-limit');
 
 /******* Environment variables *******/
 const isProduction = process.env.CHRONOWIZ_ENV === 'chronowiz-tst' || process.env.CHRONOWIZ_ENV === 'chronowiz-stg' || process.env.CHRONOWIZ_ENV === 'chronowiz-liv';
+
+/******* Setting AWS tools *******/
+ses.setupSES(process.env.AWS_ACCESS_KEY_ID, process.env.AWS_SECRET_ACESS_KEY, process.env.AWS_REGION);
 
 /******* LogDNA *******/
 report.setup(process.env.CHRONOWIZ_APP_NAME, process.env.CHRONOWIZ_ENV, process.env.LOGDNA_KEY);

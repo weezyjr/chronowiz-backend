@@ -12,7 +12,8 @@ const ErrorArgs =
         EMAILS: 'EMAILS',
         PASSWORD: 'PASSWORD',
         S3URL: 'S3URL',
-        S3URLS: 'S3URLS'
+        S3URLS: 'S3URLS',
+        VERIFICATION_CODE: 'VERIFICATION_CODE',
     };
 
 module.exports = ErrorArgs;

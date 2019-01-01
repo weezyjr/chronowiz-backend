@@ -13,8 +13,6 @@ module.exports.signup = async function(req, res, next)
 
         // Email
         admin.email = Request.validateEmail(req.body.payload.email);
-        admin.isEmailVerified = false;
-        admin.emailVerificationCode = random.getRandomInt(1000, 9999);
 
         // password
         admin.password = Request.validatePassword(req.body.payload.password);

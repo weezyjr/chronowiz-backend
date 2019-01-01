@@ -1,13 +1,13 @@
 const mongooseConnection = require('../database/mongooseConnection');
 
-const oldString = 'https://s3-eu-west-1.amazonaws.com/chronowiz-liv-media';
-const newString = 'https://media.chronowiz.com';
+// const oldString = 'https://s3-eu-west-1.amazonaws.com/chronowiz-liv-media';
+// const newString = 'https://media.chronowiz.com';
 
 // const oldString = 'https://s3-eu-west-1.amazonaws.com/chronowiz-dev-media';
 // const newString = 'https://media-dev.chronowiz.com';
 
-// const oldString = 'https://media.dev.chronowiz.com';
-// const newString = 'https://media-dev.chronowiz.com';
+const oldString = 'https://media.dev.chronowiz.com';
+const newString = 'https://media-dev.chronowiz.com';
 
 const mongoose = require('mongoose');
 
@@ -17,8 +17,8 @@ const Collection = require('../database/models/Collection');
 
 const Admin = require('../database/models/Admin');
 
-// const MONGODB_URL = "mongodb+srv://chronowiz-dev-backend:FaizFikak123@chronowiz-dev-licgt.mongodb.net/chronowiz?retryWrites=true;";
-const MONGODB_URL = "mongodb+srv://chronowiz-liv-backend:FaizFikak1%23@cluster0-8rkfv.mongodb.net/chronowiz?retryWrites=true";
+const MONGODB_URL = "mongodb+srv://chronowiz-dev-backend:FaizFikak123@chronowiz-dev-licgt.mongodb.net/chronowiz?retryWrites=true;";
+// const MONGODB_URL = "mongodb+srv://chronowiz-liv-backend:FaizFikak1%23@cluster0-8rkfv.mongodb.net/chronowiz?retryWrites=true";
 
 let run = async function()
 {
@@ -33,24 +33,24 @@ let run = async function()
 
             console.log({message: 'Connected successfully via mongoose to MongoDB'});
 
-            // let brands = await Brand.find();
-            //
-            // for(let brand of brands)
-            // {
-            //     if(brand.logoPhotoUrl)
-            //         brand.logoPhotoUrl = brand.logoPhotoUrl.replace(oldString, newString);
-            //
-            //     if(brand.headerPhotoUrl)
-            //         brand.headerPhotoUrl = brand.headerPhotoUrl.replace(oldString, newString);
-            //
-            //     if(brand.banner1PhotoUrl)
-            //         brand.banner1PhotoUrl = brand.banner1PhotoUrl.replace(oldString, newString);
-            //
-            //     if(brand.banner2PhotoUrl)
-            //         brand.banner2PhotoUrl = brand.banner2PhotoUrl.replace(oldString, newString);
-            //
-            //     await brand.save();
-            // }
+            let brands = await Brand.find();
+
+            for(let brand of brands)
+            {
+                if(brand.logoPhotoUrl)
+                    brand.logoPhotoUrl = brand.logoPhotoUrl.replace(oldString, newString);
+
+                if(brand.headerPhotoUrl)
+                    brand.headerPhotoUrl = brand.headerPhotoUrl.replace(oldString, newString);
+
+                if(brand.banner1PhotoUrl)
+                    brand.banner1PhotoUrl = brand.banner1PhotoUrl.replace(oldString, newString);
+
+                if(brand.banner2PhotoUrl)
+                    brand.banner2PhotoUrl = brand.banner2PhotoUrl.replace(oldString, newString);
+
+                await brand.save();
+            }
 
             let admin = await Admin.findById('5bd76531bf5428aba1c4be47');
 

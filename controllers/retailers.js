@@ -14,8 +14,6 @@ module.exports.create = async function(req, res, next)
 
         // Email
         retailer.email = Request.validateEmail(req.body.payload.email);
-        retailer.isEmailVerified = false;
-        retailer.emailVerificationCode = random.getRandomInt(1000, 9999);
 
         // password
         retailer.password = Request.validatePassword(req.body.payload.password);

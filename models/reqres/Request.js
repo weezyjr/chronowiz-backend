@@ -382,3 +382,26 @@ module.exports.validateS3UrlObjects = function(s3UrlObjects, fieldName, {optiona
 
     return s3UrlObjects;
 };
+
+module.exports.validateVerificationCode = function(verificationCode, type = '', {optional = false} = {})
+{
+    if(!verificationCode && optional)
+        return;
+
+    if(!verificationCode)
+        throw new ValidationError({
+            args: [ErrorArgs.VERIFICATION_CODE]
+        });
+
+    if(typeof (verificationCode) !== 'string')
+        throw new ValidationError({
+            args: [ErrorArgs.VERIFICATION_CODE, verificationCode]
+        });
+
+    if(!validator.isNumeric(verificationCode) || !validator.isLength(verificationCode, {min: 6, max: 6}))
+        throw new ValidationError({
+            args: [ErrorArgs.VERIFICATION_CODE, verificationCode]
+        });
+
+    return verificationCode;
+};
