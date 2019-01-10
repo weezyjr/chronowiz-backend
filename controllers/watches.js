@@ -327,7 +327,7 @@ module.exports.updateById = async function(req, res, next)
             isWatchUpdated = true;
         }
 
-        let referenceNumber = Request.validateText(req.body.payload.referenceNumber, 'referenceNumber');
+        let referenceNumber = Request.validateText(req.body.payload.referenceNumber, 'referenceNumber', {optional: true});
         if(referenceNumber && referenceNumber !== watch.referenceNumber)
         {
             watch.referenceNumber = referenceNumber;
@@ -514,7 +514,7 @@ module.exports.updateById = async function(req, res, next)
         let caseMaterial = Request.validateText(req.body.payload.caseMaterial, 'caseMaterial', {optional: true});
         if(caseMaterial && caseMaterial !== watch.caseMaterial)
         {
-            watch.awards = awards;
+            watch.caseMaterial = caseMaterial;
             watch.markModified('caseMaterial');
             isWatchUpdated = true;
         }
