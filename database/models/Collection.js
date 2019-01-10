@@ -12,7 +12,7 @@ const CollectionSchema = new Schema(
 
         description: {type: String, trim: true, required: false},
 
-        maximumDiscount: {type: Number, trim: true},
+        maximumDiscount: {type: Number, trim: true, default: 0},
 
         watchObjects: [{type: Schema.Types.ObjectId, ref: 'Watch', required: false}],
 

@@ -62,7 +62,7 @@ const WatchSchema = new Schema(
 
         price: {type: Number, trim: true},
         priceCurrency: {type: String, trim: true},
-        maximumDiscount: {type: Number, trim: true},
+        maximumDiscount: {type: Number, trim: true, default: 0},
 
         mainPhotoUrl: {type: String, trim: true},
         banner1PhotoUrl: {type: String, trim: true},

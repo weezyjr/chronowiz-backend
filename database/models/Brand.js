@@ -12,7 +12,7 @@ const BrandSchema = new Schema(
         banner1PhotoUrl: {type: String, trim: true, required: true},
         banner2PhotoUrl: {type: String, trim: true, required: true},
 
-        maximumDiscount: {type: Number, trim: true},
+        maximumDiscount: {type: Number, trim: true, default: 0},
 
         collectionObjects: [{type: Schema.Types.ObjectId, ref: 'Collection', required: false}],
 

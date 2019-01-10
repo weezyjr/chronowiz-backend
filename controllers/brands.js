@@ -19,7 +19,7 @@ module.exports.create = async function(req, res, next)
         brand.banner1PhotoUrl = Request.validateS3Url(req.body.payload.banner1PhotoUrl, 'banner1PhotoUrl', {optional: false});
         brand.banner2PhotoUrl = Request.validateS3Url(req.body.payload.banner2PhotoUrl, 'banner2PhotoUrl', {optional: false});
 
-        brand.maximumDiscount = Request.validateNumber(req.body.payload.maximumDiscount, 'maximumDiscount', {optional: true});
+        brand.maximumDiscount = Request.validateDiscount(req.body.payload.maximumDiscount, 'maximumDiscount', {optional: true});
 
         brand.createdByAdminObject = req.user._id;
         brand.lastEditedByAdminObject = req.user._id;
@@ -149,7 +149,7 @@ module.exports.updateById = async function(req, res, next)
             brand.markModified('banner2PhotoUrl');
         }
 
-        let maximumDiscount = Request.validateNumber(req.body.payload.maximumDiscount, 'maximumDiscount', {optional: true});
+        let maximumDiscount = Request.validateDiscount(req.body.payload.maximumDiscount, 'maximumDiscount', {optional: true});
         if(maximumDiscount && maximumDiscount !== brand.maximumDiscount)
         {
             brand.maximumDiscount = maximumDiscount;

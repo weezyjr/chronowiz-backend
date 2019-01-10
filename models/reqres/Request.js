@@ -179,6 +179,44 @@ module.exports.validateNumber = function(number, fieldName, {optional = false} =
     return number;
 };
 
+module.exports.validateDiscount = function(discount, fieldName, {optional = false} = {})
+{
+    if(!discount && optional)
+        return;
+
+    if(!discount)
+        throw new ValidationError(
+            {
+                args: [fieldName]
+            });
+
+    if(typeof discount !== "number")
+    {
+        throw new ValidationError(
+            {
+                args: [fieldName, discount]
+            });
+    }
+
+    if(discount.length > NAME_MAX_LENGTH)
+    {
+        throw new ValidationError(
+            {
+                args: [fieldName, discount]
+            });
+    }
+
+    if(discount < 0 || discount > 100)
+    {
+        throw new ValidationError(
+            {
+                args: [fieldName, discount]
+            });
+    }
+
+    return discount;
+};
+
 module.exports.validateText = function(text, fieldName, {optional = false} = {})
 {
     //TODO protect against XSS

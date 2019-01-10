@@ -72,7 +72,7 @@ module.exports.create = async function(req, res, next)
 
         watch.price = Request.validateNumber(req.body.payload.price, 'price', {optional: true});
         watch.priceCurrency = Request.validateText(req.body.payload.priceCurrency, 'priceCurrency', {optional: true});
-        watch.maximumDiscount = Request.validateNumber(req.body.payload.maximumDiscount, 'maximumDiscount', {optional: true});
+        watch.maximumDiscount = Request.validateDiscount(req.body.payload.maximumDiscount, 'maximumDiscount', {optional: true});
 
         watch.mainPhotoUrl = Request.validateS3Url(req.body.payload.mainPhotoUrl, 'mainPhotoUrl', {optional: true});
         watch.banner1PhotoUrl = Request.validateS3Url(req.body.payload.banner1PhotoUrl, 'bannerPhotoUrl1', {optional: true});
@@ -703,7 +703,7 @@ module.exports.updateById = async function(req, res, next)
             isWatchUpdated = true;
         }
 
-        let maximumDiscount = Request.validateNumber(req.body.payload.maximumDiscount, 'maximumDiscount', {optional: true});
+        let maximumDiscount = Request.validateDiscount(req.body.payload.maximumDiscount, 'maximumDiscount', {optional: true});
         if(maximumDiscount && maximumDiscount !== watch.maximumDiscount)
         {
             watch.maximumDiscount = maximumDiscount;
@@ -900,66 +900,6 @@ module.exports.deleteById = async function(req, res, next)
 
         let message = watch.referenceNumber + ' deleted successfully.';
         return res.json(Response.payload({payload: watch, en: message}));
-    }
-    catch(error)
-    {
-        next(error);
-    }
-};
-
-module.exports.AddToStockById = async function(req, res, next)
-{
-    try
-    {
-        Request.validateReq(req, {enforceParamsId: true});
-
-        let retailer = await Retailer.findById(req.user._id).populate('watchObjects');
-        if(!retailer)
-            return done({en: 'This Retailer is not registered', errorType: ErrorType.UNAUTHORIZED});
-
-        let watch = await Watch.findById(req.params._id);
-        if(!watch)
-            return res.json(Response.error({en: 'No watch is available with this Id.'}));
-
-        let existingWatch = retailer.watchObjects.find(retailerWatch => retailerWatch.referenceNumber === watch.referenceNumber);
-        if(existingWatch)
-            return res.json(Response.error({en: 'Watch already exists in the retailer\'s stock watches.'}));
-
-        retailer.watchObjects.addToSet(watch);
-
-        await retailer.save();
-
-        return res.json(Response.payload({payload: retailer}));
-    }
-    catch(error)
-    {
-        next(error);
-    }
-};
-
-module.exports.RemoveFromStockById = async function(req, res, next)
-{
-    try
-    {
-        Request.validateReq(req, {enforceParamsId: true});
-
-        let retailer = await Retailer.findById(req.user._id).populate('watchObjects');
-        if(!retailer)
-            return done({en: 'This Retailer is not registered', errorType: ErrorType.UNAUTHORIZED});
-
-        let watch = await Watch.findById(req.params._id);
-        if(!watch)
-            return res.json(Response.error({en: 'No watch is available with this Id.'}));
-
-        let existingWatch = retailer.watchObjects.find(retailerWatch => retailerWatch.referenceNumber === watch.referenceNumber);
-        if(!existingWatch)
-            return res.json(Response.error({en: 'Watch is not present in retailer\'s stock watches.'}));
-
-        retailer.watchObjects.pull({_id: existingWatch._id});
-
-        await retailer.save();
-
-        return res.json(Response.payload({payload: retailer}));
     }
     catch(error)
     {

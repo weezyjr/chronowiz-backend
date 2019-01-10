@@ -33,7 +33,13 @@ const RetailerSchema = new mongoose.Schema(
         fax: {type: String, trim: true, required: false},
         mobileNumber: {type: String, trim: true, required: false},
 
-        watchObjects: [{type: Schema.Types.ObjectId, ref: 'Watch', required: false}],
+        watchObjects:
+            [
+                {
+                    watch: {type: Schema.Types.ObjectId, ref: 'Watch', required: false},
+                    retailerWatchDiscount: {type: Number, default: 0},
+                }
+            ],
 
         createdByAdminObject: {type: Schema.Types.ObjectId, ref: 'Admin', required: true},
         lastEditedByAdminObject: {type: Schema.Types.ObjectId, ref: 'Admin', required: true}
