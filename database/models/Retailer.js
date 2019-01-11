@@ -10,14 +10,7 @@ const SALT_WORK_FACTOR = 10;
 const RetailerSchema = new mongoose.Schema(
     {
         // Email
-        email:
-            {
-                type: String,
-                trim: true,
-                lowercase: true,
-                required: true,
-                uniqueCaseInsensitive: true
-            },
+        email: {type: String, trim: true, lowercase: true, required: true, uniqueCaseInsensitive: true},
 
         // Password
         password: {type: String, required: true},
@@ -33,15 +26,33 @@ const RetailerSchema = new mongoose.Schema(
         fax: {type: String, trim: true, required: false},
         mobileNumber: {type: String, trim: true, required: false},
 
-        maximumBrandDiscount: {type: Number, default: 0, required: false},
-        maximumCollectionDiscount: {type: Number, default: 0, required: false},
-        maximumWatchDiscount: {type: Number, default: 0, required: false},
+        maximumBrandDiscounts:
+            [
+                {
+                    brand: {type: Schema.Types.ObjectId, ref: 'Brand', required: false},
+                    maximumBrandDiscount: {type: Number, default: 0, required: false}
+                }
+            ],
+        maximumCollectionDiscounts:
+            [
+                {
+                    collection: {type: Schema.Types.ObjectId, ref: 'Collection', required: false},
+                    maximumCollectionDiscount: {type: Number, default: 0, required: false}
+                }
+            ],
+        maximumWatchDiscounts:
+            [
+                {
+                    watch: {type: Schema.Types.ObjectId, ref: 'Watch', required: false},
+                    maximumWatchDiscount: {type: Number, default: 0, required: false}
+                }
+            ],
 
         watchObjects:
             [
                 {
                     watch: {type: Schema.Types.ObjectId, ref: 'Watch', required: false},
-                    retailerWatchDiscount: {type: Number, default: 0},
+                    retailerWatchDiscount: {type: Number, default: 0, required: false},
                 }
             ],
 
