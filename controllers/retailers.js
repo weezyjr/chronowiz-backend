@@ -1,6 +1,8 @@
 const Request = require('../models/reqres/Request');
 const Response = require('../models/reqres/Response');
-const random = require('../tools/random');
+const Brand = require('../database/models/Brand');
+const Collection = require('../database/models/Collection');
+const Watch = require('../database/models/Watch');
 const Retailer = require('../database/models/Retailer');
 const validator = require('validator');
 
@@ -33,11 +35,7 @@ module.exports.create = async function(req, res, next)
         retailer.lastEditedByAdminObject = req.user._id;
 
         let savedRetailer = await retailer.save();
-
-        let jwt = await savedRetailer.generateJWT(process.env.JWT_SECRET);
-
         savedRetailer = savedRetailer.toJSON();
-        savedRetailer.jwt = jwt;
 
         return res.json(Response.payload({payload: savedRetailer, en: 'Successfully signed up retailer: ' + retailer.email}));
     }
@@ -81,10 +79,10 @@ module.exports.readByIdOrEmail = async function(req, res, next)
         if(validator.isMongoId(req.params._id))
         {
             let retailer = await Retailer.findById(req.params._id)
-                .populate('watchObjects.watch')
-                .populate('maximumBrandDiscounts.brand')
-                //.populate('maximumCollectionDiscounts.collection')
-                .populate('maximumWatchDiscounts.watch');
+                .populate('watchObjects.watchObject')
+                .populate('maximumBrandDiscounts.brandObject')
+                .populate('maximumCollectionDiscounts.collectionObject')
+                .populate('maximumWatchDiscounts.watchObject');
 
             if(!retailer)
                 return res.json(Response.error({en: 'No retailer is available with this Id.'}));
@@ -113,10 +111,10 @@ module.exports.updateById = async function(req, res, next)
         Request.validateReq(req, {enforceParamsId: true, enforcePayload: true});
 
         let retailer = await Retailer.findById(req.params._id)
-            .populate('watchObjects.watch')
-            .populate('maximumBrandDiscounts.brand')
-            //.populate('maximumCollectionDiscounts.collection')
-            .populate('maximumWatchDiscounts.watch');
+            .populate('watchObjects.watchObject')
+            .populate('maximumBrandDiscounts.brandObject')
+            .populate('maximumCollectionDiscounts.collectionObject')
+            .populate('maximumWatchDiscounts.watchObject');
 
         if(!retailer)
             return res.json(Response.error({en: 'No retailer is available with this Id.'}));
@@ -205,7 +203,13 @@ module.exports.updateById = async function(req, res, next)
             retailer.markModified('mobileNumber');
         }
 
-        return res.json(Response.payload({payload: retailer}));
+        retailer.lastEditedByAdminObject = req.user._id;
+        retailer.markModified('lastEditedByAdminObject');
+
+        let savedRetailer = await retailer.save();
+        savedRetailer = savedRetailer.toJSON();
+
+        return res.json(Response.payload({payload: savedRetailer, en: 'Successfully updated retailer: ' + retailer.email}));
     }
     catch(error)
     {
@@ -234,43 +238,163 @@ module.exports.deleteById = async function(req, res, next)
     }
 };
 
-// module.exports.updateRetailerMaximumBrandDiscount = async function(req, res, next)
-// {
-//     //TODO admin would choose a specific retailer, and then choose a specific brand and add a maximum discount for that retailer on that brand
-//
-//     try
-//     {
-//         Request.validateReq(req, {enforceParamsId: true, enforcePayload: true});
-//
-//         let retailer = await Retailer.findById(req.params._id).populate('maximumBrandDiscounts.brand');
-//
-//         if(!retailer)
-//             return res.json(Response.error({en: 'No retailer is available with this Id.'}));
-//
-//         let brandObject = Request.validateIdOrObject(req.body.payload.brandObject, 'brandObject', {optional: false});
-//
-//
-//         if(brandObject)
-//         {
-//             let oldBrand = await Brand.findById(collection.brandObject._id);
-//             if(!oldBrand)
-//                 return res.json(Response.error({en: 'No brand is available with the existing Brand Id.'}));
-//         }
-//
-//         return res.json(Response.payload({payload: retailer}));
-//     }
-//     catch(error)
-//     {
-//         next(error);
-//     }
-// };
-//
-// module.exports.updateRetailerMaximumCollectionDiscount = async function(req, res, next)
-// {
-//     //TODO admin would choose a specific retailer, and then choose a specific collection and add a maximum discount for that retailer on that collection
-// };
-//
-// module.exports.updateRetailerMaximumWatchDiscount = async function(req, res, next)
-// {
-//     //TODO admin would choose a specific retailer, and then choose a specific watch and add a maximum discount for that retailer on that watch
-// };
+module.exports.addOrUpdateRetailerMaximumBrandDiscount = async function(req, res, next)
+{
+    try
+    {
+        Request.validateReq(req, {enforceParamsId: true, enforcePayload: true});
+
+        let retailer = await Retailer.findById(req.params._id).populate('maximumBrandDiscounts.brandObject');
+        if(!retailer)
+            return res.json(Response.error({en: 'No retailer is available with this id.'}));
+
+        let brandObject = Request.validateIdOrObject(req.body.payload.brandObject, 'brandObject', {optional: false});
+        let maximumBrandDiscount = Request.validateDiscount(req.body.payload.maximumBrandDiscount, 'maximumBrandDiscount', {optional: false});
+
+        let isAdded = false;
+
+        let brand = await Brand.findById(brandObject);
+        if(!brand)
+            return res.json(Response.error({en: 'No brand is available with this brand id.'}));
+
+        let existingMaximumBrandDiscountObject = retailer.maximumBrandDiscounts.find(retailerMaximumBrandDiscountObject => (retailerMaximumBrandDiscountObject.brandObject && retailerMaximumBrandDiscountObject.brandObject._id.equals(brand._id)));
+        if(existingMaximumBrandDiscountObject)
+        {
+            existingMaximumBrandDiscountObject.maximumBrandDiscount = maximumBrandDiscount;
+            isAdded = false;
+        }
+        else
+        {
+            retailer.maximumBrandDiscounts.addToSet({brandObject: brand, maximumBrandDiscount: maximumBrandDiscount});
+            isAdded = true;
+        }
+
+        retailer.markModified('maximumBrandDiscounts');
+
+        retailer.lastEditedByAdminObject = req.user._id;
+        retailer.markModified('lastEditedByAdminObject');
+
+        let savedRetailer = await retailer.save();
+        savedRetailer = savedRetailer.toJSON();
+
+        let message = null;
+        if(isAdded)
+            message = 'Successfully added a maximum discount on brand ' + brand.name + ' for retailer: ' + retailer.email;
+        else
+            message = 'Successfully updated the maximum discount on brand ' + brand.name + ' for retailer: ' + retailer.email;
+
+        return res.json(Response.payload({payload: savedRetailer, en: message}));
+    }
+    catch(error)
+    {
+        next(error);
+    }
+};
+
+module.exports.addOrUpdateRetailerMaximumCollectionDiscount = async function(req, res, next)
+{
+    try
+    {
+        Request.validateReq(req, {enforceParamsId: true, enforcePayload: true});
+
+        let retailer = await Retailer.findById(req.params._id).populate('maximumCollectionDiscounts.collectionObject');
+        if(!retailer)
+            return res.json(Response.error({en: 'No retailer is available with this id.'}));
+
+        let collectionObject = Request.validateIdOrObject(req.body.payload.collectionObject, 'collectionObject', {optional: false});
+        let maximumCollectionDiscount = Request.validateDiscount(req.body.payload.maximumCollectionDiscount, 'maximumCollectionDiscount', {optional: false});
+
+        let isAdded = false;
+
+        let collection = await Collection.findById(collectionObject);
+        if(!collection)
+            return res.json(Response.error({en: 'No collection is available with the collection Id.'}));
+
+        console.log(collection._id);
+
+        let existingMaximumCollectionDiscountObject = retailer.maximumCollectionDiscounts.find(retailerMaximumCollectionDiscountObject => (retailerMaximumCollectionDiscountObject.collectionObject && retailerMaximumCollectionDiscountObject.collectionObject._id.equals(collection._id)));
+        if(existingMaximumCollectionDiscountObject)
+        {
+            existingMaximumCollectionDiscountObject.maximumCollectionDiscount = maximumCollectionDiscount;
+            isAdded = false;
+        }
+        else
+        {
+            retailer.maximumCollectionDiscounts.addToSet({collectionObject: collection, maximumCollectionDiscount: maximumCollectionDiscount});
+            isAdded = true;
+        }
+
+        retailer.markModified('maximumCollectionDiscounts');
+
+        retailer.lastEditedByAdminObject = req.user._id;
+        retailer.markModified('lastEditedByAdminObject');
+
+        let savedRetailer = await retailer.save();
+        savedRetailer = savedRetailer.toJSON();
+
+        let message = null;
+        if(isAdded)
+            message = 'Successfully added a maximum discount on collection ' + collection.name + ' for retailer: ' + retailer.email;
+        else
+            message = 'Successfully updated the maximum discount on collection ' + collection.name + ' for retailer: ' + retailer.email;
+
+        return res.json(Response.payload({payload: savedRetailer, en: message}));
+    }
+    catch(error)
+    {
+        next(error);
+    }
+};
+
+module.exports.addOrUpdateRetailerMaximumWatchDiscount = async function(req, res, next)
+{
+    try
+    {
+        Request.validateReq(req, {enforceParamsId: true, enforcePayload: true});
+
+        let retailer = await Retailer.findById(req.params._id).populate('maximumWatchDiscounts.watchObject');
+        if(!retailer)
+            return res.json(Response.error({en: 'No retailer is available with this id.'}));
+
+        let watchObject = Request.validateIdOrObject(req.body.payload.watchObject, 'watchObject', {optional: false});
+        let maximumWatchDiscount = Request.validateDiscount(req.body.payload.maximumWatchDiscount, 'maximumWatchDiscount', {optional: false});
+
+        let isAdded = false;
+
+        let watch = await Watch.findById(watchObject);
+        if(!watch)
+            return res.json(Response.error({en: 'No watch is available with the watch Id.'}));
+
+        let existingMaximumWatchDiscountObject = retailer.maximumWatchDiscounts.find(retailerMaximumWatchDiscountObject => (retailerMaximumWatchDiscountObject.watchObject && retailerMaximumWatchDiscountObject.watchObject._id.equals(watch._id)));
+        if(existingMaximumWatchDiscountObject)
+        {
+            existingMaximumWatchDiscountObject.maximumWatchDiscount = maximumWatchDiscount;
+            isAdded = false;
+        }
+        else
+        {
+            retailer.maximumWatchDiscounts.addToSet({watchObject: watch, maximumWatchDiscount: maximumWatchDiscount});
+            isAdded = true;
+        }
+
+        retailer.markModified('maximumWatchDiscounts');
+
+        retailer.lastEditedByAdminObject = req.user._id;
+        retailer.markModified('lastEditedByAdminObject');
+
+        let savedRetailer = await retailer.save();
+        savedRetailer = savedRetailer.toJSON();
+
+        let message = null;
+        if(isAdded)
+            message = 'Successfully added a maximum discount on watch ' + watch.referenceNumber + ' for retailer: ' + retailer.email;
+        else
+            message = 'Successfully updated the maximum discount on watch ' + watch.referenceNumber + ' for retailer: ' + retailer.email;
+
+        return res.json(Response.payload({payload: savedRetailer, en: message}));
+    }
+    catch(error)
+    {
+        next(error);
+    }
+};

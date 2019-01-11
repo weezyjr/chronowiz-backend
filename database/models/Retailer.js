@@ -29,30 +29,30 @@ const RetailerSchema = new mongoose.Schema(
         maximumBrandDiscounts:
             [
                 {
-                    brand: {type: Schema.Types.ObjectId, ref: 'Brand', required: false},
-                    maximumBrandDiscount: {type: Number, default: 0, required: false}
+                    brandObject: {type: Schema.Types.ObjectId, ref: 'Brand', required: false},
+                    maximumBrandDiscount: {type: Number, default: 100, required: false}
                 }
             ],
-        // maximumCollectionDiscounts:
-        //     [
-        //         {
-        //             collection: {type: Schema.Types.ObjectId, ref: 'Collection', required: false},
-        //             maximumCollectionDiscount: {type: Number, default: 0, required: false}
-        //         }
-        //     ],
+        maximumCollectionDiscounts:
+            [
+                {
+                    collectionObject: {type: Schema.Types.ObjectId, ref: 'Collection', required: false},
+                    maximumCollectionDiscount: {type: Number, default: 100, required: false}
+                }
+            ],
         maximumWatchDiscounts:
             [
                 {
-                    watch: {type: Schema.Types.ObjectId, ref: 'Watch', required: false},
-                    maximumWatchDiscount: {type: Number, default: 0, required: false}
+                    watchObject: {type: Schema.Types.ObjectId, ref: 'Watch', required: false},
+                    maximumWatchDiscount: {type: Number, default: 100, required: false}
                 }
             ],
 
         watchObjects:
             [
                 {
-                    watch: {type: Schema.Types.ObjectId, ref: 'Watch', required: false},
-                    retailerWatchDiscount: {type: Number, default: 0, required: false},
+                    watchObject: {type: Schema.Types.ObjectId, ref: 'Watch', required: false},
+                    retailerWatchDiscount: {type: Number, default: 100, required: false},
                 }
             ],
 
@@ -127,9 +127,9 @@ RetailerSchema.methods.toJSON = function()
         phoneNumber: this.phoneNumber,
         fax: this.fax,
         mobileNumber: this.mobileNumber,
-        maximumBrandDiscount: this.maximumBrandDiscount,
-        // maximumCollectionDiscount: this.maximumCollectionDiscount,
-        maximumWatchDiscount: this.maximumWatchDiscount,
+        maximumBrandDiscounts: this.maximumBrandDiscounts,
+        maximumCollectionDiscounts: this.maximumCollectionDiscounts,
+        maximumWatchDiscounts: this.maximumWatchDiscounts,
         watchObjects: this.watchObjects
     };
 };

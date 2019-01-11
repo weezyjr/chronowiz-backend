@@ -13,7 +13,7 @@ module.exports.AddToStockById = async function(req, res, next)
     {
         Request.validateReq(req, {enforceParamsId: true});
 
-        let retailer = await Retailer.findById(req.user._id).populate('watchObjects.watch');
+        let retailer = await Retailer.findById(req.user._id).populate('watchObjects.watchObject');
         if(!retailer)
             return done({en: 'This Retailer is not registered', errorType: ErrorType.UNAUTHORIZED});
 
@@ -21,11 +21,11 @@ module.exports.AddToStockById = async function(req, res, next)
         if(!watch)
             return res.json(Response.error({en: 'No watch is available with this Id.'}));
 
-        let existingWatch = retailer.watchObjects.find(retailerWatch => (retailerWatch.watch && retailerWatch.watch.referenceNumber === watch.referenceNumber));
+        let existingWatch = retailer.watchObjects.find(retailerWatch => (retailerWatch.watchObject && retailerWatch.watchObject.referenceNumber === watch.referenceNumber));
         if(existingWatch)
             return res.json(Response.error({en: 'Watch already exists in the retailer\'s stock watches.'}));
 
-        retailer.watchObjects.addToSet({watch: watch, retailerWatchDiscount: 0});
+        retailer.watchObjects.addToSet({watchObject: watch, retailerWatchDiscount: 0});
 
         await retailer.save();
 
@@ -43,7 +43,7 @@ module.exports.RemoveFromStockById = async function(req, res, next)
     {
         Request.validateReq(req, {enforceParamsId: true});
 
-        let retailer = await Retailer.findById(req.user._id).populate('watchObjects.watch');
+        let retailer = await Retailer.findById(req.user._id).populate('watchObjects.watchObject');
         if(!retailer)
             return done({en: 'This Retailer is not registered', errorType: ErrorType.UNAUTHORIZED});
 
@@ -51,7 +51,7 @@ module.exports.RemoveFromStockById = async function(req, res, next)
         if(!watch)
             return res.json(Response.error({en: 'No watch is available with this Id.'}));
 
-        let existingWatch = retailer.watchObjects.find(retailerWatch => (retailerWatch.watch && retailerWatch.watch.referenceNumber === watch.referenceNumber));
+        let existingWatch = retailer.watchObjects.find(retailerWatch => (retailerWatch.watchObject && retailerWatch.watchObject.referenceNumber === watch.referenceNumber));
         if(!existingWatch)
             return res.json(Response.error({en: 'Watch is not present in retailer\'s stock watches.'}));
 
@@ -75,7 +75,7 @@ module.exports.UpdateRetailerWatchDiscount = async function(req, res, next)
 
         let retailerWatchDiscount =  Request.validateDiscount(req.body.payload.retailerWatchDiscount, 'retailerWatchDiscount', {optional: false});
 
-        let retailer = await Retailer.findById(req.user._id).populate('watchObjects.watch');
+        let retailer = await Retailer.findById(req.user._id).populate('watchObjects.watchObject');
         if(!retailer)
             return done({en: 'This Retailer is not registered', errorType: ErrorType.UNAUTHORIZED});
 
@@ -83,7 +83,7 @@ module.exports.UpdateRetailerWatchDiscount = async function(req, res, next)
         if(!watch)
             return res.json(Response.error({en: 'No watch is available with this Id.'}));
 
-        let existingWatch = retailer.watchObjects.find(retailerWatch => (retailerWatch.watch &&  retailerWatch.watch.referenceNumber === watch.referenceNumber));
+        let existingWatch = retailer.watchObjects.find(retailerWatch => (retailerWatch.watchObject &&  retailerWatch.watchObject.referenceNumber === watch.referenceNumber));
         if(!existingWatch)
             return res.json(Response.error({en: 'Watch is not present in retailer\'s stock watches.'}));
 

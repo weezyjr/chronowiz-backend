@@ -13,4 +13,10 @@ router.put('/:_id', passport.authenticate('jwt-admin', {session: false}), retail
 
 router.delete('/:_id', passport.authenticate('jwt-admin', {session: false}), retailers.deleteById);
 
+router.put('/brandMaxDiscount/:_id', passport.authenticate('jwt-admin', {session: false}), retailers.addOrUpdateRetailerMaximumBrandDiscount);
+
+router.put('/collectionMaxDiscount/:_id', passport.authenticate('jwt-admin', {session: false}), retailers.addOrUpdateRetailerMaximumCollectionDiscount);
+
+router.put('/watchMaxDiscount/:_id', passport.authenticate('jwt-admin', {session: false}), retailers.addOrUpdateRetailerMaximumWatchDiscount);
+
 module.exports = router;

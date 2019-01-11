@@ -11,7 +11,7 @@ module.exports.login = async function(req, res, next)
         //Email
         let email = Request.validateEmail(req.body.payload.email);
 
-        let retailer = await Retailer.findOne({email}).populate('watchObjects.watch');
+        let retailer = await Retailer.findOne({email}).populate('watchObjects.watchObject');
         if(!retailer)
             return res.json(Response.error({en: 'This email is not registered, hence cannot login.', request: req}));
 
@@ -39,7 +39,7 @@ module.exports.profile = async function(req, res, next)
     {
         Request.validateReq(req);
 
-        let retailer = await Retailer.findById(req.user._id).populate('watchObjects.watch');
+        let retailer = await Retailer.findById(req.user._id).populate('watchObjects.watchObject');
         if(!retailer)
             return res.json(Response.error({en: 'No retailer is available with this Id.'}));
 
