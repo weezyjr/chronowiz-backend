@@ -29,6 +29,10 @@ module.exports.create = async function(req, res, next)
         retailer.fax = Request.validateText(req.body.payload.fax, 'fax', {optional: true});
         retailer.mobileNumber = Request.validateText(req.body.payload.mobileNumber, 'mobileNumber', {optional: true});
 
+        retailer.maximumBrandDiscount = Request.validateDiscount(req.body.payload.maximumBrandDiscount, 'maximumBrandDiscount', {optional: true});
+        retailer.maximumCollectionDiscount = Request.validateDiscount(req.body.payload.maximumCollectionDiscount, 'maximumCollectionDiscount', {optional: true});
+        retailer.maximumWatchDiscount = Request.validateDiscount(req.body.payload.maximumWatchDiscount, 'maximumWatchDiscount', {optional: true});
+
         retailer.createdByAdminObject = req.user._id;
         retailer.lastEditedByAdminObject = req.user._id;
 
@@ -103,15 +107,118 @@ module.exports.readByIdOrEmail = async function(req, res, next)
 
 module.exports.updateById = async function(req, res, next)
 {
-    //TODO
-
     try
     {
-        Request.validateReq(req, {enforceParamsId: true});
+        Request.validateReq(req, {enforceParamsId: true, enforcePayload: true});
 
         let retailer = await Retailer.findById(req.params._id).populate('watchObjects');
         if(!retailer)
             return res.json(Response.error({en: 'No retailer is available with this Id.'}));
+
+        let email = Request.validateEmail(req.body.payload.email, {optional: true});
+        if(email && email !== retailer.email)
+        {
+            retailer.email = email;
+            retailer.markModified('email');
+        }
+
+        let password = Request.validatePassword(req.body.payload.password, {optional: true});
+        if(password)
+        {
+            retailer.password = password;
+            retailer.markModified('password');
+        }
+
+        let companyName = Request.validateText(req.body.payload.companyName, 'companyName', {optional: true});
+        if(companyName)
+        {
+            retailer.companyName = companyName;
+            retailer.markModified('companyName');
+        }
+
+        let firstName = Request.validateText(req.body.payload.firstName, 'firstName', {optional: true});
+        if(firstName)
+        {
+            retailer.firstName = firstName;
+            retailer.markModified('firstName');
+        }
+
+        let lastName = Request.validateText(req.body.payload.lastName, 'lastName', {optional: true});
+        if(lastName)
+        {
+            retailer.lastName = lastName;
+            retailer.markModified('lastName');
+        }
+
+        let address = Request.validateText(req.body.payload.address, 'address', {optional: true});
+        if(address)
+        {
+            retailer.address = address;
+            retailer.markModified('address');
+        }
+
+        let city = Request.validateText(req.body.payload.city, 'city', {optional: true});
+        if(city)
+        {
+            retailer.city = city;
+            retailer.markModified('city');
+        }
+
+        let country = Request.validateText(req.body.payload.country, 'country', {optional: true});
+        if(country)
+        {
+            retailer.country = country;
+            retailer.markModified('country');
+        }
+
+        let poBox = Request.validateText(req.body.payload.poBox, 'poBox', {optional: true});
+        if(poBox)
+        {
+            retailer.poBox = poBox;
+            retailer.markModified('poBox');
+        }
+
+        let phoneNumber = Request.validateText(req.body.payload.phoneNumber, 'phoneNumber', {optional: true});
+        if(phoneNumber)
+        {
+            retailer.phoneNumber = phoneNumber;
+            retailer.markModified('phoneNumber');
+        }
+
+        let fax = Request.validateText(req.body.payload.fax, 'fax', {optional: true});
+        if(fax)
+        {
+            retailer.fax = fax;
+            retailer.markModified('fax');
+        }
+
+        let mobileNumber = Request.validateText(req.body.payload.mobileNumber, 'mobileNumber', {optional: true});
+        if(mobileNumber)
+        {
+            retailer.mobileNumber = mobileNumber;
+            retailer.markModified('mobileNumber');
+        }
+
+        let maximumBrandDiscount = Request.validateDiscount(req.body.payload.maximumBrandDiscount, 'maximumBrandDiscount', {optional: true});
+        if(maximumBrandDiscount)
+        {
+            retailer.maximumBrandDiscount = maximumBrandDiscount;
+            retailer.markModified('maximumBrandDiscount');
+        }
+
+        let maximumCollectionDiscount = Request.validateDiscount(req.body.payload.maximumCollectionDiscount, 'maximumCollectionDiscount', {optional: true});
+        if(maximumCollectionDiscount)
+        {
+            retailer.maximumCollectionDiscount = maximumCollectionDiscount;
+            retailer.markModified('maximumCollectionDiscount');
+        }
+
+        let maximumWatchDiscount = Request.validateDiscount(req.body.payload.maximumWatchDiscount, 'maximumWatchDiscount', {optional: true});
+        if(maximumWatchDiscount)
+        {
+            retailer.maximumWatchDiscount = maximumWatchDiscount;
+            retailer.markModified('maximumWatchDiscount');
+        }
 
         return res.json(Response.payload({payload: retailer}));
     }

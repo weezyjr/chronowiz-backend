@@ -209,8 +209,6 @@ module.exports.readByIdOrReference = async function(req, res, next)
 
 module.exports.updateById = async function(req, res, next)
 {
-    let isWatchUpdated = false;
-
     try
     {
         Request.validateReq(req, {enforceParamsId: true, enforcePayload: true});
@@ -218,6 +216,8 @@ module.exports.updateById = async function(req, res, next)
         let watch = await Watch.findById(req.params._id).populate('brandObject').populate('collectionObject');
         if(!watch)
             return res.json(Response.error({en: 'No watch is available with this Id.'}));
+
+        let isWatchUpdated = false;
 
         let newBrandId = Request.validateIdOrObject(req.body.payload.brandObject, 'brandObject', {optional: false});
         let newCollectionId = Request.validateIdOrObject(req.body.payload.collectionObject, 'collectionObject', {optional: true});

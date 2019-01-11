@@ -33,6 +33,10 @@ const RetailerSchema = new mongoose.Schema(
         fax: {type: String, trim: true, required: false},
         mobileNumber: {type: String, trim: true, required: false},
 
+        maximumBrandDiscount: {type: Number, default: 0, required: false},
+        maximumCollectionDiscount: {type: Number, default: 0, required: false},
+        maximumWatchDiscount: {type: Number, default: 0, required: false},
+
         watchObjects:
             [
                 {
@@ -112,6 +116,9 @@ RetailerSchema.methods.toJSON = function()
         phoneNumber: this.phoneNumber,
         fax: this.fax,
         mobileNumber: this.mobileNumber,
+        maximumBrandDiscount: this.maximumBrandDiscount,
+        maximumCollectionDiscount: this.maximumCollectionDiscount,
+        maximumWatchDiscount: this.maximumWatchDiscount,
         watchObjects: this.watchObjects
     };
 };
