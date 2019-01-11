@@ -33,13 +33,13 @@ const RetailerSchema = new mongoose.Schema(
                     maximumBrandDiscount: {type: Number, default: 0, required: false}
                 }
             ],
-        maximumCollectionDiscounts:
-            [
-                {
-                    collection: {type: Schema.Types.ObjectId, ref: 'Collection', required: false},
-                    maximumCollectionDiscount: {type: Number, default: 0, required: false}
-                }
-            ],
+        // maximumCollectionDiscounts:
+        //     [
+        //         {
+        //             collection: {type: Schema.Types.ObjectId, ref: 'Collection', required: false},
+        //             maximumCollectionDiscount: {type: Number, default: 0, required: false}
+        //         }
+        //     ],
         maximumWatchDiscounts:
             [
                 {
