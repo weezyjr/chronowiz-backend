@@ -83,7 +83,7 @@ module.exports.readByIdOrEmail = async function(req, res, next)
             let retailer = await Retailer.findById(req.params._id)
                 .populate('watchObjects.watch')
                 .populate('maximumBrandDiscounts.brand')
-                .populate('maximumCollectionDiscounts.collection')
+                //.populate('maximumCollectionDiscounts.collection')
                 .populate('maximumWatchDiscounts.watch');
 
             if(!retailer)
@@ -115,7 +115,7 @@ module.exports.updateById = async function(req, res, next)
         let retailer = await Retailer.findById(req.params._id)
             .populate('watchObjects.watch')
             .populate('maximumBrandDiscounts.brand')
-            .populate('maximumCollectionDiscounts.collection')
+            //.populate('maximumCollectionDiscounts.collection')
             .populate('maximumWatchDiscounts.watch');
 
         if(!retailer)
@@ -234,43 +234,43 @@ module.exports.deleteById = async function(req, res, next)
     }
 };
 
-module.exports.updateRetailerMaximumBrandDiscount = async function(req, res, next)
-{
-    //TODO admin would choose a specific retailer, and then choose a specific brand and add a maximum discount for that retailer on that brand
-
-    try
-    {
-        Request.validateReq(req, {enforceParamsId: true, enforcePayload: true});
-
-        let retailer = await Retailer.findById(req.params._id).populate('maximumBrandDiscounts.brand');
-
-        if(!retailer)
-            return res.json(Response.error({en: 'No retailer is available with this Id.'}));
-
-        let brandObject = Request.validateIdOrObject(req.body.payload.brandObject, 'brandObject', {optional: false});
-
-
-        if(brandObject)
-        {
-            let oldBrand = await Brand.findById(collection.brandObject._id);
-            if(!oldBrand)
-                return res.json(Response.error({en: 'No brand is available with the existing Brand Id.'}));
-        }
-
-        return res.json(Response.payload({payload: retailer}));
-    }
-    catch(error)
-    {
-        next(error);
-    }
-};
-
-module.exports.updateRetailerMaximumCollectionDiscount = async function(req, res, next)
-{
-    //TODO admin would choose a specific retailer, and then choose a specific collection and add a maximum discount for that retailer on that collection
-};
-
-module.exports.updateRetailerMaximumWatchDiscount = async function(req, res, next)
-{
-    //TODO admin would choose a specific retailer, and then choose a specific watch and add a maximum discount for that retailer on that watch
-};
+// module.exports.updateRetailerMaximumBrandDiscount = async function(req, res, next)
+// {
+//     //TODO admin would choose a specific retailer, and then choose a specific brand and add a maximum discount for that retailer on that brand
+//
+//     try
+//     {
+//         Request.validateReq(req, {enforceParamsId: true, enforcePayload: true});
+//
+//         let retailer = await Retailer.findById(req.params._id).populate('maximumBrandDiscounts.brand');
+//
+//         if(!retailer)
+//             return res.json(Response.error({en: 'No retailer is available with this Id.'}));
+//
+//         let brandObject = Request.validateIdOrObject(req.body.payload.brandObject, 'brandObject', {optional: false});
+//
+//
+//         if(brandObject)
+//         {
+//             let oldBrand = await Brand.findById(collection.brandObject._id);
+//             if(!oldBrand)
+//                 return res.json(Response.error({en: 'No brand is available with the existing Brand Id.'}));
+//         }
+//
+//         return res.json(Response.payload({payload: retailer}));
+//     }
+//     catch(error)
+//     {
+//         next(error);
+//     }
+// };
+//
+// module.exports.updateRetailerMaximumCollectionDiscount = async function(req, res, next)
+// {
+//     //TODO admin would choose a specific retailer, and then choose a specific collection and add a maximum discount for that retailer on that collection
+// };
+//
+// module.exports.updateRetailerMaximumWatchDiscount = async function(req, res, next)
+// {
+//     //TODO admin would choose a specific retailer, and then choose a specific watch and add a maximum discount for that retailer on that watch
+// };

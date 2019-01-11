@@ -128,7 +128,7 @@ RetailerSchema.methods.toJSON = function()
         fax: this.fax,
         mobileNumber: this.mobileNumber,
         maximumBrandDiscount: this.maximumBrandDiscount,
-        maximumCollectionDiscount: this.maximumCollectionDiscount,
+        // maximumCollectionDiscount: this.maximumCollectionDiscount,
         maximumWatchDiscount: this.maximumWatchDiscount,
         watchObjects: this.watchObjects
     };
