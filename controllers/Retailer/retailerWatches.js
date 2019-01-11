@@ -21,7 +21,7 @@ module.exports.AddToStockById = async function(req, res, next)
         if(!watch)
             return res.json(Response.error({en: 'No watch is available with this Id.'}));
 
-        let existingWatch = retailer.watchObjects.find(retailerWatch => retailerWatch.watch.referenceNumber === watch.referenceNumber);
+        let existingWatch = retailer.watchObjects.find(retailerWatch => (retailerWatch.watch && retailerWatch.watch.referenceNumber === watch.referenceNumber));
         if(existingWatch)
             return res.json(Response.error({en: 'Watch already exists in the retailer\'s stock watches.'}));
 
@@ -51,7 +51,7 @@ module.exports.RemoveFromStockById = async function(req, res, next)
         if(!watch)
             return res.json(Response.error({en: 'No watch is available with this Id.'}));
 
-        let existingWatch = retailer.watchObjects.find(retailerWatch => retailerWatch.watch.referenceNumber === watch.referenceNumber);
+        let existingWatch = retailer.watchObjects.find(retailerWatch => (retailerWatch.watch && retailerWatch.watch.referenceNumber === watch.referenceNumber));
         if(!existingWatch)
             return res.json(Response.error({en: 'Watch is not present in retailer\'s stock watches.'}));
 
@@ -83,7 +83,7 @@ module.exports.UpdateRetailerWatchDiscount = async function(req, res, next)
         if(!watch)
             return res.json(Response.error({en: 'No watch is available with this Id.'}));
 
-        let existingWatch = retailer.watchObjects.find(retailerWatch => retailerWatch.watch.referenceNumber === watch.referenceNumber);
+        let existingWatch = retailer.watchObjects.find(retailerWatch => (retailerWatch.watch &&  retailerWatch.watch.referenceNumber === watch.referenceNumber));
         if(!existingWatch)
             return res.json(Response.error({en: 'Watch is not present in retailer\'s stock watches.'}));
 
