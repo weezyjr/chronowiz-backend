@@ -91,7 +91,12 @@ module.exports.readByIdOrEmail = async function(req, res, next)
         }
         else
         {
-            let retailer = await Retailer.findOne({email: req.params._id}).populate('watchObjects');
+            let retailer = await Retailer.findOne({email: req.params._id})
+                .populate('watchObjects.watchObject')
+                .populate('maximumBrandDiscounts.brandObject')
+                .populate('maximumCollectionDiscounts.collectionObject')
+                .populate('maximumWatchDiscounts.watchObject');
+
             if(!retailer)
                 return res.json(Response.error({en: 'No retailer is available with this email.'}));
 
