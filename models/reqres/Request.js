@@ -179,7 +179,7 @@ module.exports.validateNumber = function(number, fieldName, {optional = false} =
     return number;
 };
 
-module.exports.validateDiscount = function(discount, fieldName, {optional = false} = {})
+module.exports.validatePercentage = function(discount, fieldName, {optional = false} = {})
 {
     if(!discount && optional)
         return;

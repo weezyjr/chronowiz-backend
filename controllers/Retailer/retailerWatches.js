@@ -73,7 +73,7 @@ module.exports.UpdateRetailerWatchDiscount = async function(req, res, next)
     {
         Request.validateReq(req, {enforceParamsId: true, enforcePayload: true});
 
-        let retailerWatchDiscount =  Request.validateDiscount(req.body.payload.retailerWatchDiscount, 'retailerWatchDiscount', {optional: false});
+        let retailerWatchDiscount =  Request.validatePercentage(req.body.payload.retailerWatchDiscount, 'retailerWatchDiscount', {optional: false});
 
         let retailer = await Retailer.findById(req.user._id).populate('watchObjects.watchObject');
         if(!retailer)

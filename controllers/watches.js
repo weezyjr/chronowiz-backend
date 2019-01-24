@@ -72,7 +72,7 @@ module.exports.create = async function(req, res, next)
 
         watch.price = Request.validateNumber(req.body.payload.price, 'price', {optional: true});
         watch.priceCurrency = Request.validateText(req.body.payload.priceCurrency, 'priceCurrency', {optional: true});
-        watch.maximumDiscount = Request.validateDiscount(req.body.payload.maximumDiscount, 'maximumDiscount', {optional: true});
+        watch.maximumDiscount = Request.validatePercentage(req.body.payload.maximumDiscount, 'maximumDiscount', {optional: true});
 
         watch.mainPhotoUrl = Request.validateS3Url(req.body.payload.mainPhotoUrl, 'mainPhotoUrl', {optional: true});
         watch.banner1PhotoUrl = Request.validateS3Url(req.body.payload.banner1PhotoUrl, 'bannerPhotoUrl1', {optional: true});
@@ -703,7 +703,7 @@ module.exports.updateById = async function(req, res, next)
             isWatchUpdated = true;
         }
 
-        let maximumDiscount = Request.validateDiscount(req.body.payload.maximumDiscount, 'maximumDiscount', {optional: true});
+        let maximumDiscount = Request.validatePercentage(req.body.payload.maximumDiscount, 'maximumDiscount', {optional: true});
         if(maximumDiscount && maximumDiscount !== watch.maximumDiscount)
         {
             watch.maximumDiscount = maximumDiscount;

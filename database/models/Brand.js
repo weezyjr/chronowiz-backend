@@ -16,6 +16,10 @@ const BrandSchema = new Schema(
 
         collectionObjects: [{type: Schema.Types.ObjectId, ref: 'Collection', required: false}],
 
+        headerBackgroundColor: {type: String, trim: true, required: false},
+        headerContentColor: {type: String, trim: true, required: false},
+        headerBackgroundOpacity: {type: Number, trim: true, required: false},
+
         createdByAdminObject: {type: Schema.Types.ObjectId, ref: 'Admin', required: true},
         lastEditedByAdminObject: {type: Schema.Types.ObjectId, ref: 'Admin', required: true},
     },

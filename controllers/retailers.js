@@ -254,7 +254,7 @@ module.exports.addOrUpdateRetailerMaximumBrandDiscount = async function(req, res
             return res.json(Response.error({en: 'No retailer is available with this id.'}));
 
         let brandObject = Request.validateIdOrObject(req.body.payload.brandObject, 'brandObject', {optional: false});
-        let maximumBrandDiscount = Request.validateDiscount(req.body.payload.maximumBrandDiscount, 'maximumBrandDiscount', {optional: false});
+        let maximumBrandDiscount = Request.validatePercentage(req.body.payload.maximumBrandDiscount, 'maximumBrandDiscount', {optional: false});
 
         let isAdded = false;
 
@@ -307,7 +307,7 @@ module.exports.addOrUpdateRetailerMaximumCollectionDiscount = async function(req
             return res.json(Response.error({en: 'No retailer is available with this id.'}));
 
         let collectionObject = Request.validateIdOrObject(req.body.payload.collectionObject, 'collectionObject', {optional: false});
-        let maximumCollectionDiscount = Request.validateDiscount(req.body.payload.maximumCollectionDiscount, 'maximumCollectionDiscount', {optional: false});
+        let maximumCollectionDiscount = Request.validatePercentage(req.body.payload.maximumCollectionDiscount, 'maximumCollectionDiscount', {optional: false});
 
         let isAdded = false;
 
@@ -362,7 +362,7 @@ module.exports.addOrUpdateRetailerMaximumWatchDiscount = async function(req, res
             return res.json(Response.error({en: 'No retailer is available with this id.'}));
 
         let watchObject = Request.validateIdOrObject(req.body.payload.watchObject, 'watchObject', {optional: false});
-        let maximumWatchDiscount = Request.validateDiscount(req.body.payload.maximumWatchDiscount, 'maximumWatchDiscount', {optional: false});
+        let maximumWatchDiscount = Request.validatePercentage(req.body.payload.maximumWatchDiscount, 'maximumWatchDiscount', {optional: false});
 
         let isAdded = false;
 

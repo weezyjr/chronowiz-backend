@@ -19,7 +19,11 @@ module.exports.create = async function(req, res, next)
         brand.banner1PhotoUrl = Request.validateS3Url(req.body.payload.banner1PhotoUrl, 'banner1PhotoUrl', {optional: false});
         brand.banner2PhotoUrl = Request.validateS3Url(req.body.payload.banner2PhotoUrl, 'banner2PhotoUrl', {optional: false});
 
-        brand.maximumDiscount = Request.validateDiscount(req.body.payload.maximumDiscount, 'maximumDiscount', {optional: true});
+        brand.maximumDiscount = Request.validatePercentage(req.body.payload.maximumDiscount, 'maximumDiscount', {optional: true});
+
+        brand.headerBackgroundColor = Request.validateText(req.body.payload.headerBackgroundColor, 'headerBackgroundColor', {optional: true});
+        brand.headerContentColor = Request.validateText(req.body.payload.headerContentColor, 'headerContentColor', {optional: true});
+        brand.headerBackgroundOpacity = Request.validatePercentage(req.body.payload.headerBackgroundOpacity, 'headerBackgroundOpacity', {optional: true});
 
         brand.createdByAdminObject = req.user._id;
         brand.lastEditedByAdminObject = req.user._id;
@@ -149,11 +153,32 @@ module.exports.updateById = async function(req, res, next)
             brand.markModified('banner2PhotoUrl');
         }
 
-        let maximumDiscount = Request.validateDiscount(req.body.payload.maximumDiscount, 'maximumDiscount', {optional: true});
+        let maximumDiscount = Request.validatePercentage(req.body.payload.maximumDiscount, 'maximumDiscount', {optional: true});
         if(maximumDiscount && maximumDiscount !== brand.maximumDiscount)
         {
             brand.maximumDiscount = maximumDiscount;
             brand.markModified('maximumDiscount');
+        }
+
+        let headerBackgroundColor = Request.validateText(req.body.payload.headerBackgroundColor, 'headerBackgroundColor', {optional: true});
+        if(headerBackgroundColor)
+        {
+            brand.headerBackgroundColor = headerBackgroundColor;
+            brand.markModified('headerBackgroundColor');
+        }
+
+        let headerContentColor = Request.validateText(req.body.payload.headerContentColor, 'headerContentColor', {optional: true});
+        if(headerContentColor)
+        {
+            brand.headerContentColor = headerContentColor;
+            brand.markModified('headerContentColor');
+        }
+
+        let headerBackgroundOpacity = Request.validatePercentage(req.body.payload.headerBackgroundOpacity, 'headerBackgroundOpacity', {optional: true});
+        if(headerBackgroundOpacity)
+        {
+            brand.headerBackgroundOpacity = headerBackgroundOpacity;
+            brand.markModified('headerBackgroundOpacity');
         }
 
         if(!brand.createdByAdminObject)
