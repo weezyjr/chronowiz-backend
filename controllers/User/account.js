@@ -78,9 +78,29 @@ module.exports.profile = async function(req, res, next)
     {
         Request.validateReq(req);
 
+        let user = await User.findById(req.user._id).populate('orderObjects');
+        if(!user)
+            return res.json(Response.error({en: 'No user is available with this Id.'}));
+
+        return res.json(Response.payload({payload: user}));
+    }
+    catch(error)
+    {
+        next(error);
+    }
+};
+
+module.exports.update = async function(req, res, next)
+{
+    try
+    {
+        Request.validateReq(req, {enforcePayload: true});
+
         let user = await User.findById(req.user._id);
         if(!user)
             return res.json(Response.error({en: 'No user is available with this Id.'}));
+
+        //TODO User to update his own details
 
         return res.json(Response.payload({payload: user}));
     }
@@ -188,12 +208,14 @@ module.exports.resetPasswordNewPassword = async function(req, res, next)
                 args: [ErrorArgs.USER],
                 request: req
             }));
+
         if(user.email !== email)
             return res.json(Response.error({
                 errorType: ErrorType.WRONG_INPUT,
                 args: [ErrorArgs.EMAIL],
                 request: req
             }));
+
         // Verification Code
         let recoveryEmailVerificationCode = Request.validateVerificationCode(req.body.payload.recoveryEmailVerificationCode, 'email');
         if(user.recoveryEmailVerificationCode !== recoveryEmailVerificationCode)

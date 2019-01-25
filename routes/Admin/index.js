@@ -8,4 +8,6 @@ router.use('/watches', require('./watches'));
 
 router.use('/retailers', require('./retailers'));
 
+router.use('/orders', require('./orders'));
+
 module.exports = router;

@@ -26,7 +26,25 @@ const UserSchema = new mongoose.Schema(
 
         // Name
         firstName: {type: String, trim: true, required: false},
-        lastName: {type: String, trim: true, required: false}
+        lastName: {type: String, trim: true, required: false},
+
+        phone: {type: String, trim: true, required: false},
+
+        // Billing address
+        billingCountry: {type: String, trim: true},
+        billingState: {type: String, trim: true},
+        billingCity: {type: String, trim: true},
+        billingZip: {type: String, trim: true},
+        billingAddress: {type: String, trim: true},
+
+        // Shipping address
+        shippingCountry: {type: String, trim: true},
+        shippingState: {type: String, trim: true},
+        shippingCity: {type: String, trim: true},
+        shippingZip: {type: String, trim: true},
+        shippingAddress: {type: String, trim: true},
+
+        orderObjects: [{type: Schema.Types.ObjectId, ref: 'Order', required: false}],
     },
     {
         timestamps: true
@@ -87,7 +105,22 @@ UserSchema.methods.toJSON = function()
 
         email: this.email,
         firstName: this.firstName,
-        lastName: this.lastName
+        lastName: this.lastName,
+        phone: this.phone,
+
+        billingCountry: this.billingCountry,
+        billingState: this.billingState,
+        billingCity: this.billingCity,
+        billingZip: this.billingZip,
+        billingAddress: this.billingAddress,
+
+        shippingCountry: this.shippingCountry,
+        shippingState: this.shippingState,
+        shippingCity: this.shippingCity,
+        shippingZip: this.shippingZip,
+        shippingAddress: this.shippingAddress,
+
+        orderObjects: this.orderObjects
     };
 };
 

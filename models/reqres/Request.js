@@ -443,3 +443,47 @@ module.exports.validateVerificationCode = function(verificationCode, type = '', 
 
     return verificationCode;
 };
+
+module.exports.validateBoolean = function(boolean, fieldName, {optional = false} = {})
+{
+    if(!boolean && optional)
+        return;
+
+    if(boolean === null)
+        throw new ValidationError(
+            {
+                args: [fieldName]
+            });
+
+    if(typeof boolean !== 'boolean')
+    {
+        throw new ValidationError(
+            {
+                args: [fieldName, boolean]
+            });
+    }
+
+    return boolean;
+};
+
+module.exports.validateArray = function(array, fieldName, {optional = false} = {})
+{
+    if(!array && optional)
+        return;
+
+    if(!array)
+        throw new ValidationError(
+            {
+                args: [fieldName]
+            });
+
+    if(!Array.isArray(array))
+    {
+        throw new ValidationError(
+            {
+                args: [fieldName, array]
+            });
+    }
+
+    return array;
+};

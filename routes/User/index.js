@@ -8,4 +8,6 @@ router.use('/account', require('./account'));
 
 router.use('/search', require('./search'));
 
+router.use('/orders', require('./orders'));
+
 module.exports = router;

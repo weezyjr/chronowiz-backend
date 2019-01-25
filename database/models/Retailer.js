@@ -27,34 +27,34 @@ const RetailerSchema = new mongoose.Schema(
         mobileNumber: {type: String, trim: true, required: false},
 
         maximumBrandDiscounts:
-            [
-                {
-                    brandObject: {type: Schema.Types.ObjectId, ref: 'Brand', required: false},
-                    maximumBrandDiscount: {type: Number, default: 100, required: false}
-                }
-            ],
+            [{
+                brandObject: {type: Schema.Types.ObjectId, ref: 'Brand', required: false},
+                maximumBrandDiscount: {type: Number, default: 100, required: false}
+            }],
+
         maximumCollectionDiscounts:
-            [
-                {
-                    collectionObject: {type: Schema.Types.ObjectId, ref: 'Collection', required: false},
-                    maximumCollectionDiscount: {type: Number, default: 100, required: false}
-                }
-            ],
+            [{
+                collectionObject: {type: Schema.Types.ObjectId, ref: 'Collection', required: false},
+                maximumCollectionDiscount: {type: Number, default: 100, required: false}
+            }],
+
         maximumWatchDiscounts:
-            [
-                {
-                    watchObject: {type: Schema.Types.ObjectId, ref: 'Watch', required: false},
-                    maximumWatchDiscount: {type: Number, default: 100, required: false}
-                }
-            ],
+            [{
+                watchObject: {type: Schema.Types.ObjectId, ref: 'Watch', required: false},
+                maximumWatchDiscount: {type: Number, default: 100, required: false}
+            }],
 
         watchObjects:
-            [
-                {
-                    watchObject: {type: Schema.Types.ObjectId, ref: 'Watch', required: false},
-                    retailerWatchDiscount: {type: Number, default: 100, required: false},
-                }
-            ],
+            [{
+                watchObject: {type: Schema.Types.ObjectId, ref: 'Watch', required: false},
+                retailerWatchDiscount: {type: Number, default: 100, required: false},
+            }],
+
+        orderObjects:
+            [{
+                orderObject: {type: Schema.Types.ObjectId, ref: 'Order', required: false},
+                retailerWatchDiscount: {type: Number, default: 100, required: false},
+            }],
 
         createdByAdminObject: {type: Schema.Types.ObjectId, ref: 'Admin', required: true},
         lastEditedByAdminObject: {type: Schema.Types.ObjectId, ref: 'Admin', required: true}
