@@ -16,8 +16,8 @@ module.exports.create = async function(req, res, next)
         order.status = "Verifying";
 
         order.email = Request.validateEmail(req.body.payload.email, 'email', {optional: false});
-        order.firstName = Request.validateText(req.body.payload.firstName, 'firstName', {optional: false});
-        order.lastName = Request.validateText(req.body.payload.lastName, 'lastName', {optional: false});
+        order.firstName = Request.validateName(req.body.payload.firstName, 'firstName', {optional: false});
+        order.lastName = Request.validateName(req.body.payload.lastName, 'lastName', {optional: false});
         order.phone = Request.validateText(req.body.payload.phone, 'phone', {optional: false});
 
         order.billingCountry = Request.validateText(req.body.payload.billingCountry, 'billingCountry', {optional: false});

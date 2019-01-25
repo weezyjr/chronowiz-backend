@@ -118,7 +118,7 @@ module.exports.updateById = async function(req, res, next)
         if(!brand)
             return res.json(Response.error({en: 'No brand is available with this Id.'}));
 
-        let name = Request.validateText(req.body.payload.name, 'name', {optional: true});
+        let name = Request.validateName(req.body.payload.name, 'name', {optional: true});
         if(name)
         {
             brand.name = name;

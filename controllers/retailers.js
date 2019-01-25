@@ -21,8 +21,8 @@ module.exports.create = async function(req, res, next)
         retailer.password = Request.validatePassword(req.body.payload.password);
 
         retailer.companyName = Request.validateText(req.body.payload.companyName, 'companyName', {optional: true});
-        retailer.firstName = Request.validateText(req.body.payload.firstName, 'firstName', {optional: true});
-        retailer.lastName = Request.validateText(req.body.payload.lastName, 'lastName', {optional: true});
+        retailer.firstName = Request.validateName(req.body.payload.firstName, 'firstName', {optional: true});
+        retailer.lastName = Request.validateName(req.body.payload.lastName, 'lastName', {optional: true});
         retailer.address = Request.validateText(req.body.payload.address, 'address', {optional: true});
         retailer.city = Request.validateText(req.body.payload.city, 'city', {optional: true});
         retailer.country = Request.validateText(req.body.payload.country, 'country', {optional: true});
@@ -145,14 +145,14 @@ module.exports.updateById = async function(req, res, next)
             retailer.markModified('companyName');
         }
 
-        let firstName = Request.validateText(req.body.payload.firstName, 'firstName', {optional: true});
+        let firstName = Request.validateName(req.body.payload.firstName, 'firstName', {optional: true});
         if(firstName)
         {
             retailer.firstName = firstName;
             retailer.markModified('firstName');
         }
 
-        let lastName = Request.validateText(req.body.payload.lastName, 'lastName', {optional: true});
+        let lastName = Request.validateName(req.body.payload.lastName, 'lastName', {optional: true});
         if(lastName)
         {
             retailer.lastName = lastName;

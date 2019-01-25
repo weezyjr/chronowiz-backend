@@ -94,7 +94,7 @@ module.exports.updateById = async function(req, res, next)
 
         let savedOrder = await order.save();
 
-        let message = savedOrder.name + ' updated successfully.';
+        let message = 'Order RF#' + savedOrder.orderNumber + ' updated successfully.';
         return res.json(Response.payload({payload: savedOrder, en: message}));
     }
     catch(error)

@@ -55,13 +55,13 @@ module.exports.sendResetPasswordEmail = function(recipientAddress, emailVerifica
     });
 };
 
-module.exports.sendGenericMail = function(emailAddresses, subject, body)
+module.exports.sendGenericMail = function(emailAddress, subject, body)
 {
     let params =
         {
             Destination:
                 {
-                    ToAddresses: emailAddresses
+                    ToAddresses: [emailAddress]
                 },
             Message:
                 {

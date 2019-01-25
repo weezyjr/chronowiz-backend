@@ -123,7 +123,7 @@ module.exports.updateById = async function(req, res, next)
             collection.markModified('brandObject');
         }
 
-        let name = Request.validateText(req.body.payload.name, 'name', {optional: true});
+        let name = Request.validateName(req.body.payload.name, 'name', {optional: true});
         if(name)
         {
             collection.name = name;

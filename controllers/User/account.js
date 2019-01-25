@@ -21,10 +21,10 @@ module.exports.signup = async function(req, res, next)
         user.password = Request.validatePassword(req.body.payload.password);
 
         // firstName
-        user.firstName = Request.validateText(req.body.payload.firstName, 'firstName', {optional: true});
+        user.firstName = Request.validateName(req.body.payload.firstName, 'firstName', {optional: true});
 
         // lastName
-        user.lastName = Request.validateText(req.body.payload.lastName, 'lastName', {optional: true});
+        user.lastName = Request.validateName(req.body.payload.lastName, 'lastName', {optional: true});
 
         let savedUser = await user.save();
 
@@ -79,6 +79,7 @@ module.exports.profile = async function(req, res, next)
         Request.validateReq(req);
 
         let user = await User.findById(req.user._id).populate('orderObjects');
+
         if(!user)
             return res.json(Response.error({en: 'No user is available with this Id.'}));
 
@@ -236,6 +237,33 @@ module.exports.resetPasswordNewPassword = async function(req, res, next)
         savedUser.jwt = jwt;
 
         return res.json(Response.payload({payload: savedUser}));
+    }
+    catch(error)
+    {
+        next(error);
+    }
+};
+
+module.exports.contactus = async function(req, res, next)
+{
+    try
+    {
+        Request.validateReq(req, {enforcePayload: true});
+
+        let name = Request.validateName(req.body.payload.name, 'Name', {optional: false});
+        let email = Request.validateText(req.body.payload.email, 'Email', {optional: false});
+        let phone = Request.validateText(req.body.payload.phone, 'Phone', {optional: true});
+        let message = Request.validateText(req.body.payload.message, 'Message', {optional: false});
+
+        let body =
+            'User name: ' + name + '<br>' +
+            'User email: ' + email + '<br>' +
+            'User phone: ' + phone + '<br>' +
+            'Message: ' + message;
+
+        await ses.sendGenericMail("heiba@chronowiz.com", "Contact Us message received from " + name, body);
+
+        return res.json(Response.payload({en: 'Contact us message sent successfully.'}));
     }
     catch(error)
     {

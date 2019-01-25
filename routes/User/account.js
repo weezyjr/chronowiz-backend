@@ -15,4 +15,6 @@ router.post('/resetPasswordConfirmCode', account.resetPasswordConfirmCode);
 
 router.post('/resetPasswordNewPassword', passport.authenticate('jwt-user', {session: false}), account.resetPasswordNewPassword);
 
+router.post('/contactus', account.contactus);
+
 module.exports = router;

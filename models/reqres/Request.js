@@ -3,6 +3,7 @@ const ValidationError = require('../errors/ValidationError');
 const ErrorArgs = require('../errors/ErrorArgs');
 
 const NAME_MAX_LENGTH = 255;
+const TEXT_MAX_LENGTH = 99999;
 const EMAIL_ADDRESS_MAX_LENGTH = 255;
 
 function isEmptyObject(obj)
@@ -217,6 +218,44 @@ module.exports.validatePercentage = function(discount, fieldName, {optional = fa
     return discount;
 };
 
+module.exports.validateName = function(name, fieldName, {optional = false} = {})
+{
+    //TODO protect against XSS
+
+    if(!name && optional)
+        return;
+
+    if(!name)
+        throw new ValidationError(
+            {
+                args: [fieldName]
+            });
+
+    if(typeof name === 'string')
+    {
+        // if (!validator.isAlphanumeric(name.replace(/ /g, '').replace("'", '').replace('&', '').replace('ô', 'o').replace('è', 'e').replace('-', '')))
+        //     throw new ValidationError(
+        //         {
+        //             args: [fieldName, name]
+        //         });
+
+        if(name.length > NAME_MAX_LENGTH)
+            throw new ValidationError(
+                {
+                    args: [fieldName, name]
+                });
+    }
+    else
+    {
+        throw new ValidationError(
+            {
+                args: [fieldName, name]
+            });
+    }
+
+    return name;
+};
+
 module.exports.validateText = function(text, fieldName, {optional = false} = {})
 {
     //TODO protect against XSS
@@ -238,7 +277,7 @@ module.exports.validateText = function(text, fieldName, {optional = false} = {})
         //             args: [fieldName, text]
         //         });
 
-        if(text.length > NAME_MAX_LENGTH)
+        if(text.length > TEXT_MAX_LENGTH)
             throw new ValidationError(
                 {
                     args: [fieldName, text]

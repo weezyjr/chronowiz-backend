@@ -18,10 +18,10 @@ module.exports.signup = async function(req, res, next)
         admin.password = Request.validatePassword(req.body.payload.password);
 
         // firstName
-        admin.firstName = Request.validateText(req.body.payload.firstName, 'firstName');
+        admin.firstName = Request.validateName(req.body.payload.firstName, 'firstName');
 
         // lastName
-        admin.lastName = Request.validateText(req.body.payload.lastName, 'lastName');
+        admin.lastName = Request.validateName(req.body.payload.lastName, 'lastName');
 
         let savedAdmin = await admin.save();
 
