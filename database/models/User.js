@@ -28,7 +28,7 @@ const UserSchema = new mongoose.Schema(
         firstName: {type: String, trim: true, required: false},
         lastName: {type: String, trim: true, required: false},
 
-        phone: {type: String, trim: true, required: false},
+        phoneNumber: {type: String, trim: true, required: false},
 
         // Billing address
         billingCountry: {type: String, trim: true},
@@ -45,6 +45,8 @@ const UserSchema = new mongoose.Schema(
         shippingAddress: {type: String, trim: true},
 
         orderObjects: [{type: Schema.Types.ObjectId, ref: 'Order', required: false}],
+
+        lastEditedByAdminObject: {type: Schema.Types.ObjectId, ref: 'Admin', required: false},
     },
     {
         timestamps: true
@@ -106,7 +108,7 @@ UserSchema.methods.toJSON = function()
         email: this.email,
         firstName: this.firstName,
         lastName: this.lastName,
-        phone: this.phone,
+        phoneNumber: this.phoneNumber,
 
         billingCountry: this.billingCountry,
         billingState: this.billingState,

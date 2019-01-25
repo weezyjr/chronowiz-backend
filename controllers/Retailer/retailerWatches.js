@@ -87,6 +87,9 @@ module.exports.UpdateRetailerWatchDiscount = async function(req, res, next)
         if(!existingWatch)
             return res.json(Response.error({en: 'Watch is not present in retailer\'s stock watches.'}));
 
+        //TODO check against brand/collection/watch maximum discount
+        //TODO check against retailer discount
+
         existingWatch.retailerWatchDiscount = retailerWatchDiscount;
 
         await retailer.save();

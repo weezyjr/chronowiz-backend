@@ -9,6 +9,8 @@ router.post('/login', account.login);
 
 router.get('/profile', passport.authenticate('jwt-user', {session: false}), account.profile);
 
+router.put('/update', passport.authenticate('jwt-user', {session: false}), account.update);
+
 router.post('/resetPasswordSendEmail', account.resetPasswordSendEmail);
 
 router.post('/resetPasswordConfirmCode', account.resetPasswordConfirmCode);

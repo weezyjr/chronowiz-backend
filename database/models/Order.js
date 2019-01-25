@@ -13,7 +13,7 @@ const OrderSchema = new Schema(
         email: {type: String, trim: true, required: true},
         firstName: {type: String, trim: true},
         lastName: {type: String, trim: true},
-        phone: {type: String, trim: true},
+        phoneNumber: {type: String, trim: true},
 
         // Billing address
         billingCountry: {type: String, trim: true, required: true},
