@@ -96,28 +96,18 @@ module.exports.readByIdOrOrderNumber = async function(req, res, next)
 
         if(validator.isMongoId(req.params._id))
         {
-            order = await Order.findById(req.params._id).populate(
-                {
-                    path: 'watchObjects',
-                    populate:
-                        {
-                            path: 'watchObject'
-                        }
-                }).populate('userObject');
+            order = await Order.findById(req.params._id)
+                .populate('userObject')
+                .populate('watchObjects.watchObject');
 
             if(!order)
                 return res.json(Response.error({en: 'No order is available with this Id.'}));
         }
         else
         {
-            order = await Order.findOne({orderNumber: req.params._id}).populate(
-                {
-                    path: 'watchObjects',
-                    populate:
-                        {
-                            path: 'watchObject'
-                        }
-                });
+            order = await Order.findOne({orderNumber: req.params._id})
+                .populate('userObject')
+                .populate('watchObjects.watchObject');
 
             if(!order)
                 return res.json(Response.error({en: 'No order is available with this order number.'}));
