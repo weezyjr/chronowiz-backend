@@ -376,7 +376,7 @@ module.exports.contactus = async function(req, res, next)
             'User phoneNumber: ' + phoneNumber + '<br>' +
             'Message: ' + message;
 
-        await ses.sendGenericMail("heiba@chronowiz.com", "Contact Us message received from " + name, body);
+        await ses.sendGenericMail(["fikak@chronowiz.com", "heiba@chronowiz.com"], "Contact Us message received from " + name, body);
 
         return res.json(Response.payload({en: 'Contact us message sent successfully.'}));
     }
