@@ -36,14 +36,9 @@ module.exports.readByIdOrOrderNumber = async function(req, res, next)
 
         if(validator.isMongoId(req.params._id))
         {
-            let order = await Order.findById(req.params._id).populate(
-                {
-                    path: 'watchObjects',
-                    populate:
-                        {
-                            path: 'watchObject'
-                        }
-                });
+            let order = await Order.findById(req.params._id)
+                .populate('userObject')
+                .populate('watchObjects.watchObject');
 
             if(!order)
                 return res.json(Response.error({en: 'No order is available with this Id.'}));
@@ -52,14 +47,9 @@ module.exports.readByIdOrOrderNumber = async function(req, res, next)
         }
         else
         {
-            let order = await Order.findOne({orderNumber: req.params._id}).populate(
-                {
-                    path: 'watchObjects',
-                    populate:
-                        {
-                            path: 'watchObject'
-                        }
-                });
+            let order = await Order.findOne({orderNumber: req.params._id})
+                .populate('userObject')
+                .populate('watchObjects.watchObject');
 
             if(!order)
                 return res.json(Response.error({en: 'No order is available with this order number.'}));
@@ -79,6 +69,8 @@ module.exports.updateById = async function(req, res, next)
     {
         Request.validateReq(req, {enforceParamsId: true, enforcePayload: true});
 
+        let isOrderUpdated = false;
+
         let order = await Order.findById(req.params._id);
         if(!order)
             return res.json(Response.error({en: 'No order is available with this Id.'}));
@@ -88,14 +80,23 @@ module.exports.updateById = async function(req, res, next)
         {
             order.status = status;
             order.markModified('status');
+            isOrderUpdated = true;
         }
 
-        order.lastEditedByAdminObject = req.user._id;
+        if(isOrderUpdated)
+        {
+            order.lastEditedByAdminObject = req.user._id;
 
-        let savedOrder = await order.save();
+            let savedOrder = await order.save();
 
-        let message = 'Order RF#' + savedOrder.orderNumber + ' updated successfully.';
-        return res.json(Response.payload({payload: savedOrder, en: message}));
+            let message = 'Order RF#' + savedOrder.orderNumber + ' updated successfully.';
+            return res.json(Response.payload({payload: savedOrder, en: message}));
+        }
+        else
+        {
+            let message = 'Order RF#' + order.orderNumber + ' was not updated';
+            return res.json(Response.payload({payload: order, en: message}));
+        }
     }
     catch(error)
     {
