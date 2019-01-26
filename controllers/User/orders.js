@@ -1,6 +1,7 @@
 const Request = require('../../models/reqres/Request');
 const Response = require('../../models/reqres/Response');
 const Order = require('../../database/models/Order');
+const Watch = require('../../database/models/Watch');
 const User = require('../../database/models/User');
 const validator = require('validator');
 
@@ -54,12 +55,27 @@ module.exports.create = async function(req, res, next)
         let requestWatchObjects = Request.validateArray(req.body.payload.watchObjects, 'watchObjects', {optional: false});
         for(let requestWatchObject of requestWatchObjects)
         {
-            Request.validateIdOrObject(requestWatchObject.watchObject, 'watchObject', {optional: false});
-            Request.validateNumber(requestWatchObject.quantity, 'quantity', {optional: false});
-            Request.validateNumber(requestWatchObject.price, 'price', {optional: false});
+            let watchId = Request.validateIdOrObject(requestWatchObject.watchObject, 'watchObject', {optional: false});
+            let watch = await Watch.findById(watchId);
+            if(!watch)
+                return res.json(Response.error({en: 'No watch is available with the watch Id.'}));
+
+            let quantity = Request.validateNumber(requestWatchObject.quantity, 'quantity', {optional: false});
+
+            requestWatchObject.price = watch.price * quantity;
 
             order.watchObjects.push(requestWatchObject);
         }
+
+        order.totalPrice = order.watchObjects
+            .map(function(item)
+            {
+                return item.price;
+            })
+            .reduce(function(prev, next)
+            {
+                return prev + next;
+            });
 
         let savedOrder = await order.save();
 

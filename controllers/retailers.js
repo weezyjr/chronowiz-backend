@@ -315,8 +315,6 @@ module.exports.addOrUpdateRetailerMaximumCollectionDiscount = async function(req
         if(!collection)
             return res.json(Response.error({en: 'No collection is available with the collection Id.'}));
 
-        console.log(collection._id);
-
         let existingMaximumCollectionDiscountObject = retailer.maximumCollectionDiscounts.find(retailerMaximumCollectionDiscountObject => (retailerMaximumCollectionDiscountObject.collectionObject && retailerMaximumCollectionDiscountObject.collectionObject._id.equals(collection._id)));
         if(existingMaximumCollectionDiscountObject)
         {
