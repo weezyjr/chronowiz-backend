@@ -24,6 +24,7 @@
     "mongoose-auto-increment-reworked": "^1.2.1",
     "mongoose-regex-search": "^0.5.2",
     "morgan": "^1.9.1",
+    "node-json2html": "^1.2.0",
     "passport": "^0.4.0",
     "passport-jwt": "^4.0.0",
     "strong-error-handler": "^3.2.0",
