@@ -34,12 +34,15 @@ const RetailerSchema = new mongoose.Schema(
 
         maximumCollectionDiscounts:
             [{
+                brandObject: {type: Schema.Types.ObjectId, ref: 'Brand'},
                 collectionObject: {type: Schema.Types.ObjectId, ref: 'Collection'},
                 maximumCollectionDiscount: {type: Number}
             }],
 
         maximumWatchDiscounts:
             [{
+                brandObject: {type: Schema.Types.ObjectId, ref: 'Brand'},
+                collectionObject: {type: Schema.Types.ObjectId, ref: 'Collection'},
                 watchObject: {type: Schema.Types.ObjectId, ref: 'Watch'},
                 maximumWatchDiscount: {type: Number}
             }],

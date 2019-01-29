@@ -81,7 +81,10 @@ module.exports.readByIdOrEmail = async function(req, res, next)
             let retailer = await Retailer.findById(req.params._id)
                 .populate('watchObjects.watchObject')
                 .populate('maximumBrandDiscounts.brandObject')
+                .populate('maximumCollectionDiscounts.brandObject')
                 .populate('maximumCollectionDiscounts.collectionObject')
+                .populate('maximumWatchDiscounts.brandObject')
+                .populate('maximumWatchDiscounts.collectionObject')
                 .populate('maximumWatchDiscounts.watchObject');
 
             if(!retailer)
@@ -94,7 +97,10 @@ module.exports.readByIdOrEmail = async function(req, res, next)
             let retailer = await Retailer.findOne({email: req.params._id})
                 .populate('watchObjects.watchObject')
                 .populate('maximumBrandDiscounts.brandObject')
+                .populate('maximumCollectionDiscounts.brandObject')
                 .populate('maximumCollectionDiscounts.collectionObject')
+                .populate('maximumWatchDiscounts.brandObject')
+                .populate('maximumWatchDiscounts.collectionObject')
                 .populate('maximumWatchDiscounts.watchObject');
 
             if(!retailer)
@@ -118,7 +124,10 @@ module.exports.updateById = async function(req, res, next)
         let retailer = await Retailer.findById(req.params._id)
             .populate('watchObjects.watchObject')
             .populate('maximumBrandDiscounts.brandObject')
+            .populate('maximumCollectionDiscounts.brandObject')
             .populate('maximumCollectionDiscounts.collectionObject')
+            .populate('maximumWatchDiscounts.brandObject')
+            .populate('maximumWatchDiscounts.collectionObject')
             .populate('maximumWatchDiscounts.watchObject');
 
         if(!retailer)
@@ -317,6 +326,10 @@ module.exports.addOrUpdateRetailerMaximumCollectionDiscount = async function(req
         if(!collection)
             return res.json(Response.error({en: 'No collection is available with the collection Id.'}));
 
+        let brand = await Brand.findById(collection.brandObject);
+        if(!brand)
+            return res.json(Response.error({en: 'No brand is available for this collection Id.'}));
+
         let action;
 
         let existingMaximumCollectionDiscountObject = retailer.maximumCollectionDiscounts.find(retailerMaximumCollectionDiscountObject => (retailerMaximumCollectionDiscountObject.collectionObject && retailerMaximumCollectionDiscountObject.collectionObject._id.equals(collection._id)));
@@ -339,7 +352,7 @@ module.exports.addOrUpdateRetailerMaximumCollectionDiscount = async function(req
         {
             let maximumCollectionDiscount = Request.validatePercentage(req.body.payload.maximumCollectionDiscount, 'maximumCollectionDiscount', {optional: false});
 
-            retailer.maximumCollectionDiscounts.addToSet({collectionObject: collection, maximumCollectionDiscount: maximumCollectionDiscount});
+            retailer.maximumCollectionDiscounts.addToSet({brandObject: brand, collectionObject: collection, maximumCollectionDiscount: maximumCollectionDiscount});
             action = "added";
         }
 
@@ -375,6 +388,14 @@ module.exports.addOrUpdateRetailerMaximumWatchDiscount = async function(req, res
         if(!watch)
             return res.json(Response.error({en: 'No watch is available with the watch Id.'}));
 
+        let brand = await Brand.findById(watch.brandObject);
+        if(!brand)
+            return res.json(Response.error({en: 'No brand is available for this watch Id.'}));
+
+        let collection = await Collection.findById(watch.collectionObject);
+        if(!collection)
+            return res.json(Response.error({en: 'No collection is available for this watch Id.'}));
+
         let action;
 
         let existingMaximumWatchDiscountObject = retailer.maximumWatchDiscounts.find(retailerMaximumWatchDiscountObject => (retailerMaximumWatchDiscountObject.watchObject && retailerMaximumWatchDiscountObject.watchObject._id.equals(watch._id)));
@@ -396,7 +417,7 @@ module.exports.addOrUpdateRetailerMaximumWatchDiscount = async function(req, res
         {
             let maximumWatchDiscount = Request.validatePercentage(req.body.payload.maximumWatchDiscount, 'maximumWatchDiscount', {optional: false});
 
-            retailer.maximumWatchDiscounts.addToSet({watchObject: watch, maximumWatchDiscount: maximumWatchDiscount});
+            retailer.maximumWatchDiscounts.addToSet({brandObject: brand, collectionObject: collection, watchObject: watch, maximumWatchDiscount: maximumWatchDiscount});
             action = "added";
         }
 
