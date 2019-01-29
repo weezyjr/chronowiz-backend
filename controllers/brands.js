@@ -119,63 +119,63 @@ module.exports.updateById = async function(req, res, next)
             return res.json(Response.error({en: 'No brand is available with this Id.'}));
 
         let name = Request.validateName(req.body.payload.name, 'name', {optional: true});
-        if(name)
+        if(name && brand.name !== name)
         {
             brand.name = name;
             brand.markModified('name');
         }
 
         let logoPhotoUrl = Request.validateS3Url(req.body.payload.logoPhotoUrl, 'logoPhotoUrl', {optional: true});
-        if(logoPhotoUrl)
+        if(logoPhotoUrl && brand.name !== logoPhotoUrl)
         {
             brand.logoPhotoUrl = logoPhotoUrl;
             brand.markModified('logoPhotoUrl');
         }
 
         let headerPhotoUrl = Request.validateS3Url(req.body.payload.headerPhotoUrl, 'headerPhotoUrl', {optional: true});
-        if(headerPhotoUrl)
+        if(headerPhotoUrl && brand.headerPhotoUrl !== headerPhotoUrl)
         {
             brand.headerPhotoUrl = headerPhotoUrl;
             brand.markModified('headerPhotoUrl');
         }
 
         let banner1PhotoUrl = Request.validateS3Url(req.body.payload.banner1PhotoUrl, 'banner1PhotoUrl', {optional: true});
-        if(banner1PhotoUrl)
+        if(banner1PhotoUrl && brand.banner1PhotoUrl !== banner1PhotoUrl)
         {
             brand.banner1PhotoUrl = banner1PhotoUrl;
             brand.markModified('banner1PhotoUrl');
         }
 
         let banner2PhotoUrl = Request.validateS3Url(req.body.payload.banner2PhotoUrl, 'banner2PhotoUrl', {optional: true});
-        if(banner2PhotoUrl)
+        if(banner2PhotoUrl && brand.banner2PhotoUrl !== banner2PhotoUrl)
         {
             brand.banner2PhotoUrl = banner2PhotoUrl;
             brand.markModified('banner2PhotoUrl');
         }
 
         let maximumDiscount = Request.validatePercentage(req.body.payload.maximumDiscount, 'maximumDiscount', {optional: true});
-        if(maximumDiscount && maximumDiscount !== brand.maximumDiscount)
+        if(maximumDiscount !== undefined && maximumDiscount !== brand.maximumDiscount)
         {
             brand.maximumDiscount = maximumDiscount;
             brand.markModified('maximumDiscount');
         }
 
         let headerBackgroundColor = Request.validateText(req.body.payload.headerBackgroundColor, 'headerBackgroundColor', {optional: true});
-        if(headerBackgroundColor)
+        if(headerBackgroundColor && brand.headerBackgroundColor !== headerBackgroundColor)
         {
             brand.headerBackgroundColor = headerBackgroundColor;
             brand.markModified('headerBackgroundColor');
         }
 
         let headerContentColor = Request.validateText(req.body.payload.headerContentColor, 'headerContentColor', {optional: true});
-        if(headerContentColor)
+        if(headerContentColor && brand.headerContentColor !== headerBackgroundColor)
         {
             brand.headerContentColor = headerContentColor;
             brand.markModified('headerContentColor');
         }
 
         let headerBackgroundOpacity = Request.validatePercentage(req.body.payload.headerBackgroundOpacity, 'headerBackgroundOpacity', {optional: true});
-        if(headerBackgroundOpacity)
+        if(headerBackgroundOpacity !== undefined && brand.headerBackgroundOpacity !== headerBackgroundColor)
         {
             brand.headerBackgroundOpacity = headerBackgroundOpacity;
             brand.markModified('headerBackgroundOpacity');

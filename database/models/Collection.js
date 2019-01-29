@@ -10,11 +10,11 @@ const CollectionSchema = new Schema(
         name: {type: String, trim: true, required: true, searchable: true},
         isUndefined: {type: Boolean, default: false},
 
-        description: {type: String, trim: true, required: false},
+        description: {type: String, trim: true},
 
-        maximumDiscount: {type: Number, trim: true, default: 100},
+        maximumDiscount: {type: Number, trim: true},
 
-        watchObjects: [{type: Schema.Types.ObjectId, ref: 'Watch', required: false}],
+        watchObjects: [{type: Schema.Types.ObjectId, ref: 'Watch'}],
 
         createdByAdminObject: {type: Schema.Types.ObjectId, ref: 'Admin', required: true},
         lastEditedByAdminObject: {type: Schema.Types.ObjectId, ref: 'Admin', required: true},

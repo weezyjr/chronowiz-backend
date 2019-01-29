@@ -153,59 +153,46 @@ module.exports.validateIds = function(Ids, fieldName, {optional = false} = {})
 
 module.exports.validateNumber = function(number, fieldName, {optional = false} = {})
 {
-    if(!number && optional)
-        return;
-
-    if(!number)
+    if(!optional && ((number === undefined) || (number === null)))
         throw new ValidationError(
             {
                 args: [fieldName]
             });
 
+    if(number === undefined && optional)
+        return;
+
+    if(number === null)
+        return null;
+
     if(typeof number !== "number")
-    {
         throw new ValidationError(
             {
-                args: [fieldName, number]
+                args: [fieldName]
             });
-    }
-    else if(number.length > NAME_MAX_LENGTH)
-    {
-        throw new ValidationError(
-            {
-                args: [fieldName, number]
-            });
-    }
 
     return number;
 };
 
 module.exports.validatePercentage = function(discount, fieldName, {optional = false} = {})
 {
-    if(!discount && optional)
-        return;
-
-    if(!discount)
+    if(!optional && ((discount === undefined) || (discount === null)))
         throw new ValidationError(
             {
                 args: [fieldName]
             });
 
-    if(typeof discount !== "number")
-    {
-        throw new ValidationError(
-            {
-                args: [fieldName, discount]
-            });
-    }
+    if(discount === undefined && optional)
+        return;
 
-    if(discount.length > NAME_MAX_LENGTH)
-    {
+    if(discount === null)
+        return null;
+
+    if(typeof discount !== "number")
         throw new ValidationError(
             {
-                args: [fieldName, discount]
+                args: [fieldName]
             });
-    }
 
     if(discount < 0 || discount > 100)
     {

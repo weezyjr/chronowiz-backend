@@ -15,45 +15,45 @@ const RetailerSchema = new mongoose.Schema(
         // Password
         password: {type: String, required: true},
 
-        companyName: {type: String, trim: true, required: false},
-        firstName: {type: String, trim: true, required: false},
-        lastName: {type: String, trim: true, required: false},
-        address: {type: String, trim: true, required: false},
-        city: {type: String, trim: true, required: false},
-        country: {type: String, trim: true, required: false},
-        poBox: {type: String, trim: true, required: false},
-        phoneNumber: {type: String, trim: true, required: false},
-        fax: {type: String, trim: true, required: false},
-        mobileNumber: {type: String, trim: true, required: false},
+        companyName: {type: String, trim: true},
+        firstName: {type: String, trim: true},
+        lastName: {type: String, trim: true},
+        address: {type: String, trim: true},
+        city: {type: String, trim: true},
+        country: {type: String, trim: true},
+        poBox: {type: String, trim: true},
+        phoneNumber: {type: String, trim: true},
+        fax: {type: String, trim: true},
+        mobileNumber: {type: String, trim: true},
 
         maximumBrandDiscounts:
             [{
-                brandObject: {type: Schema.Types.ObjectId, ref: 'Brand', required: false},
-                maximumBrandDiscount: {type: Number, default: 100, required: false}
+                brandObject: {type: Schema.Types.ObjectId, ref: 'Brand'},
+                maximumBrandDiscount: {type: Number}
             }],
 
         maximumCollectionDiscounts:
             [{
-                collectionObject: {type: Schema.Types.ObjectId, ref: 'Collection', required: false},
-                maximumCollectionDiscount: {type: Number, default: 100, required: false}
+                collectionObject: {type: Schema.Types.ObjectId, ref: 'Collection'},
+                maximumCollectionDiscount: {type: Number}
             }],
 
         maximumWatchDiscounts:
             [{
-                watchObject: {type: Schema.Types.ObjectId, ref: 'Watch', required: false},
-                maximumWatchDiscount: {type: Number, default: 100, required: false}
+                watchObject: {type: Schema.Types.ObjectId, ref: 'Watch'},
+                maximumWatchDiscount: {type: Number}
             }],
 
         watchObjects:
             [{
-                watchObject: {type: Schema.Types.ObjectId, ref: 'Watch', required: false},
-                retailerWatchDiscount: {type: Number, default: 100, required: false},
+                watchObject: {type: Schema.Types.ObjectId, ref: 'Watch'},
+                retailerWatchDiscount: {type: Number},
             }],
 
         orderObjects:
             [{
-                orderObject: {type: Schema.Types.ObjectId, ref: 'Order', required: false},
-                retailerWatchDiscount: {type: Number, default: 100, required: false},
+                orderObject: {type: Schema.Types.ObjectId, ref: 'Order'},
+                retailerWatchDiscount: {type: Number},
             }],
 
         createdByAdminObject: {type: Schema.Types.ObjectId, ref: 'Admin', required: true},

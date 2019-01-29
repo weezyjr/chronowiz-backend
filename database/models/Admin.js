@@ -23,11 +23,11 @@ const AdminSchema = new mongoose.Schema(
         password: {type: String, required: true},
 
         // Name
-        firstName: {type: String, trim: true, required: false},
-        lastName: {type: String, trim: true, required: false},
+        firstName: {type: String, trim: true},
+        lastName: {type: String, trim: true},
 
-        createdByAdminObject: {type: Schema.Types.ObjectId, ref: 'Admin', required: false},
-        lastEditedByAdminObject: {type: Schema.Types.ObjectId, ref: 'Admin', required: false},
+        createdByAdminObject: {type: Schema.Types.ObjectId, ref: 'Admin'},
+        lastEditedByAdminObject: {type: Schema.Types.ObjectId, ref: 'Admin'},
     },
     {
         timestamps: true

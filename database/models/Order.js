@@ -17,26 +17,26 @@ const OrderSchema = new Schema(
 
         // Billing address
         billingCountry: {type: String, trim: true, required: true},
-        billingState: {type: String, trim: true, required: false},
+        billingState: {type: String, trim: true},
         billingCity: {type: String, trim: true, required: true},
-        billingZip: {type: String, trim: true, required: false},
+        billingZip: {type: String, trim: true},
         billingAddress: {type: String, trim: true, required: true},
 
         // Shipping Type
         shippingType: {type: String, trim: true, required: true},
-        shippingSameAsBilling: {type: Boolean, default: true, required: true},
+        shippingSameAsBilling: {type: Boolean, required: true},
 
         // Shipping address
         shippingCountry: {type: String, trim: true, required: true},
-        shippingState: {type: String, trim: true, required: false},
+        shippingState: {type: String, trim: true},
         shippingCity: {type: String, trim: true, required: true},
-        shippingZip: {type: String, trim: true, required: false},
+        shippingZip: {type: String, trim: true},
         shippingAddress: {type: String, trim: true, required: true},
 
         // Payment method
         paymentMethod: {type: String, trim: true, required: true},
 
-        userObject: {type: Schema.Types.ObjectId, ref: 'User', required: false},
+        userObject: {type: Schema.Types.ObjectId, ref: 'User'},
 
         // Items
         watchObjects:

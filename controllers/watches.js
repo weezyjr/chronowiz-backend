@@ -480,7 +480,7 @@ module.exports.updateById = async function(req, res, next)
         }
 
         let movementNumberOfParts = Request.validateNumber(req.body.payload.movementNumberOfParts, 'movementNumberOfParts', {optional: true});
-        if(movementNumberOfParts && movementNumberOfParts !== watch.movementNumberOfParts)
+        if(movementNumberOfParts !== undefined && movementNumberOfParts !== watch.movementNumberOfParts)
         {
             watch.movementNumberOfParts = movementNumberOfParts;
             watch.markModified('movementNumberOfParts');
@@ -688,7 +688,7 @@ module.exports.updateById = async function(req, res, next)
         }
 
         let price = Request.validateNumber(req.body.payload.price, 'price', {optional: true});
-        if(price && price !== watch.price)
+        if(price !== undefined && price !== watch.price)
         {
             watch.price = price;
             watch.markModified('price');
@@ -704,7 +704,7 @@ module.exports.updateById = async function(req, res, next)
         }
 
         let maximumDiscount = Request.validatePercentage(req.body.payload.maximumDiscount, 'maximumDiscount', {optional: true});
-        if(maximumDiscount && maximumDiscount !== watch.maximumDiscount)
+        if(maximumDiscount !== undefined && maximumDiscount !== watch.maximumDiscount)
         {
             watch.maximumDiscount = maximumDiscount;
             watch.markModified('maximumDiscount');

@@ -28,7 +28,7 @@ const WatchSchema = new Schema(
         movementSpring: {type: String, trim: true},
         movementTourbillon: {type: String, trim: true},
         movementRotor: {type: String, trim: true},
-        movementNumberOfParts: {type: Number, trim: true, required: false},
+        movementNumberOfParts: {type: Number, trim: true},
         movementAdditionalFeatures: [{value: {type: String, trim: true}}],
 
         complications: [{value: {type: String, trim: true}}],
@@ -62,7 +62,7 @@ const WatchSchema = new Schema(
 
         price: {type: Number, trim: true},
         priceCurrency: {type: String, trim: true},
-        maximumDiscount: {type: Number, trim: true, default: 100},
+        maximumDiscount: {type: Number, trim: true},
 
         mainPhotoUrl: {type: String, trim: true},
         banner1PhotoUrl: {type: String, trim: true},

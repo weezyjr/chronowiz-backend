@@ -94,13 +94,12 @@ module.exports.updateById = async function(req, res, next)
         if(!collection)
             return res.json(Response.error({en: 'No collection is available with this Id.'}));
 
-        if(collection.isUndefined === true)
-            return res.json(Response.error({en: 'Cannot edit the UNDEFINED Collection.'}));
-
         let brandObject = Request.validateIdOrObject(req.body.payload.brandObject, 'brandObject', {optional: true});
-
         if(brandObject && (brandObject.toString() !== collection.brandObject._id.toString()))
         {
+            if(collection.isUndefined === true)
+                return res.json(Response.error({en: 'Cannot change the brand of an UNDEFINED Collection.'}));
+
             let oldBrand = await Brand.findById(collection.brandObject._id);
             if(!oldBrand)
                 return res.json(Response.error({en: 'No brand is available with the existing Brand Id.'}));
@@ -124,21 +123,24 @@ module.exports.updateById = async function(req, res, next)
         }
 
         let name = Request.validateName(req.body.payload.name, 'name', {optional: true});
-        if(name)
+        if(name && collection.name !== name)
         {
+            if(collection.isUndefined === true)
+                return res.json(Response.error({en: 'Cannot change the name of an UNDEFINED Collection.'}));
+
             collection.name = name;
             collection.markModified('name');
         }
 
         let description = Request.validateText(req.body.payload.description, 'description', {optional: true});
-        if(description)
+        if(description && collection.description !== description)
         {
             collection.description = description;
             collection.markModified('description');
         }
 
         let maximumDiscount = Request.validatePercentage(req.body.payload.maximumDiscount, 'maximumDiscount', {optional: true});
-        if(maximumDiscount && maximumDiscount !== collection.maximumDiscount)
+        if(maximumDiscount !== undefined && maximumDiscount !== collection.maximumDiscount)
         {
             collection.maximumDiscount = maximumDiscount;
             collection.markModified('maximumDiscount');

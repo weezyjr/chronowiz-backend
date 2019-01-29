@@ -19,16 +19,16 @@ const UserSchema = new mongoose.Schema(
                 uniqueCaseInsensitive: true
             },
 
-        recoveryEmailVerificationCode: {type: String, required: false},
+        recoveryEmailVerificationCode: {type: String},
 
         // Password
         password: {type: String, required: true},
 
         // Name
-        firstName: {type: String, trim: true, required: false},
-        lastName: {type: String, trim: true, required: false},
+        firstName: {type: String, trim: true},
+        lastName: {type: String, trim: true},
 
-        phoneNumber: {type: String, trim: true, required: false},
+        phoneNumber: {type: String, trim: true},
 
         // Billing address
         billingCountry: {type: String, trim: true},
@@ -44,9 +44,9 @@ const UserSchema = new mongoose.Schema(
         shippingZip: {type: String, trim: true},
         shippingAddress: {type: String, trim: true},
 
-        orderObjects: [{type: Schema.Types.ObjectId, ref: 'Order', required: false}],
+        orderObjects: [{type: Schema.Types.ObjectId, ref: 'Order'}],
 
-        lastEditedByAdminObject: {type: Schema.Types.ObjectId, ref: 'Admin', required: false},
+        lastEditedByAdminObject: {type: Schema.Types.ObjectId, ref: 'Admin'},
     },
     {
         timestamps: true

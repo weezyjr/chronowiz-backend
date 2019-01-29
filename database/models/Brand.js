@@ -8,17 +8,17 @@ const BrandSchema = new Schema(
         name: {type: String, trim: true, unique: true, required: true, searchable: true},
 
         logoPhotoUrl: {type: String, trim: true, required: true},
-        headerPhotoUrl: {type: String, trim: true, required: false},
+        headerPhotoUrl: {type: String, trim: true},
         banner1PhotoUrl: {type: String, trim: true, required: true},
         banner2PhotoUrl: {type: String, trim: true, required: true},
 
-        maximumDiscount: {type: Number, trim: true, default: 100},
+        maximumDiscount: {type: Number, trim: true},
 
-        collectionObjects: [{type: Schema.Types.ObjectId, ref: 'Collection', required: false}],
+        collectionObjects: [{type: Schema.Types.ObjectId, ref: 'Collection'}],
 
-        headerBackgroundColor: {type: String, trim: true, required: false},
-        headerContentColor: {type: String, trim: true, required: false},
-        headerBackgroundOpacity: {type: Number, trim: true, required: false},
+        headerBackgroundColor: {type: String, trim: true},
+        headerContentColor: {type: String, trim: true},
+        headerBackgroundOpacity: {type: Number, trim: true},
 
         createdByAdminObject: {type: Schema.Types.ObjectId, ref: 'Admin', required: true},
         lastEditedByAdminObject: {type: Schema.Types.ObjectId, ref: 'Admin', required: true},
