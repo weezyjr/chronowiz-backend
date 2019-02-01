@@ -140,7 +140,7 @@ module.exports.updateById = async function(req, res, next)
         let darkLogoPhotoUrl = Request.validateS3Url(req.body.payload.darkLogoPhotoUrl, 'darkLogoPhotoUrl', {optional: true});
         if(darkLogoPhotoUrl && brand.darkLogoPhotoUrl !== darkLogoPhotoUrl)
         {
-            brand.lightLogoPhotoUrl = darkLogoPhotoUrl;
+            brand.darkLogoPhotoUrl = darkLogoPhotoUrl;
             brand.markModified('darkLogoPhotoUrl');
         }
 
