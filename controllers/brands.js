@@ -15,6 +15,7 @@ module.exports.create = async function(req, res, next)
         brand.name = Request.validateText(req.body.payload.name, 'name', {optional: false});
 
         brand.logoPhotoUrl = Request.validateS3Url(req.body.payload.logoPhotoUrl, 'logoPhotoUrl', {optional: false});
+        brand.darkLogoPhotoUrl = Request.validateS3Url(req.body.payload.darkLogoPhotoUrl, 'darkLogoPhotoUrl', {optional: false});
         brand.headerPhotoUrl = Request.validateS3Url(req.body.payload.headerPhotoUrl, 'headerPhotoUrl', {optional: true});
         brand.banner1PhotoUrl = Request.validateS3Url(req.body.payload.banner1PhotoUrl, 'banner1PhotoUrl', {optional: false});
         brand.banner2PhotoUrl = Request.validateS3Url(req.body.payload.banner2PhotoUrl, 'banner2PhotoUrl', {optional: false});
@@ -22,8 +23,12 @@ module.exports.create = async function(req, res, next)
         brand.maximumDiscount = Request.validatePercentage(req.body.payload.maximumDiscount, 'maximumDiscount', {optional: true});
 
         brand.headerBackgroundColor = Request.validateText(req.body.payload.headerBackgroundColor, 'headerBackgroundColor', {optional: true});
-        brand.headerContentColor = Request.validateText(req.body.payload.headerContentColor, 'headerContentColor', {optional: true});
         brand.headerBackgroundOpacity = Request.validatePercentage(req.body.payload.headerBackgroundOpacity, 'headerBackgroundOpacity', {optional: true});
+        brand.headerContentColor = Request.validateBoolean(req.body.payload.headerContentColor, 'headerContentColor', {optional: true});
+
+        brand.pageBackgroundColor = Request.validateText(req.body.payload.pageBackgroundColor, 'pageBackgroundColor', {optional: true});
+        brand.pageBackgroundOpacity = Request.validatePercentage(req.body.payload.pageBackgroundOpacity, 'pageBackgroundOpacity', {optional: true});
+        brand.pageContentColor = Request.validateBoolean(req.body.payload.pageContentColor, 'pageContentColor', {optional: true});
 
         brand.createdByAdminObject = req.user._id;
         brand.lastEditedByAdminObject = req.user._id;
@@ -126,10 +131,17 @@ module.exports.updateById = async function(req, res, next)
         }
 
         let logoPhotoUrl = Request.validateS3Url(req.body.payload.logoPhotoUrl, 'logoPhotoUrl', {optional: true});
-        if(logoPhotoUrl && brand.name !== logoPhotoUrl)
+        if(logoPhotoUrl && brand.logoPhotoUrl !== logoPhotoUrl)
         {
             brand.logoPhotoUrl = logoPhotoUrl;
             brand.markModified('logoPhotoUrl');
+        }
+
+        let darkLogoPhotoUrl = Request.validateS3Url(req.body.payload.darkLogoPhotoUrl, 'darkLogoPhotoUrl', {optional: true});
+        if(darkLogoPhotoUrl && brand.darkLogoPhotoUrl !== darkLogoPhotoUrl)
+        {
+            brand.lightLogoPhotoUrl = darkLogoPhotoUrl;
+            brand.markModified('darkLogoPhotoUrl');
         }
 
         let headerPhotoUrl = Request.validateS3Url(req.body.payload.headerPhotoUrl, 'headerPhotoUrl', {optional: true});
@@ -167,18 +179,39 @@ module.exports.updateById = async function(req, res, next)
             brand.markModified('headerBackgroundColor');
         }
 
-        let headerContentColor = Request.validateText(req.body.payload.headerContentColor, 'headerContentColor', {optional: true});
-        if(headerContentColor && brand.headerContentColor !== headerBackgroundColor)
-        {
-            brand.headerContentColor = headerContentColor;
-            brand.markModified('headerContentColor');
-        }
-
         let headerBackgroundOpacity = Request.validatePercentage(req.body.payload.headerBackgroundOpacity, 'headerBackgroundOpacity', {optional: true});
         if(headerBackgroundOpacity !== undefined && brand.headerBackgroundOpacity !== headerBackgroundColor)
         {
             brand.headerBackgroundOpacity = headerBackgroundOpacity;
             brand.markModified('headerBackgroundOpacity');
+        }
+
+        let headerContentColor = Request.validateBoolean(req.body.payload.headerContentColor, 'headerContentColor', {optional: true});
+        if(headerContentColor && brand.headerContentColor !== headerContentColor)
+        {
+            brand.headerContentColor = headerContentColor;
+            brand.markModified('headerContentColor');
+        }
+
+        let pageBackgroundColor = Request.validateText(req.body.payload.pageBackgroundColor, 'pageBackgroundColor', {optional: true});
+        if(pageBackgroundColor && brand.pageBackgroundColor !== pageBackgroundColor)
+        {
+            brand.pageBackgroundColor = pageBackgroundColor;
+            brand.markModified('pageBackgroundColor');
+        }
+
+        let pageBackgroundOpacity = Request.validatePercentage(req.body.payload.pageBackgroundOpacity, 'pageBackgroundOpacity', {optional: true});
+        if(pageBackgroundOpacity !== undefined && brand.pageBackgroundOpacity !== pageBackgroundColor)
+        {
+            brand.pageBackgroundOpacity = pageBackgroundOpacity;
+            brand.markModified('pageBackgroundOpacity');
+        }
+
+        let pageContentColor = Request.validateBoolean(req.body.payload.pageContentColor, 'pageContentColor', {optional: true});
+        if(pageContentColor !== undefined && brand.pageContentColor !== pageContentColor)
+        {
+            brand.pageContentColor = pageContentColor;
+            brand.markModified('pageContentColor');
         }
 
         if(!brand.createdByAdminObject)
