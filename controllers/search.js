@@ -75,3 +75,51 @@ async function searchBrands(query)
     });
 }
 
+module.exports.advancedSearch = async function(req, res, next)
+{
+    try
+    {
+        Request.validateReq(req, {enforceParams: true});
+
+        let query = Request.validateText(req.params.query, 'query');
+
+        let result = [];
+
+        let brands = await searchBrands(query);
+
+        for(let brand of brands)
+        {
+            let watchesByBrandId = await searchWatchesByBrandId(brand._id);
+            result = result.concat(watchesByBrandId);
+        }
+
+        let collections = await searchCollections(query);
+
+        for(let collection of collections)
+        {
+            let watchesByCollectionId = await searchWatchesByCollectionId(collection._id);
+            result = result.concat(watchesByCollectionId);
+        }
+
+        let watches = await searchWatches(query);
+        result = result.concat(watches);
+
+        return res.json(Response.payload({payload: result}));
+    }
+    catch(error)
+    {
+        next(error);
+    }
+};
+
+async function searchWatchesByBrandId(brandId)
+{
+    return await Watch.find({brandObject: brandId});
+}
+
+async function searchWatchesByCollectionId(collectionId)
+{
+    return await Watch.find({collectionObject: collectionId});
+}
+
+
