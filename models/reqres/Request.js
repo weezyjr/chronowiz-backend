@@ -153,17 +153,27 @@ module.exports.validateIds = function(Ids, fieldName, {optional = false} = {})
 
 module.exports.validateNumber = function(number, fieldName, {optional = false} = {})
 {
-    if(!optional && ((number === undefined) || (number === null)))
-        throw new ValidationError(
-            {
-                args: [fieldName]
-            });
-
-    if(number === undefined && optional)
-        return;
+    if(number === undefined)
+    {
+        if(optional)
+            return;
+        else
+            throw new ValidationError(
+                {
+                    args: [fieldName]
+                });
+    }
 
     if(number === null)
-        return null;
+    {
+        if(optional)
+            return null;
+        else
+            throw new ValidationError(
+                {
+                    args: [fieldName]
+                });
+    }
 
     if(typeof number !== "number")
         throw new ValidationError(
@@ -176,23 +186,7 @@ module.exports.validateNumber = function(number, fieldName, {optional = false} =
 
 module.exports.validatePercentage = function(discount, fieldName, {optional = false} = {})
 {
-    if(!optional && ((discount === undefined) || (discount === null)))
-        throw new ValidationError(
-            {
-                args: [fieldName]
-            });
-
-    if(discount === undefined && optional)
-        return;
-
-    if(discount === null)
-        return null;
-
-    if(typeof discount !== "number")
-        throw new ValidationError(
-            {
-                args: [fieldName]
-            });
+    this.validateNumber(discount, fieldName, {optional});
 
     if(discount < 0 || discount > 100)
     {
@@ -472,8 +466,16 @@ module.exports.validateVerificationCode = function(verificationCode, type = '', 
 
 module.exports.validateBoolean = function(boolean, fieldName, {optional = false} = {})
 {
-    if(!boolean && optional)
-        return;
+    if(boolean === undefined)
+    {
+        if(optional)
+            return;
+        else
+            throw new ValidationError(
+                {
+                    args: [fieldName]
+                });
+    }
 
     if(boolean === null)
         throw new ValidationError(
@@ -482,12 +484,10 @@ module.exports.validateBoolean = function(boolean, fieldName, {optional = false}
             });
 
     if(typeof boolean !== 'boolean')
-    {
         throw new ValidationError(
             {
                 args: [fieldName, boolean]
             });
-    }
 
     return boolean;
 };

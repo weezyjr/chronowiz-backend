@@ -187,7 +187,7 @@ module.exports.updateById = async function(req, res, next)
         }
 
         let headerContentColor = Request.validateBoolean(req.body.payload.headerContentColor, 'headerContentColor', {optional: true});
-        if(headerContentColor && brand.headerContentColor !== headerContentColor)
+        if(headerContentColor !== undefined && brand.headerContentColor !== headerContentColor)
         {
             brand.headerContentColor = headerContentColor;
             brand.markModified('headerContentColor');
