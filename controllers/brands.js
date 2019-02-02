@@ -180,7 +180,7 @@ module.exports.updateById = async function(req, res, next)
         }
 
         let headerBackgroundOpacity = Request.validatePercentage(req.body.payload.headerBackgroundOpacity, 'headerBackgroundOpacity', {optional: true});
-        if(headerBackgroundOpacity !== undefined && brand.headerBackgroundOpacity !== headerBackgroundColor)
+        if(headerBackgroundOpacity !== undefined && brand.headerBackgroundOpacity !== headerBackgroundOpacity)
         {
             brand.headerBackgroundOpacity = headerBackgroundOpacity;
             brand.markModified('headerBackgroundOpacity');
@@ -201,7 +201,7 @@ module.exports.updateById = async function(req, res, next)
         }
 
         let pageBackgroundOpacity = Request.validatePercentage(req.body.payload.pageBackgroundOpacity, 'pageBackgroundOpacity', {optional: true});
-        if(pageBackgroundOpacity !== undefined && brand.pageBackgroundOpacity !== pageBackgroundColor)
+        if(pageBackgroundOpacity !== undefined && brand.pageBackgroundOpacity !== pageBackgroundOpacity)
         {
             brand.pageBackgroundOpacity = pageBackgroundOpacity;
             brand.markModified('pageBackgroundOpacity');
