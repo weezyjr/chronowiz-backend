@@ -92,18 +92,25 @@ module.exports.UpdateRetailerWatchDiscount = async function(req, res, next)
         if(!existingWatch)
             return res.json(Response.error({en: 'Watch is not present in the retailer\'s stock watches.'}));
 
-        const setRetailerWatchDiscount = async function(debug)
+        const setRetailerWatchDiscount = async function(reason)
         {
             existingWatch.retailerWatchDiscount = retailerWatchDiscount;
             await retailer.save();
-            return res.json(Response.payload({payload: retailer, debug: debug, en: 'Successfully updated your retailer discount on watch with reference number: ' + watch.referenceNumber + ' to be ' + existingWatch.retailerWatchDiscount + '%'}));
+
+            let message;
+            if(reason)
+                message = 'Successfully updated your retailer discount on watch with reference number: ' + watch.referenceNumber + ' to be ' + existingWatch.retailerWatchDiscount + '% as it is less than or equal to the ' + reason;
+            else
+                message = 'Successfully updated your retailer discount on watch with reference number: ' + watch.referenceNumber + ' to be ' + existingWatch.retailerWatchDiscount + '%';
+
+            return res.json(Response.payload({payload: retailer, en: message}));
         };
 
         let retailerMaximumWatchDiscount = retailer.maximumWatchDiscounts.find(retailerMaximumWatchDiscount => (retailerMaximumWatchDiscount.watchObject && retailerMaximumWatchDiscount.watchObject._id.equals(watch._id)));
         if(retailerMaximumWatchDiscount)
         {
             if(retailerMaximumWatchDiscount.maximumWatchDiscount >= retailerWatchDiscount)
-                return await setRetailerWatchDiscount('retailerMaximumWatchDiscount.maximumWatchDiscount: ' + retailerMaximumWatchDiscount.maximumWatchDiscount + ' >= retailerWatchDiscount: ' + retailerWatchDiscount);
+                return await setRetailerWatchDiscount('maximum discount allowed on this watch allowed for your retailer account which is ' + retailerMaximumWatchDiscount.maximumWatchDiscount + '%');
             else
                 return res.json(Response.error({en: 'The maximum discount that can be applied on the watch with reference number ' + retailerMaximumWatchDiscount.watchObject.referenceNumber + ' for your retailer account ' + retailer.email + ' is ' + retailerMaximumWatchDiscount.maximumWatchDiscount + '%'}));
         }
@@ -112,7 +119,7 @@ module.exports.UpdateRetailerWatchDiscount = async function(req, res, next)
         if(retailerMaximumCollectionDiscount)
         {
             if(retailerMaximumCollectionDiscount.maximumCollectionDiscount >= retailerWatchDiscount)
-                return await setRetailerWatchDiscount('retailerMaximumCollectionDiscount.maximumCollectionDiscount: ' + retailerMaximumCollectionDiscount.maximumCollectionDiscount + ' >= retailerWatchDiscount: ' + retailerWatchDiscount);
+                return await setRetailerWatchDiscount('maximum discount allowed on this collection for your retailer account which is ' + retailerMaximumCollectionDiscount.maximumCollectionDiscount + '%');
             else
                 return res.json(Response.error({en: 'The maximum discount that can be applied on the collection ' + retailerMaximumCollectionDiscount.collectionObject.name + ' for your retailer account ' + retailer.email + ' is ' + retailerMaximumCollectionDiscount.maximumCollectionDiscount + '%'}));
         }
@@ -121,7 +128,7 @@ module.exports.UpdateRetailerWatchDiscount = async function(req, res, next)
         if(retailerMaximumBrandDiscount)
         {
             if(retailerMaximumBrandDiscount.maximumBrandDiscount >= retailerWatchDiscount)
-                return await setRetailerWatchDiscount('retailerMaximumBrandDiscount.maximumBrandDiscount: ' + retailerMaximumBrandDiscount.maximumBrandDiscount + ' >= retailerWatchDiscount: ' + retailerWatchDiscount);
+                return await setRetailerWatchDiscount('maximum discount allowed on this brand for your retailer account which is ' + retailerMaximumBrandDiscount.maximumBrandDiscount + '%');
             else
                 return res.json(Response.error({en: 'The maximum discount that can be applied on the brand ' + retailerMaximumBrandDiscount.brandObject.name + ' for your retailer account ' + retailer.email + ' is ' + retailerMaximumBrandDiscount.maximumBrandDiscount + '%'}));
         }
@@ -129,7 +136,7 @@ module.exports.UpdateRetailerWatchDiscount = async function(req, res, next)
         if(watch.maximumDiscount)
         {
             if(watch.maximumDiscount >= retailerWatchDiscount)
-                return await setRetailerWatchDiscount('watch.maximumDiscount: ' + watch.maximumDiscount + ' >= retailerWatchDiscount: ' + retailerWatchDiscount);
+                return await setRetailerWatchDiscount('maximum discount allowed on this watch which is ' + watch.maximumDiscount + '%');
             else
                 return res.json(Response.error({en: 'The maximum discount that can be applied on the watch with reference number ' + watch.referenceNumber + ' is ' + watch.maximumDiscount + '%'}));
         }
@@ -137,7 +144,7 @@ module.exports.UpdateRetailerWatchDiscount = async function(req, res, next)
         if(watch.collectionObject.maximumDiscount)
         {
             if(watch.collectionObject.maximumDiscount >= retailerWatchDiscount)
-                return await setRetailerWatchDiscount('watch.collectionObject.maximumDiscount: ' + watch.collectionObject.maximumDiscount + ' >= retailerWatchDiscount: ' + retailerWatchDiscount);
+                return await setRetailerWatchDiscount('maximum discount allowed on this collection which is ' + watch.collectionObject.maximumDiscount + '%');
             else
                 return res.json(Response.error({en: 'The maximum discount that can be applied on the collection ' + watch.collectionObject.name + ' is ' + watch.collectionObject.maximumDiscount + '%'}));
         }
@@ -145,7 +152,7 @@ module.exports.UpdateRetailerWatchDiscount = async function(req, res, next)
         if(watch.brandObject.maximumDiscount)
         {
             if(watch.brandObject.maximumDiscount >= retailerWatchDiscount)
-                return await setRetailerWatchDiscount('watch.brandObject.maximumDiscount: ' + watch.brandObject.maximumDiscount + ' >= retailerWatchDiscount: ' + retailerWatchDiscount);
+                return await setRetailerWatchDiscount('maximum discount allowed on this brand which is ' + watch.brandObject.maximumDiscount + '%');
             else
                 return res.json(Response.error({en: 'The maximum discount that can be applied on the brand ' + watch.brandObject.name + ' is ' + watch.brandObject.maximumDiscount + '%'}));
         }
