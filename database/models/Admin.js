@@ -26,6 +26,10 @@ const AdminSchema = new mongoose.Schema(
         firstName: {type: String, trim: true},
         lastName: {type: String, trim: true},
 
+        //Role (SuperAdmin or Admin)
+
+        //Status (Activated or De-Actviated)
+
         createdByAdminObject: {type: Schema.Types.ObjectId, ref: 'Admin'},
         lastEditedByAdminObject: {type: Schema.Types.ObjectId, ref: 'Admin'},
     },

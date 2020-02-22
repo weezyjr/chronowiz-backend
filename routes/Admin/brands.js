@@ -3,6 +3,8 @@ const passport = require('passport');
 
 const brands = require('../../controllers/brands');
 
+// /api/admin/brands
+
 router.post('/', passport.authenticate('jwt-admin', {session: false}), brands.create);
 
 router.get('/', passport.authenticate('jwt-admin', {session: false}), brands.readAll);

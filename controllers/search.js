@@ -104,6 +104,8 @@ module.exports.advancedSearch = async function(req, res, next)
         let watches = await searchWatches(query);
         result = result.concat(watches);
 
+        //TODO remove duplicates. Test by searching for Lange
+
         return res.json(Response.payload({payload: result}));
     }
     catch(error)

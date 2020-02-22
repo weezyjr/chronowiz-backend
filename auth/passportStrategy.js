@@ -77,4 +77,7 @@ module.exports.setupPassport = function(passport, JWT_SECRET)
             return done({en: 'This admin is not registered or not authorized', error, errorType: ErrorType.UNAUTHORIZED});
         }
     }));
+
+    // passport.use('jwt-super-admin', new JwtStrategy(opts, async function(jwt_payload, done)
+ 
 };
